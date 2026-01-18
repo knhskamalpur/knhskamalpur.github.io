@@ -3,6 +3,7 @@
     "short_name": "KNHS",
     "start_url": "/",
     "scope": "/",
+    "id": "/",
     "icons": [
         {
             "src": "/assets/images/android-chrome-192x192.png",
