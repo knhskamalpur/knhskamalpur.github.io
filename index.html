@@ -68,6 +68,13 @@
             flex-direction: column;
             box-sizing: border-box;
         }
+        @media (prefers-color-scheme: dark) {
+            .form-card {
+                background: rgb(64, 64, 64);
+                border: 1px solid #555;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            }
+        }
         @media (max-width: 768px) {
             body {
                 padding: 20px;
