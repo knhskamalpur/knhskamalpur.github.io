@@ -34,8 +34,14 @@
         .logo {
             width: 150px;
             height: 150px;
-            margin-bottom: 20px;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.862));
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
         }
         .form-card {
             background: rgb(193, 193, 193);
@@ -62,12 +68,18 @@
             .form-card {
                 padding: 10px;
             }
+            .header {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <img src="assets/images/knhs.webp" alt="KNHS Logo" class="logo">
-    <h1>Kamalpur Netaji High School (H.S.)</h1>
+    <div class="header">
+        <img src="assets/images/knhs.webp" alt="KNHS Logo" class="logo">
+        <h1>Kamalpur Netaji High School (H.S.)</h1>
+    </div>
     <div class="form-card">
         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScu05zZ81-Hvb8drH0mozH0ANiodbf8W6MpecsUQWyEYfshTQ/viewform?embedded=true" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
     </div></body>
