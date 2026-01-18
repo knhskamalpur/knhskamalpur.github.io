@@ -4,6 +4,14 @@
     "start_url": "/",
     "scope": "/",
     "id": "/",
+    "description": "Official website for Kamalpur Netaji High School (H.S.)",
+    "orientation": "any",
+    "categories": [
+        "education",
+        "productivity"
+    ],
+    "lang": "en",
+    "dir": "ltr",
     "icons": [
         {
             "src": "/assets/images/android-chrome-192x192.png",
