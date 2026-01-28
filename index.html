@@ -127,6 +127,323 @@
         }
     </style>
 </head>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue & Yellow Responsive Layout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- 1. Variables & Reset --- */
+        :root {
+            --primary-blue: #0d47a1;   /* Deep Royal Blue */
+            --secondary-blue: #1565c0; /* Lighter Blue for hover */
+            --accent-yellow: #ffc107;  /* Amber/Yellow */
+            --text-light: #f5f5f5;
+            --text-dark: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- 2. Header Styles --- */
+        header {
+            background-color: var(--primary-blue);
+            color: var(--text-light);
+            position: sticky; /* Sticky is better for mobile than fixed sometimes */
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-yellow); /* Yellow Logo */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Desktop Navigation */
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-yellow);
+        }
+
+        /* Call to Action Button */
+        .btn-yellow {
+            background-color: var(--accent-yellow);
+            color: var(--primary-blue);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px; /* Rounded pill shape for mobile touch targets */
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn-yellow:hover {
+            background-color: #ffca28;
+            transform: scale(1.05);
+        }
+
+        /* Hamburger Icon (Hidden on Desktop) */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--accent-yellow);
+        }
+
+        /* --- 3. Content Spacer --- */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- 4. Footer Styles --- */
+        footer {
+            background-color: var(--primary-blue);
+            color: var(--text-light);
+            padding-top: 3rem;
+            border-top: 5px solid var(--accent-yellow); /* Yellow top border */
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+        }
+
+        .footer-col h3 {
+            color: var(--accent-yellow);
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-yellow);
+            padding-left: 5px; /* Visual cue */
+            transition: 0.3s;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icons a {
+            background-color: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--accent-yellow);
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--accent-yellow);
+            color: var(--primary-blue);
+        }
+
+        .copyright {
+            background-color: #002171; /* Darker shade of blue */
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* --- 5. Mobile Responsive Styles (Android Optimization) --- */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block; /* Show burger on mobile */
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%; /* Hide off-screen */
+                top: 70px; /* Below header */
+                flex-direction: column;
+                background-color: var(--primary-blue);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+                padding: 2rem 0;
+            }
+
+            .nav-menu.active {
+                left: 0; /* Slide in */
+            }
+
+            .nav-menu li {
+                margin: 1.5rem 0;
+            }
+
+            /* Make button full width on mobile menu */
+            .btn-yellow {
+                display: inline-block;
+                width: 80%; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <i class="fas fa-layer-group"></i> Blue<span style="color:white">Tech</span>
+            </a>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" class="nav-link">Home</a></li>
+                <li><a href="#" class="nav-link">Features</a></li>
+                <li><a href="#" class="nav-link">Pricing</a></li>
+                <li><a href="#" class="nav-link">About</a></li>
+                <li><a href="#" class="btn-yellow">Get Started</a></li>
+            </ul>
+
+            <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h2 style="color: var(--primary-blue);">Mobile-Ready Layout</h2>
+        <p>Resize your browser window or open this on your Android phone.</p>
+        <p>You will see the <strong>Yellow Burger Menu</strong> appear on the top right.</p>
+        <br>
+        <div style="background: #e3f2fd; padding: 20px; border-left: 5px solid var(--primary-blue); border-radius: 4px;">
+            <strong>Design Tip:</strong> The Yellow on Blue creates a "Complementary Color Scheme" which is very high contrast and easy to read outdoors on mobile screens.
+        </div>
+        <br><br><br>
+        <p>Scroll down to see the footer...</p>
+        <br><br><br><br><br><br>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>BlueTech Inc.</h3>
+                <p style="opacity: 0.8; line-height: 1.6;">
+                    Building responsive mobile-first web experiences for modern businesses.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h3>Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Web Design</a></li>
+                    <li><a href="#">App Development</a></li>
+                    <li><a href="#">Cloud Services</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Contact</h3>
+                <ul class="footer-links">
+                    <li><a href="#">support@bluetech.com</a></li>
+                    <li><a href="#">+1 (555) 123-4567</a></li>
+                    <li><a href="#">New York, NY</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Connect</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-android"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright">
+            &copy; 2024 BlueTech. Designed for Mobile & Desktop.
+        </div>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            // Toggle the 'active' class to slide the menu in/out
+            navMenu.classList.toggle('active');
+            
+            // Optional: Toggle icon between bars and X
+            const icon = hamburger.querySelector('i');
+            if (navMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close menu when a link is clicked (good UX for mobile)
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            hamburger.querySelector('i').classList.add('fa-bars');
+            hamburger.querySelector('i').classList.remove('fa-times');
+        }));
+    </script>
+
+</body>
+</html>
+
+    
 <body>
     <div class="header">
         <img src="assets/images/knhs.webp" alt="KNHS Logo" class="logo">
