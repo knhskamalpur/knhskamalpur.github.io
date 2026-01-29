@@ -198,3 +198,8 @@ section {
 .fade-in {
     animation: fadeInUp 0.8s ease-out forwards;
 }
+.mr-10 { margin-right: 10px; }
+.footer-content { display: flex; justify-content: space-around; flex-wrap: wrap; text-align: left; margin-bottom: 20px; }
+.single-footer-widget ul { list-style: none; padding: 0; }
+.single-footer-widget a { color: #aaa; text-decoration: none; }
+.single-footer-widget h4 { color: #fec90d; }
