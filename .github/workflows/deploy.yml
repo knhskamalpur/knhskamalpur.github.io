@@ -1,0 +1,47 @@
+name: Deploy with Automated Versioning
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update Service Worker Version
+        run: |
+          # Create a secure version string using the short commit hash
+          VERSION="knhs-$(git rev-parse --short HEAD)"
+          echo "Updating Service Worker cache name to: $VERSION"
+          
+          # Replace the CACHE_NAME line in sw.js
+          # This looks for "const CACHE_NAME =" and replaces the whole line
+          sed -i "s/const CACHE_NAME = .*/const CACHE_NAME = '$VERSION';/" sw.js
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
