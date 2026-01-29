@@ -2,6 +2,7 @@ const CACHE_NAME = 'knhs-v1';
 const urlsToCache = [
   '/',
   '/index.html',
+  '/assets/css/styles.css',
   '/assets/images/knhs.webp',
   '/manifest.json'
 ];
