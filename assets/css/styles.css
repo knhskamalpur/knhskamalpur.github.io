@@ -203,3 +203,49 @@ section {
 .single-footer-widget ul { list-style: none; padding: 0; }
 .single-footer-widget a { color: #aaa; text-decoration: none; }
 .single-footer-widget h4 { color: #fec90d; }
+
+/* Gallery Styles */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.gallery-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.gallery-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.gallery-caption {
+    color: #fec90d;
+    margin-top: 10px;
+    font-size: 1.1em;
+    text-transform: capitalize;
+}
+
+/* Customize sizes for portrait/landscape if needed 
+   For now, simple grid with auto-fit and object-fit cover should suffice 
+   But user mentioned Landscape/Portrait which suggests orientation matters.
+   For Masonry layout or specific aspect matching, CSS Grid can handle basic fitting.
+*/
+
