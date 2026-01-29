@@ -35,6 +35,19 @@ h1 {
     margin: 0;
 }
 
+.header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align text to the left relative to the container */
+}
+
+.header-subtitle {
+    margin: 5px 0 0 0;
+    color: #cccccc; /* Light gray for subtitle */
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
 nav ul {
     list-style: none;
     padding: 0;
@@ -115,6 +128,10 @@ footer {
         flex-direction: column;
         text-align: center;
     }
+
+    .header-text {
+        align-items: center; /* Center text on mobile */
+    }
     
     .logo {
         width: 80px;
@@ -128,4 +145,50 @@ footer {
     nav ul {
         gap: 10px;
     }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+section {
+    padding: 40px 0;
+}
+
+.about-card {
+    background: rgba(255, 255, 255, 0.05); /* Glassmorphism effect */
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    margin-bottom: 40px;
+    text-align: justify;
+}
+
+.about-card p {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.about-card strong, .about-card em {
+    color: #fec90d;
+    font-style: normal;
+}
+
+/* Simple fade-in animation for sections */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.8s ease-out forwards;
 }
