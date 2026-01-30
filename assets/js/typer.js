@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const targetElement = document.querySelector(".header-text h1");
     if (!targetElement) return;
 
-    const textEn = "Kamalpur Netaji High School (H.S.) Est. 1956";
-    const textBn = "কমলপুর নেতাজী উচ্চ বিদ্যালয় (উঃ মাঃ) স্থাপিত ১৯৫৬";
+    const textEn = "Kamalpur Netaji High School (H.S.)";
+    const textBn = "কমলপুর নেতাজী উচ্চ বিদ্যালয় (উঃ মাঃ)";
     const texts = [textEn, textBn];
     let textIndex = 0;
     let charIndex = textEn.length;
