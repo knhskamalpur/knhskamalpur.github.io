@@ -263,3 +263,30 @@ section {
    For Masonry layout or specific aspect matching, CSS Grid can handle basic fitting.
 */
 
+
+/* Gallery Page Styles */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.gallery-item {
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px; /* Fixed height for uniformity */
+    object-fit: cover;
+    display: block;
+}
+
