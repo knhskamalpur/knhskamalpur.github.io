@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#012f63">
+    <title>About Us - Kamalpur Netaji High School</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        nav a[href="about.html"] {
+            background-color: #fec90d;
+            color: #012f63;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/"><img src="assets/images/knhs.webp" alt="KNHS Logo" class="logo"></a>
+            <div class="header-text">
+                <h1>Kamalpur Netaji High School (H.S.) Est. 1956</h1>
+                <p class="header-subtitle">Kamalpur &bull; Chhatna &bull; Bankura &bull; West Bengal &bull; 722137</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="index.html#academics">Academics</a></li>
+                <li><a href="teachers.html">Teachers</a></li>
+                <li><a href="various_events.html">Various Events</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="fade-in">
+            <h2>About Our School</h2>
+            <div class="about-card">
+                <p>
+                    Kamalpur Netaji High School, located in Chhatna, Bankura district of West Bengal, was established on <strong>January 23, 1956</strong>. Founded by <em>Lt. Sudhir Kumar Rakshit</em>, it is a co-educational institution providing education from grades 5 to 12 with a focus on academics, sports, and cultural development.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content" style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: left; margin-bottom: 20px;">
+            <div class="single-footer-widget">
+                <h4>QUICK LINKS</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li><a href="http://www.wbbse.org/" style="color: #aaa; text-decoration: none;">WBBSE</a></li>
+                    <li><a href="http://wbchse.nic.in/html/index.html" style="color: #aaa; text-decoration: none;">WBCHSE</a></li>
+                    <li><a href="#" style="color: #aaa; text-decoration: none;">School Education WB</a></li>
+                    <li><a href="#" style="color: #aaa; text-decoration: none;">Kanyashree</a></li>
+                </ul>
+            </div>
+
+            <div class="single-footer-widget">
+                <h4>INSTITUTION ADDRESS</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li><i class="fa fa-university mr-10" aria-hidden="true"></i> KAMALPUR NETAJI H.S</li>
+                    <li><i class="fa fa-map-marker mr-10" aria-hidden="true"></i> CHHATNA(S), BANKURA</li>
+                    <li><i class="fa fa-mobile mr-10" aria-hidden="true"></i> 9434393164</li>
+                    <li><i class="fa fa-envelope-o mr-10" aria-hidden="true"></i> knhskamalpur@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <p>&copy; <span id="year"></span> Kamalpur Netaji High School. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
