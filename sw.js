@@ -1,5 +1,5 @@
 const CACHE_NAME = "knhs-v1";
-const urlsToCache = ["/", "/index.html", "/assets/css/styles.css", "/assets/images/knhs.webp", "/manifest.json"];
+const urlsToCache = ["/", "/index.html", "/assets/css/styles.css", "/assets/images/knhs.webp", "/manifest.json", "/assets/js/typer.js"];
 
 self.addEventListener("install", (event) => {
     self.skipWaiting(); // Activate new service worker immediately
