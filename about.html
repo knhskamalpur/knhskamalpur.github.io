@@ -136,6 +136,20 @@
         // Set default volume
         audio.volume = 0.3;
 
+        function updateRangeBackground(range) {
+            const min = range.min ? parseFloat(range.min) : 0;
+            const max = range.max ? parseFloat(range.max) : 100;
+            const val = range.value ? parseFloat(range.value) : 0;
+            const percentage = ((val - min) / (max - min)) * 100;
+            range.style.background = `linear-gradient(to right, #fec90d ${percentage}%, rgba(255, 255, 255, 0.15) ${percentage}%)`;
+            range.style.backgroundSize = '100% 4px';
+            range.style.backgroundPosition = 'center';
+            range.style.backgroundRepeat = 'no-repeat';
+        }
+
+        updateRangeBackground(volumeBar);
+        updateRangeBackground(seekBar);
+
         let isRepeating = false; // By default not repeating (or repeating all in a playlist context, but here single song)
         // Actually user said "repeate smae song" and "play single time".
         // Let's implement toggle: Loop (One) vs No Loop.
@@ -162,6 +176,7 @@
             const value = (audio.currentTime / audio.duration) * 100;
             seekBar.value = value || 0;
             currentTimeSpan.textContent = formatTime(audio.currentTime);
+            updateRangeBackground(seekBar);
         });
 
         audio.addEventListener('loadedmetadata', () => {
@@ -175,6 +190,7 @@
         seekBar.addEventListener('input', () => {
             const time = (seekBar.value / 100) * audio.duration;
             audio.currentTime = time;
+            updateRangeBackground(seekBar);
         });
 
         // Volume Control
@@ -184,6 +200,7 @@
                 audio.muted = false;
             }
             updateMuteIcon();
+            updateRangeBackground(volumeBar);
         });
 
         // Mute Toggle
@@ -199,6 +216,7 @@
                 volumeBar.value = 0;
             }
             updateMuteIcon();
+            updateRangeBackground(volumeBar);
         });
 
         function updateMuteIcon() {
