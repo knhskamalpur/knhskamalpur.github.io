@@ -50,18 +50,37 @@
                 <div class="anthem-section">
                     <h3>Our School Anthem</h3>
                     <div class="custom-player">
+                        <div class="player-header">
+                            <span class="now-playing">NOW PLAYING</span>
+                        </div>
                         <div class="player-art-wrapper">
                             <img src="assets/images/knhs.webp" alt="KNHS Logo" id="player-art" class="player-art">
                         </div>
-                        <div class="player-controls">
-                            <button id="play-btn" class="play-btn"><i class="fa fa-play" id="play-icon"></i></button>
-                            <div class="seekbar-wrapper">
-                                <input type="range" id="seek-bar" value="0" step="0.1">
-                                <div class="time-display">
-                                    <span id="current-time">0:00</span> / <span id="duration">0:00</span>
-                                </div>
+                        <div class="track-info">
+                            <div class="track-title">School Anthem</div>
+                            <div class="track-artist">KNHS</div>
+                        </div>
+
+                        <div class="seekbar-container">
+                            <input type="range" id="seek-bar" value="0" step="0.1">
+                            <div class="time-display">
+                                <span id="current-time">0:00</span>
+                                <span id="duration">0:00</span>
                             </div>
                         </div>
+
+                        <div class="main-controls">
+                            <button id="repeat-btn" class="control-btn" title="Repeat"><i class="fa fa-repeat" id="repeat-icon"></i></button>
+                            <button id="play-btn" class="play-btn-large"><i class="fa fa-play" id="play-icon"></i></button>
+                            <button id="mute-btn" class="control-btn" title="Mute"><i class="fa fa-volume-up" id="mute-icon"></i></button>
+                        </div>
+                        
+                        <div class="volume-container">
+                             <i class="fa fa-volume-down small-icon"></i>
+                             <input type="range" id="volume-bar" min="0" max="1" step="0.05" value="0.3">
+                             <i class="fa fa-volume-up small-icon"></i>
+                        </div>
+                        
                         <audio id="audio-player" preload="metadata">
                             <source src="assets/audio/knhs.opus" type="audio/ogg; codecs=opus">
                             <source src="assets/audio/knhs.opus" type="audio/opus">
@@ -108,9 +127,25 @@
         const seekBar = document.getElementById('seek-bar');
         const currentTimeSpan = document.getElementById('current-time');
         const durationSpan = document.getElementById('duration');
+        const volumeBar = document.getElementById('volume-bar');
+        const muteBtn = document.getElementById('mute-btn');
+        const muteIcon = document.getElementById('mute-icon');
+        const repeatBtn = document.getElementById('repeat-btn');
+        const repeatIcon = document.getElementById('repeat-icon');
 
-        playBtn.addEventListener('click', () => {
-            if (audio.paused) {
+        // Set default volume
+        audio.volume = 0.3;
+
+        let isRepeating = false; // By default not repeating (or repeating all in a playlist context, but here single song)
+        // Actually user said "repeate smae song" and "play single time".
+        // Let's implement toggle: Loop (One) vs No Loop.
+        // Default HTML audio loop property does "Loop One".
+        
+        playBtn.addEventListener('click', togglePlay);
+        art.addEventListener('click', togglePlay); // Allow clicking art to play/pause
+
+        function togglePlay() {
+             if (audio.paused) {
                 audio.play();
                 playIcon.classList.remove('fa-play');
                 playIcon.classList.add('fa-pause');
@@ -121,11 +156,11 @@
                 playIcon.classList.add('fa-play');
                 art.classList.remove('rotating');
             }
-        });
+        }
 
         audio.addEventListener('timeupdate', () => {
             const value = (audio.currentTime / audio.duration) * 100;
-            seekBar.value = value;
+            seekBar.value = value || 0;
             currentTimeSpan.textContent = formatTime(audio.currentTime);
         });
 
@@ -133,7 +168,6 @@
              durationSpan.textContent = formatTime(audio.duration);
         });
         
-        // Fallback if metadata is already loaded
         if(audio.readyState >= 1) {
              durationSpan.textContent = formatTime(audio.duration);
         }
@@ -142,16 +176,67 @@
             const time = (seekBar.value / 100) * audio.duration;
             audio.currentTime = time;
         });
+
+        // Volume Control
+        volumeBar.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+            if (audio.volume > 0 && audio.muted) {
+                audio.muted = false;
+            }
+            updateMuteIcon();
+        });
+
+        // Mute Toggle
+        muteBtn.addEventListener('click', () => {
+            if (audio.muted) {
+                audio.muted = false;
+                if (audio.volume === 0) {
+                    audio.volume = 0.3;
+                }
+                volumeBar.value = audio.volume;
+            } else {
+                audio.muted = true;
+                volumeBar.value = 0;
+            }
+            updateMuteIcon();
+        });
+
+        function updateMuteIcon() {
+            if (audio.muted || audio.volume === 0) {
+                muteIcon.className = 'fa fa-volume-off';
+            } else if (audio.volume < 0.5) {
+                muteIcon.className = 'fa fa-volume-down';
+            } else {
+                muteIcon.className = 'fa fa-volume-up';
+            }
+        }
+
+        // Repeat Toggle
+        repeatBtn.addEventListener('click', () => {
+            isRepeating = !isRepeating;
+            if (isRepeating) {
+                repeatIcon.style.color = '#fec90d'; // Active color
+                audio.loop = true;
+                repeatBtn.title = "Repeat One: On";
+            } else {
+                repeatIcon.style.color = 'inherit';
+                audio.loop = false;
+                repeatBtn.title = "Repeat One: Off";
+            }
+        });
         
         audio.addEventListener('ended', () => {
-            playIcon.classList.remove('fa-pause');
-            playIcon.classList.add('fa-play');
-            art.classList.remove('rotating');
-            seekBar.value = 0;
-            currentTimeSpan.textContent = "0:00";
+            if(!isRepeating) {
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                art.classList.remove('rotating');
+                seekBar.value = 0;
+                currentTimeSpan.textContent = "0:00";
+            }
         });
 
         function formatTime(seconds) {
+            if(isNaN(seconds)) return "0:00";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
