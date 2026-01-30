@@ -290,3 +290,118 @@ section {
     display: block;
 }
 
+/* Custom Audio Player Styles - Appended */
+
+.anthem-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.custom-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-art-wrapper {
+    margin-bottom: 20px;
+}
+
+.player-art {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #fec90d;
+    box-shadow: 0 0 15px rgba(254, 201, 13, 0.3);
+    object-fit: cover;
+    transition: transform 0.5s linear;
+}
+
+.player-art.rotating {
+    animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.player-controls {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.play-btn {
+    background-color: #fec90d;
+    color: #012f63;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.play-btn:hover {
+    background-color: #e0b00b;
+}
+
+.seekbar-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#seek-bar {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+#seek-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #fec90d;
+    cursor: pointer;
+}
+
+#seek-bar::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #fec90d;
+    cursor: pointer;
+}
+
+.time-display {
+    text-align: right;
+    font-size: 0.8em;
+    color: #ccc;
+    font-family: monospace;
+}

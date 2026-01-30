@@ -47,13 +47,26 @@
                 <p>
                     Kamalpur Netaji High School, located in Chhatna, Bankura district of West Bengal, was established on <strong>January 23, 1956</strong>. Founded by <em>Lt. Sudhir Kumar Rakshit</em>, it is a co-educational institution providing education from grades 5 to 12 with a focus on academics, sports, and cultural development.
                 </p>
-                <div style="margin-top: 25px; text-align: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
-                    <h3 style="color: #fec90d; margin-top: 0; margin-bottom: 15px;">Our School Anthem</h3>
-                    <audio controls style="width: 100%; max-width: 350px;">
-                        <source src="assets/audio/knhs.opus" type="audio/ogg; codecs=opus">
-                        <source src="assets/audio/knhs.opus" type="audio/opus">
-                        Your browser does not support the audio element.
-                    </audio>
+                <div class="anthem-section">
+                    <h3>Our School Anthem</h3>
+                    <div class="custom-player">
+                        <div class="player-art-wrapper">
+                            <img src="assets/images/knhs.webp" alt="KNHS Logo" id="player-art" class="player-art">
+                        </div>
+                        <div class="player-controls">
+                            <button id="play-btn" class="play-btn"><i class="fa fa-play" id="play-icon"></i></button>
+                            <div class="seekbar-wrapper">
+                                <input type="range" id="seek-bar" value="0" step="0.1">
+                                <div class="time-display">
+                                    <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <audio id="audio-player" preload="metadata">
+                            <source src="assets/audio/knhs.opus" type="audio/ogg; codecs=opus">
+                            <source src="assets/audio/knhs.opus" type="audio/opus">
+                        </audio>
+                    </div>
                 </div>
             </div>
         </section>
@@ -86,6 +99,63 @@
 
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Audio Player Logic
+        const audio = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play-btn');
+        const playIcon = document.getElementById('play-icon');
+        const art = document.getElementById('player-art');
+        const seekBar = document.getElementById('seek-bar');
+        const currentTimeSpan = document.getElementById('current-time');
+        const durationSpan = document.getElementById('duration');
+
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                art.classList.add('rotating');
+            } else {
+                audio.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                art.classList.remove('rotating');
+            }
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const value = (audio.currentTime / audio.duration) * 100;
+            seekBar.value = value;
+            currentTimeSpan.textContent = formatTime(audio.currentTime);
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+             durationSpan.textContent = formatTime(audio.duration);
+        });
+        
+        // Fallback if metadata is already loaded
+        if(audio.readyState >= 1) {
+             durationSpan.textContent = formatTime(audio.duration);
+        }
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+        
+        audio.addEventListener('ended', () => {
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+            art.classList.remove('rotating');
+            seekBar.value = 0;
+            currentTimeSpan.textContent = "0:00";
+        });
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
     </script>
 </body>
 </html>
