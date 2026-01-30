@@ -106,6 +106,7 @@ footer {
 
 /* Slick Scrollbar */
 * {
+    box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: #fec90d rgba(0, 0, 0, 0.05);
 }
@@ -563,7 +564,7 @@ input[type=range]::-moz-range-track {
 }
 
 .play-btn-large i {
-    text-indent: 4px; /* Optically center play icon */
+    text-indent: 2px; /* Optically center play icon */
 }
 .play-btn-large i.fa-pause {
     text-indent: 0;
