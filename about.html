@@ -150,26 +150,97 @@
         updateRangeBackground(volumeBar);
         updateRangeBackground(seekBar);
 
-        let isRepeating = false; // By default not repeating (or repeating all in a playlist context, but here single song)
-        // Actually user said "repeate smae song" and "play single time".
-        // Let's implement toggle: Loop (One) vs No Loop.
-        // Default HTML audio loop property does "Loop One".
+        let isRepeating = false; // By default not repeating
+
+        // Art Rotation & Interaction Variables
+        let rotationAngle = 0;
+        let isDragging = false;
+        let lastPointerAngle = 0;
+        let dragHasMoved = false;
+
+        // Start animation loop
+        requestAnimationFrame(animateArt);
+
+        function animateArt() {
+            if (!audio.paused && !isDragging) {
+                // ~30 deg/sec = 1 rotation per 12s
+                rotationAngle = (rotationAngle + 0.5) % 360; 
+            }
+            art.style.transform = `rotate(${rotationAngle}deg)`;
+            requestAnimationFrame(animateArt);
+        }
+
+        // Interaction Logic (Touch/Mouse)
+        function getPointerAngle(e) {
+            const rect = art.getBoundingClientRect();
+            const center = {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return Math.atan2(clientY - center.y, clientX - center.x) * (180 / Math.PI);
+        }
+
+        function startDrag(e) {
+            if (e.type === 'mousedown' && e.button !== 0) return;
+            e.preventDefault(); 
+            isDragging = true;
+            dragHasMoved = false;
+            lastPointerAngle = getPointerAngle(e);
+        }
+
+        function doDrag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            dragHasMoved = true;
+            
+            const currentPointerAngle = getPointerAngle(e);
+            let delta = currentPointerAngle - lastPointerAngle;
+
+            // Handle angle wrapping
+            if (delta > 180) delta -= 360;
+            if (delta < -180) delta += 360;
+
+            rotationAngle += delta; 
+            lastPointerAngle = currentPointerAngle;
+
+            // Seek audio: 360 degrees rotation = 15 seconds seek
+            if (audio.duration) {
+                const seekTimeChange = delta * (15 / 360); 
+                audio.currentTime = Math.min(Math.max(audio.currentTime + seekTimeChange, 0), audio.duration);
+            }
+        }
+
+        function endDrag(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            if (!dragHasMoved) {
+                togglePlay();
+            }
+        }
         
+        art.addEventListener('mousedown', startDrag);
+        art.addEventListener('touchstart', startDrag, { passive: false });
+        
+        window.addEventListener('mousemove', doDrag);
+        window.addEventListener('touchmove', doDrag, { passive: false });
+        
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+
         playBtn.addEventListener('click', togglePlay);
-        art.addEventListener('click', togglePlay); // Allow clicking art to play/pause
+        // art click handled by drag logic now
 
         function togglePlay() {
              if (audio.paused) {
                 audio.play();
                 playIcon.classList.remove('fa-play');
                 playIcon.classList.add('fa-pause');
-                art.classList.add('rotating');
-                art.style.animationPlayState = 'running';
             } else {
                 audio.pause();
                 playIcon.classList.remove('fa-pause');
                 playIcon.classList.add('fa-play');
-                art.style.animationPlayState = 'paused';
             }
         }
 
@@ -248,8 +319,8 @@
             if(!isRepeating) {
                 playIcon.classList.remove('fa-pause');
                 playIcon.classList.add('fa-play');
-                art.classList.remove('rotating');
-                art.style.animationPlayState = 'running';
+                rotationAngle = 0;
+                art.style.transform = `rotate(0deg)`;
                 seekBar.value = 0;
                 currentTimeSpan.textContent = "0:00";
             }
