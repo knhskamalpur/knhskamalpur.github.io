@@ -207,88 +207,51 @@ section {
 
 /* Gallery Styles */
 .gallery-grid {
-    column-count: 3;
-    column-gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
     padding: 20px 0;
-}
-
-@media (max-width: 900px) {
-    .gallery-grid {
-        column-count: 2;
-    }
-}
-
-@media (max-width: 600px) {
-    .gallery-grid {
-        column-count: 1;
-    }
 }
 
 .gallery-item {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 10px;
-    display: inline-block;
-    width: 100%;
-    break-inside: avoid;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-    text-align: center;
-    transition: transform 0.3s;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 .gallery-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
-.gallery-image {
+.gallery-image, 
+.gallery-item img {
     width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    height: 250px;
+    object-fit: cover;
+    object-position: center;
     display: block;
+    margin: 0;
+    border-radius: 0; /* Let container handle radius */
 }
 
 .gallery-caption {
+    padding: 15px;
     color: #fec90d;
-    margin-top: 10px;
+    text-align: center;
     font-size: 1.1em;
+    font-weight: 500;
     text-transform: capitalize;
-}
-
-/* Customize sizes for portrait/landscape if needed 
-   For now, simple grid with auto-fit and object-fit cover should suffice 
-   But user mentioned Landscape/Portrait which suggests orientation matters.
-   For Masonry layout or specific aspect matching, CSS Grid can handle basic fitting.
-*/
-
-
-/* Gallery Page Styles */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-.gallery-item {
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: transform 0.3s ease;
-}
-
-.gallery-item:hover {
-    transform: scale(1.05);
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 200px; /* Fixed height for uniformity */
-    object-fit: cover;
-    display: block;
+    background: rgba(0, 0, 0, 0.2);
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
