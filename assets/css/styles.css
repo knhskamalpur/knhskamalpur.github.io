@@ -104,6 +104,8 @@ main {
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
+    width: 100%;
+    min-width: 0; /* Fix for flex container overflowing with carousel */
 }
 
 h2 {
@@ -313,6 +315,12 @@ html {
 section {
     padding: 40px 0;
 }
+
+#home {
+    overflow: hidden; /* Prevent carousel from overflowing horizontally */
+    width: 100%;
+}
+
 
 .about-card {
     background: rgba(255, 255, 255, 0.05); /* Glassmorphism effect */
