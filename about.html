@@ -164,11 +164,12 @@
                 playIcon.classList.remove('fa-play');
                 playIcon.classList.add('fa-pause');
                 art.classList.add('rotating');
+                art.style.animationPlayState = 'running';
             } else {
                 audio.pause();
                 playIcon.classList.remove('fa-pause');
                 playIcon.classList.add('fa-play');
-                art.classList.remove('rotating');
+                art.style.animationPlayState = 'paused';
             }
         }
 
@@ -248,6 +249,7 @@
                 playIcon.classList.remove('fa-pause');
                 playIcon.classList.add('fa-play');
                 art.classList.remove('rotating');
+                art.style.animationPlayState = 'running';
                 seekBar.value = 0;
                 currentTimeSpan.textContent = "0:00";
             }
