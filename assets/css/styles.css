@@ -1,3 +1,12 @@
+@import url("./base.css");
+@import url("./header.css");
+@import url("./nav.css");
+@import url("./main.css");
+@import url("./footer.css");
+@import url("./gallery.css");
+@import url("./audio-player.css");
+@import url("./carousel.css");
+
 :root {
   --primary-bg: #012f63;
   --header-bg-start: #002b5c;
@@ -14,13 +23,4 @@
   --font-family: Georgia, 'Times New Roman', Times, serif;
   --font-family-player: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
-
-@import url("./base.css");
-@import url("./header.css");
-@import url("./nav.css");
-@import url("./main.css");
-@import url("./footer.css");
-@import url("./gallery.css");
-@import url("./audio-player.css");
-@import url("./carousel.css");
 
