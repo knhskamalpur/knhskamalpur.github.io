@@ -15,12 +15,12 @@
   --font-family-player: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-@import "base.css";
-@import "header.css";
-@import "nav.css";
-@import "main.css";
-@import "footer.css";
-@import "gallery.css";
-@import "audio-player.css";
-@import "carousel.css";
+@import url("./base.css");
+@import url("./header.css");
+@import url("./nav.css");
+@import url("./main.css");
+@import url("./footer.css");
+@import url("./gallery.css");
+@import url("./audio-player.css");
+@import url("./carousel.css");
 
