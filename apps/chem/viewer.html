@@ -11,7 +11,7 @@
     
     <!-- Kekule.js -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/kekule/dist/themes/default/kekule.css" />
-    <script src="https://cdn.jsdelivr.net/npm/kekule/dist/kekule.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/kekule/dist/kekule.js?modules=chemWidget,io,algorithm"></script>
     
     <style>
         #viewer-container {
@@ -108,24 +108,43 @@
     <script>
         let viewer;
         
-        Kekule.X.domReady(() => {
+        Kekule.onReady(() => {
             viewer = Kekule.Widget.getWidgetById('viewer-container');
             loadMolecule('C', 'Methane (CH4)');
         });
 
         function loadMolecule(smiles, name) {
             try {
+                // SMILES format identifier in Kekule consists of 'smi' or 'smiles'
                 const mol = Kekule.IO.loadFormatData(smiles, 'smi');
-                viewer.setChemObj(mol);
+                
+                if (mol) {
+                    // Molecules from SMILES strings don't have coordinates.
+                    // For the 3D viewer to display something, we should ensure coordinates exist.
+                    if (viewer.getRenderType() === 3) {
+                        if (Kekule.Calculator && Kekule.Calculator.generate3DCoords) {
+                            Kekule.Calculator.generate3DCoords(mol, Kekule.CoordMode.COORD3D);
+                        }
+                    }
+                    viewer.setChemObj(mol);
+                } else {
+                    console.warn('Could not load molecule from SMILES:', smiles);
+                }
+
                 document.getElementById('mol-name').textContent = name;
                 
                 // Highlight active item
-                document.querySelectorAll('.mol-item').forEach(el => {
-                    if (el.textContent === name.split(' ')[0]) el.classList.add('active');
-                    else el.classList.remove('active');
-                });
+                const molList = document.getElementById('mol-list');
+                const items = molList.getElementsByClassName('mol-item');
+                for (let item of items) {
+                    if (item.getAttribute('onclick').includes(smiles)) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                }
             } catch (e) {
-                console.error(e);
+                console.error('Error loading molecule:', e);
             }
         }
 

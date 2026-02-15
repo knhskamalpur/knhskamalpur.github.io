@@ -11,7 +11,7 @@
     
     <!-- Kekule.js -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/kekule/dist/themes/default/kekule.css" />
-    <script src="https://cdn.jsdelivr.net/npm/kekule/dist/kekule.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/kekule/dist/kekule.js?modules=chemWidget,io,algorithm"></script>
     
     <style>
         #composer-container {
@@ -80,7 +80,7 @@
     <script>
         let composer;
         
-        Kekule.X.domReady(() => {
+        Kekule.onReady(() => {
             composer = Kekule.Widget.getWidgetById('composer-container');
             // Set some default properties if needed
         });
@@ -107,11 +107,20 @@
         function exportSmiles() {
             const mol = composer.getExportableChemObj();
             if (mol) {
-                const smiles = Kekule.IO.saveFormatData(mol, 'smi');
+                // Try getting the SMILES data
+                const formatId = 'smi';
+                const smiles = Kekule.IO.saveFormatData(mol, formatId);
+                
                 const output = document.getElementById('output-panel');
                 const text = document.getElementById('output-text');
-                output.style.display = 'block';
-                text.textContent = smiles;
+                
+                if (smiles) {
+                    output.style.display = 'block';
+                    output.style.borderColor = '#ddd';
+                    text.textContent = smiles;
+                } else {
+                    alert('Could not generate SMILES. Please ensure the structure is valid.');
+                }
             } else {
                 alert('Draw something first!');
             }
