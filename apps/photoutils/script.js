@@ -13,7 +13,10 @@ let stream = null;
 // Initialize camera list
 async function getCameras() {
     try {
-        await navigator.mediaDevices.getUserMedia({ video: true }); // Request permission first
+        // First, check for permissions
+        const initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        initialStream.getTracks().forEach(track => track.stop()); // Release the dummy stream
+
         const devices = await navigator.mediaDevices.enumerateDevices();
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
         
@@ -26,25 +29,33 @@ async function getCameras() {
         });
 
         if (videoDevices.length > 0) {
-            startCamera(); // Auto-start with default camera
+            // Wait a bit for the select to update
+            setTimeout(() => startCamera(), 100);
         }
     } catch (err) {
         console.error("Error listing cameras:", err);
+        alert("Camera access denied or no camera found.");
     }
 }
 
 async function startCamera() {
     try {
+        captureBtn.disabled = true; // Disable until new stream is ready
+        
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
+            stream = null;
         }
 
         const deviceId = cameraSelect.value;
+        const wIdeal = parseInt(widthInput.value) || 1920;
+        const hIdeal = parseInt(heightInput.value) || 1080;
+
         const constraints = {
             video: {
                 deviceId: deviceId ? { exact: deviceId } : undefined,
-                width: { ideal: parseInt(widthInput.value) || 1920 },
-                height: { ideal: parseInt(heightInput.value) || 1080 }
+                width: { ideal: wIdeal },
+                height: { ideal: hIdeal }
             }
         };
 
@@ -54,13 +65,13 @@ async function startCamera() {
         video.onloadedmetadata = () => {
             video.play();
             captureBtn.disabled = false;
-            // Force a slight delay to ensure video dimensions are available
-            setTimeout(drawOverlay, 100);
+            // Ensure overlay matches the new video dimensions
+            setTimeout(drawOverlay, 300);
         };
 
     } catch (err) {
         console.error("Error accessing camera: ", err);
-        alert("Could not access camera. Please ensure permissions are granted.");
+        alert("Could not start this camera module. It may be in use or unsupported at this resolution.");
     }
 }
 
@@ -68,51 +79,69 @@ function drawOverlay() {
     if (!video.videoWidth) return;
 
     const ctx = overlay.getContext('2d');
-    const containerWidth = overlay.clientWidth;
-    const containerHeight = overlay.clientHeight;
+    const cW = overlay.clientWidth;
+    const cH = overlay.clientHeight;
     
-    overlay.width = containerWidth;
-    overlay.height = containerHeight;
+    overlay.width = cW;
+    overlay.height = cH;
 
+    const vW = video.videoWidth;
+    const vH = video.videoHeight;
+    
     const targetWidth = parseInt(widthInput.value) || 1920;
     const targetHeight = parseInt(heightInput.value) || 1080;
-    const targetRatio = targetWidth / targetHeight;
+    const tRatio = targetWidth / targetHeight;
     
-    const viewportRatio = containerWidth / containerHeight;
+    // Calculate actual video display size (object-fit: contain)
+    const displayRatio = Math.min(cW / vW, cH / vH);
+    const dW = vW * displayRatio;
+    const dH = vH * displayRatio;
+    const dX = (cW - dW) / 2;
+    const dY = (cH - dH) / 2;
 
-    let rectWidth, rectHeight;
+    // Calculate crop rectangle relative to the displayed video
+    let rW, rH;
+    const vRatio = vW / vH;
 
-    if (targetRatio > viewportRatio) {
-        rectWidth = containerWidth * 0.9;
-        rectHeight = rectWidth / targetRatio;
+    if (vRatio > tRatio) {
+        // Video is wider than target format
+        rH = dH;
+        rW = dH * tRatio;
     } else {
-        rectHeight = containerHeight * 0.8;
-        rectWidth = rectHeight * targetRatio;
+        // Video is taller than target format
+        rW = dW;
+        rH = dW / tRatio;
     }
 
-    const x = (containerWidth - rectWidth) / 2;
-    const y = (containerHeight - rectHeight) / 2;
+    const rX = dX + (dW - rW) / 2;
+    const rY = dY + (dH - rH) / 2;
 
-    ctx.clearRect(0, 0, containerWidth, containerHeight);
+    ctx.clearRect(0, 0, cW, cH);
     
-    // Dim background
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fillRect(0, 0, containerWidth, containerHeight);
+    // 1. Semi-transparent black over whole canvas
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.fillRect(0, 0, cW, cH);
     
-    // Clear the rectangle area
+    // 2. Clear out the crop rectangle
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillRect(x, y, rectWidth, rectHeight);
+    ctx.fillRect(rX, rY, rW, rH);
     ctx.globalCompositeOperation = 'source-over';
 
-    // Draw border
-    ctx.strokeStyle = '#fec90d'; // Use theme accent
+    // 3. Draw border around crop rectangle
+    ctx.strokeStyle = '#fec90d';
     ctx.lineWidth = 3;
-    ctx.strokeRect(x, y, rectWidth, rectHeight);
+    ctx.strokeRect(rX, rY, rW, rH);
 
-    // Add resolution text
+    // 4. Draw outer border of actual video stream (optional but helpful)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(dX, dY, dW, dH);
+
+    // Resolution text
     ctx.fillStyle = '#fec90d';
-    ctx.font = '14px Arial';
-    ctx.fillText(`${targetWidth} x ${targetHeight}`, x, y - 10);
+    ctx.font = 'bold 16px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${targetWidth} x ${targetHeight}`, rX + rW/2, rY - 10);
 }
 
 async function capturePhoto() {
