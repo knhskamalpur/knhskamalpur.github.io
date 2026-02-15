@@ -56,9 +56,9 @@
                         <label for="preset-select">Presets:</label>
                         <select id="preset-select">
                             <option value="">-- Manual --</option>
-                            <option value="1920x1080x500">HD (1920x1080, 500KB)</option>
-                            <option value="1280x720x300">SD (1280x720, 300KB)</option>
-                            <option value="640x480x100">Low (640x480, 100KB)</option>
+                            <option value="1920x1080x500x0">HD (1920x1080, 500KB)</option>
+                            <option value="1280x720x300x0">SD (1280x720, 300KB)</option>
+                            <option value="640x480x100x0">Low (640x480, 100KB)</option>
                         </select>
                     </div>
                     <div class="control-group">
@@ -89,6 +89,13 @@
 
                 <div class="actions-bar">
                     <button id="start-camera" class="btn-action" title="Restart Camera"><i class="fa fa-refresh"></i></button>
+                    <div class="switch-container">
+                        <label class="switch" title="Toggle Black & White Mode">
+                            <input type="checkbox" id="bw-mode">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="switch-label">B&W</span>
+                    </div>
                     <button id="capture" class="btn-action btn-capture" title="Capture Photo" disabled><i class="fa fa-camera"></i></button>
                 </div>
 

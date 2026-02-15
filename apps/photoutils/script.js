@@ -11,6 +11,7 @@ const presetSelect = document.getElementById('preset-select');
 const savePresetBtn = document.getElementById('save-preset');
 const deletePresetBtn = document.getElementById('delete-preset');
 const swapDimsBtn = document.getElementById('swap-dims');
+const bwModeInput = document.getElementById('bw-mode');
 const viewportContainer = document.querySelector('.viewport-container');
 
 let stream = null;
@@ -168,10 +169,19 @@ function drawOverlay() {
     ctx.fillText(`${targetWidth} x ${targetHeight}`, rX + rW/2, rY - 10);
 }
 
+function applyBwFilter() {
+    if (bwModeInput.checked) {
+        video.style.filter = 'grayscale(100%)';
+    } else {
+        video.style.filter = 'none';
+    }
+}
+
 async function capturePhoto() {
     const targetWidth = parseInt(widthInput.value) || 1920;
     const targetHeight = parseInt(heightInput.value) || 1080;
     const maxKB = parseInt(maxSizeInput.value) || 500;
+    const isBw = bwModeInput.checked;
 
     captureCanvas.width = targetWidth;
     captureCanvas.height = targetHeight;
@@ -190,6 +200,13 @@ async function capturePhoto() {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, targetWidth, targetHeight);
     
+    // Apply grayscale filter if enabled
+    if (isBw) {
+        ctx.filter = 'grayscale(100%)';
+    } else {
+        ctx.filter = 'none';
+    }
+
     // Draw cropped image
     ctx.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
 
@@ -228,8 +245,9 @@ function loadPresets() {
     
     customPresets.forEach((p, index) => {
         const option = document.createElement('option');
-        option.value = `${p.w}x${p.h}x${p.size}`;
-        option.text = `${p.name} (${p.w}x${p.h}, ${p.size}KB)`;
+        const bwPart = p.bw ? ' (B&W)' : '';
+        option.value = `${p.w}x${p.h}x${p.size}x${p.bw ? 1 : 0}`;
+        option.text = `${p.name} (${p.w}x${p.h}, ${p.size}KB)${bwPart}`;
         presetSelect.appendChild(option);
     });
 }
@@ -241,13 +259,14 @@ function savePreset() {
     const w = parseInt(widthInput.value);
     const h = parseInt(heightInput.value);
     const size = parseInt(maxSizeInput.value);
+    const bw = bwModeInput.checked;
 
-    const newPreset = { name, w, h, size };
+    const newPreset = { name, w, h, size, bw };
     customPresets.push(newPreset);
     localStorage.setItem('photo-presets', JSON.stringify(customPresets));
     
     loadPresets();
-    presetSelect.value = `${w}x${h}x${size}`;
+    presetSelect.value = `${w}x${h}x${size}x${bw ? 1 : 0}`;
     deletePresetBtn.style.display = 'inline-block';
 }
 
@@ -282,10 +301,11 @@ function applyPreset() {
         return;
     }
 
-    const [w, h, size] = val.split('x');
+    const [w, h, size, bw] = val.split('x');
     widthInput.value = w;
     heightInput.value = h;
     maxSizeInput.value = size;
+    bwModeInput.checked = bw === '1';
     
     // Show delete button only for custom presets (index > 3)
     if (presetSelect.selectedIndex > 3) {
@@ -294,6 +314,7 @@ function applyPreset() {
         deletePresetBtn.style.display = 'none';
     }
 
+    applyBwFilter();
     startCamera();
 }
 
@@ -304,6 +325,11 @@ presetSelect.addEventListener('change', applyPreset);
 savePresetBtn.addEventListener('click', savePreset);
 deletePresetBtn.addEventListener('click', deletePreset);
 swapDimsBtn.addEventListener('click', swapDimensions);
+bwModeInput.addEventListener('change', () => {
+    presetSelect.value = ''; // Reset to manual
+    deletePresetBtn.style.display = 'none';
+    applyBwFilter();
+});
 
 // Redraw overlay when inputs change or window resizes
 [widthInput, heightInput].forEach(el => el.addEventListener('input', () => {
@@ -321,3 +347,4 @@ window.addEventListener('resize', drawOverlay);
 // Start on load
 getCameras();
 loadPresets();
+applyBwFilter();
