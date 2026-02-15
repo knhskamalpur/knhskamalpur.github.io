@@ -1,0 +1,22 @@
+{
+    "name": "Photo Utils - Kamalpur Netaji High School",
+    "short_name": "Photo Utils",
+    "description": "Capture and resize school photos with specific dimensions and file size limits.",
+    "start_url": "index.html",
+    "scope": "/apps/photoutils/",
+    "display": "standalone",
+    "background_color": "#012f63",
+    "theme_color": "#012f63",
+    "icons": [
+        {
+            "src": "../../assets/images/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "../../assets/images/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
