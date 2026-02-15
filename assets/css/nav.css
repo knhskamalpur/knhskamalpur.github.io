@@ -31,6 +31,10 @@ nav a {
     display: block;
 }
 
+nav a i {
+    margin-right: 3px;
+}
+
 nav a:hover, nav a:focus {
     background-color: var(--accent);
     color: var(--primary-bg);
