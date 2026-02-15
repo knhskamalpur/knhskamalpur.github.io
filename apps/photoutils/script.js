@@ -6,8 +6,32 @@ const captureBtn = document.getElementById('capture');
 const widthInput = document.getElementById('width');
 const heightInput = document.getElementById('height');
 const maxSizeInput = document.getElementById('max-size');
+const cameraSelect = document.getElementById('camera-select');
 
 let stream = null;
+
+// Initialize camera list
+async function getCameras() {
+    try {
+        await navigator.mediaDevices.getUserMedia({ video: true }); // Request permission first
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        
+        cameraSelect.innerHTML = '';
+        videoDevices.forEach((device, index) => {
+            const option = document.createElement('option');
+            option.value = device.deviceId;
+            option.text = device.label || `Camera ${index + 1}`;
+            cameraSelect.appendChild(option);
+        });
+
+        if (videoDevices.length > 0) {
+            startCamera(); // Auto-start with default camera
+        }
+    } catch (err) {
+        console.error("Error listing cameras:", err);
+    }
+}
 
 async function startCamera() {
     try {
@@ -15,8 +39,10 @@ async function startCamera() {
             stream.getTracks().forEach(track => track.stop());
         }
 
+        const deviceId = cameraSelect.value;
         const constraints = {
             video: {
+                deviceId: deviceId ? { exact: deviceId } : undefined,
                 width: { ideal: parseInt(widthInput.value) || 1920 },
                 height: { ideal: parseInt(heightInput.value) || 1080 }
             }
@@ -26,8 +52,10 @@ async function startCamera() {
         video.srcObject = stream;
         
         video.onloadedmetadata = () => {
+            video.play();
             captureBtn.disabled = false;
-            drawOverlay();
+            // Force a slight delay to ensure video dimensions are available
+            setTimeout(drawOverlay, 100);
         };
 
     } catch (err) {
@@ -37,6 +65,8 @@ async function startCamera() {
 }
 
 function drawOverlay() {
+    if (!video.videoWidth) return;
+
     const ctx = overlay.getContext('2d');
     const containerWidth = overlay.clientWidth;
     const containerHeight = overlay.clientHeight;
@@ -75,9 +105,14 @@ function drawOverlay() {
     ctx.globalCompositeOperation = 'source-over';
 
     // Draw border
-    ctx.strokeStyle = '#00ff00';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#fec90d'; // Use theme accent
+    ctx.lineWidth = 3;
     ctx.strokeRect(x, y, rectWidth, rectHeight);
+
+    // Add resolution text
+    ctx.fillStyle = '#fec90d';
+    ctx.font = '14px Arial';
+    ctx.fillText(`${targetWidth} x ${targetHeight}`, x, y - 10);
 }
 
 async function capturePhoto() {
@@ -90,8 +125,6 @@ async function capturePhoto() {
 
     const ctx = captureCanvas.getContext('2d');
     
-    // Draw the current video frame to canvas
-    // We want to crop/scale the video frame to fit the target resolution perfectly
     const videoWidth = video.videoWidth;
     const videoHeight = video.videoHeight;
     const videoRatio = videoWidth / videoHeight;
@@ -100,13 +133,20 @@ async function capturePhoto() {
     let sourceX = 0, sourceY = 0, sourceWidth = videoWidth, sourceHeight = videoHeight;
 
     if (videoRatio > targetRatio) {
+        // Video is wider than target crop
         sourceWidth = videoHeight * targetRatio;
         sourceX = (videoWidth - sourceWidth) / 2;
     } else {
+        // Video is taller than target crop
         sourceHeight = videoWidth / targetRatio;
         sourceY = (videoHeight - sourceHeight) / 2;
     }
 
+    // Fill background black first
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, targetWidth, targetHeight);
+    
+    // Draw cropped image
     ctx.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
 
     // Iterative quality reduction to meet file size
@@ -137,7 +177,11 @@ function getBlob(canvas, type, quality) {
 
 startBtn.addEventListener('click', startCamera);
 captureBtn.addEventListener('click', capturePhoto);
+cameraSelect.addEventListener('change', startCamera);
 
 // Redraw overlay when inputs change or window resizes
 [widthInput, heightInput].forEach(el => el.addEventListener('input', drawOverlay));
 window.addEventListener('resize', drawOverlay);
+
+// Start on load
+getCameras();
