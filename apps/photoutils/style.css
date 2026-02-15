@@ -93,6 +93,96 @@ select {
     box-shadow: none;
 }
 
+.btn-secondary {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--accent, #fec90d);
+    border-radius: 4px;
+    background-color: transparent;
+    color: var(--accent, #fec90d);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.btn-secondary:hover {
+    background-color: var(--accent, #fec90d);
+    color: #012f63;
+}
+
+.btn-danger {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ff4d4d;
+    border-radius: 4px;
+    background-color: transparent;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.btn-danger:hover {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.actions-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-action {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background-color: white;
+    color: #012f63;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.btn-action:hover {
+    transform: scale(1.1);
+    background-color: #fec90d;
+}
+
+.btn-action:active {
+    transform: scale(0.95);
+}
+
+.btn-action:disabled {
+    background-color: #666;
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-capture {
+    width: 65px;
+    height: 65px;
+    background-color: #fec90d;
+    font-size: 1.5rem;
+}
+
+.btn-capture:hover {
+    background-color: #ffd43b;
+    transform: scale(1.1) rotate(5deg);
+}
+
 .viewport-container {
     position: relative;
     width: 100%;
@@ -100,6 +190,26 @@ select {
     background: #000;
     border-radius: 8px;
     overflow: hidden;
+    margin-top: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 600px) {
+    .actions-bar {
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+    
+    .btn-action {
+        width: 45px;
+        height: 45px;
+    }
+
+    .btn-capture {
+        width: 60px;
+        height: 60px;
+    }
 }
 
 #video {

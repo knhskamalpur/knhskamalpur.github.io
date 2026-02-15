@@ -7,8 +7,12 @@ const widthInput = document.getElementById('width');
 const heightInput = document.getElementById('height');
 const maxSizeInput = document.getElementById('max-size');
 const cameraSelect = document.getElementById('camera-select');
+const presetSelect = document.getElementById('preset-select');
+const savePresetBtn = document.getElementById('save-preset');
+const deletePresetBtn = document.getElementById('delete-preset');
 
 let stream = null;
+let customPresets = JSON.parse(localStorage.getItem('photo-presets') || '[]');
 
 // Initialize camera list
 async function getCameras() {
@@ -191,7 +195,7 @@ async function capturePhoto() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `photo_${targetWidth}x${targetHeight}_${Math.round(blob.size/1024)}KB.jpg`;
+    a.download = `photo_${targetWidth}x${targetHeight}_${Math.round(blob.size/1024)}KB.knhs.jpg`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -204,13 +208,99 @@ function getBlob(canvas, type, quality) {
     });
 }
 
+// Preset Logic
+function loadPresets() {
+    // Clear current dynamic options (after the first 4 default ones)
+    while (presetSelect.options.length > 4) {
+        presetSelect.remove(4);
+    }
+    
+    customPresets.forEach((p, index) => {
+        const option = document.createElement('option');
+        option.value = `${p.w}x${p.h}x${p.size}`;
+        option.text = `${p.name} (${p.w}x${p.h}, ${p.size}KB)`;
+        presetSelect.appendChild(option);
+    });
+}
+
+function savePreset() {
+    const name = prompt("Enter a name for this preset:");
+    if (!name) return;
+
+    const w = parseInt(widthInput.value);
+    const h = parseInt(heightInput.value);
+    const size = parseInt(maxSizeInput.value);
+
+    const newPreset = { name, w, h, size };
+    customPresets.push(newPreset);
+    localStorage.setItem('photo-presets', JSON.stringify(customPresets));
+    
+    loadPresets();
+    presetSelect.value = `${w}x${h}x${size}`;
+    deletePresetBtn.style.display = 'inline-block';
+}
+
+function deletePreset() {
+    const val = presetSelect.value;
+    if (!val) return;
+
+    // Default presets are the first 4 (0 to 3 index in options)
+    // and they aren't in customPresets array
+    const selectedIndex = presetSelect.selectedIndex;
+    if (selectedIndex <= 3) {
+        alert("Cannot delete default presets.");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this preset?")) return;
+
+    // Custom presets starts at index 4 in select, 0 in customPresets
+    const customIndex = selectedIndex - 4;
+    customPresets.splice(customIndex, 1);
+    localStorage.setItem('photo-presets', JSON.stringify(customPresets));
+    
+    loadPresets();
+    presetSelect.value = '';
+    deletePresetBtn.style.display = 'none';
+}
+
+function applyPreset() {
+    const val = presetSelect.value;
+    if (!val) {
+        deletePresetBtn.style.display = 'none';
+        return;
+    }
+
+    const [w, h, size] = val.split('x');
+    widthInput.value = w;
+    heightInput.value = h;
+    maxSizeInput.value = size;
+    
+    // Show delete button only for custom presets (index > 3)
+    if (presetSelect.selectedIndex > 3) {
+        deletePresetBtn.style.display = 'inline-block';
+    } else {
+        deletePresetBtn.style.display = 'none';
+    }
+
+    drawOverlay();
+}
+
 startBtn.addEventListener('click', startCamera);
 captureBtn.addEventListener('click', capturePhoto);
 cameraSelect.addEventListener('change', startCamera);
+presetSelect.addEventListener('change', applyPreset);
+savePresetBtn.addEventListener('click', savePreset);
+deletePresetBtn.addEventListener('click', deletePreset);
 
 // Redraw overlay when inputs change or window resizes
-[widthInput, heightInput].forEach(el => el.addEventListener('input', drawOverlay));
+[widthInput, heightInput, maxSizeInput].forEach(el => el.addEventListener('input', () => {
+    presetSelect.value = ''; // Reset to manual
+    deletePresetBtn.style.display = 'none';
+    drawOverlay();
+}));
 window.addEventListener('resize', drawOverlay);
 
 // Start on load
 getCameras();
+loadPresets();
