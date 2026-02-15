@@ -10,9 +10,19 @@ const cameraSelect = document.getElementById('camera-select');
 const presetSelect = document.getElementById('preset-select');
 const savePresetBtn = document.getElementById('save-preset');
 const deletePresetBtn = document.getElementById('delete-preset');
+const swapDimsBtn = document.getElementById('swap-dims');
+const viewportContainer = document.querySelector('.viewport-container');
 
 let stream = null;
 let customPresets = JSON.parse(localStorage.getItem('photo-presets') || '[]');
+
+function swapDimensions() {
+    const w = widthInput.value;
+    const h = heightInput.value;
+    widthInput.value = h;
+    heightInput.value = w;
+    drawOverlay();
+}
 
 // Initialize camera list
 async function getCameras() {
@@ -69,18 +79,37 @@ async function startCamera() {
         video.onloadedmetadata = () => {
             video.play();
             captureBtn.disabled = false;
+            
+            // Auto-adjust orientation on first load if camera is portrait
+            const vW = video.videoWidth;
+            const vH = video.videoHeight;
+            const tW = parseInt(widthInput.value);
+            const tH = parseInt(heightInput.value);
+
+            // If camera is portrait but settings are landscape, swap them
+            if (vH > vW && tW > tH) {
+                widthInput.value = tH;
+                heightInput.value = tW;
+            } else if (vW > vH && tH > tW) {
+                widthInput.value = tH;
+                heightInput.value = tW;
+            }
+
+            viewportContainer.style.aspectRatio = `${widthInput.value}/${heightInput.value}`;
+            
             // Ensure overlay matches the new video dimensions
             setTimeout(drawOverlay, 300);
         };
 
     } catch (err) {
         console.error("Error accessing camera: ", err);
+        captureBtn.disabled = true;
         alert("Could not start this camera module. It may be in use or unsupported at this resolution.");
     }
 }
 
 function drawOverlay() {
-    if (!video.videoWidth) return;
+    if (!video.videoWidth || !overlay.clientWidth) return;
 
     const ctx = overlay.getContext('2d');
     const cW = overlay.clientWidth;
@@ -283,6 +312,7 @@ function applyPreset() {
         deletePresetBtn.style.display = 'none';
     }
 
+    viewportContainer.style.aspectRatio = `${w}/${h}`;
     drawOverlay();
 }
 
@@ -292,13 +322,20 @@ cameraSelect.addEventListener('change', startCamera);
 presetSelect.addEventListener('change', applyPreset);
 savePresetBtn.addEventListener('click', savePreset);
 deletePresetBtn.addEventListener('click', deletePreset);
+swapDimsBtn.addEventListener('click', swapDimensions);
 
 // Redraw overlay when inputs change or window resizes
-[widthInput, heightInput, maxSizeInput].forEach(el => el.addEventListener('input', () => {
+[widthInput, heightInput].forEach(el => el.addEventListener('input', () => {
+    presetSelect.value = ''; // Reset to manual
+    deletePresetBtn.style.display = 'none';
+    viewportContainer.style.aspectRatio = `${widthInput.value}/${heightInput.value}`;
+    drawOverlay();
+}));
+maxSizeInput.addEventListener('input', () => {
     presetSelect.value = ''; // Reset to manual
     deletePresetBtn.style.display = 'none';
     drawOverlay();
-}));
+});
 window.addEventListener('resize', drawOverlay);
 
 // Start on load
