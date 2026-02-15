@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic Table - KNHS Chemistry</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .chem-container {
+            padding: 20px;
+            max-width: 1400px; /* Increased width to accommodate full table */
+            margin: 0 auto;
+            color: #333;
+        }
+        .ptable-container {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 3px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 100%;
+            overflow-x: auto; /* Fallback for very small screens */
+            box-sizing: border-box;
+        }
+        .element-cell {
+            aspect-ratio: 1/1;
+            border: 1px solid #ddd;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            min-width: 40px; /* Reduced min-width to prevent scrolling on most tablets/laptops */
+            color: #333;
+            border-radius: 4px;
+        }
+        .element-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .element-cell.active-selection {
+            outline: 3px solid #012f63;
+            outline-offset: -3px;
+            z-index: 5;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+        }
+        .element-cell .symbol {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .element-cell .atomic-num {
+            font-size: 0.6rem;
+            align-self: flex-start;
+        }
+        
+        /* Category Colors - Adjusted for better contrast and visibility */
+        .alkali { background: #ff8a8a; }
+        .alkaline { background: #ffcc80; }
+        .transition { background: #ffb5c5; }
+        .post-transition { background: #d1d1d1; }
+        .metalloid { background: #d4d4aa; }
+        .nonmetal { background: #a5d6a7; }
+        .halogen { background: #fff59d; }
+        .noblegas { background: #81d4fa; }
+        .lanthanide { background: #ce93d8; }
+        .actinide { background: #f48fb1; }
+        
+        #element-details {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f4f4f4;
+            border-radius: 8px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            color: #333; /* Ensure text is dark on light background */
+        }
+        .detail-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 150px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: #333;
+        }
+        .detail-card .symbol-large {
+            font-size: 4rem;
+            font-weight: bold;
+            display: block;
+        }
+        .detail-info p {
+            color: #444;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html"><img src="../../assets/images/knhs.webp" alt="KNHS Logo" class="logo"></a>
+            <div class="header-text">
+                <h1>Interactive Periodic Table</h1>
+                <p class="header-subtitle">Kamalpur Netaji High School (H.S.)</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fa fa-flask"></i> Chem Hub</a></li>
+                <li><a href="../../index.html"><i class="fa fa-home"></i> School Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="chem-container">
+            <h2>Periodic Table of Elements</h2>
+            <p>Click on an element to see more details.</p>
+            
+            <div class="ptable-container" id="ptable">
+                <!-- Javascript will populate this -->
+            </div>
+
+            <div id="element-details">
+                <div class="detail-card" id="detail-box">
+                    <span class="atomic-num" id="det-num">1</span>
+                    <span class="symbol-large" id="det-sym">H</span>
+                    <h3 id="det-name">Hydrogen</h3>
+                </div>
+                <div class="detail-info">
+                    <p><strong>Category:</strong> <span id="det-cat">Non-metal</span></p>
+                    <p><strong>Atomic Mass:</strong> <span id="det-mass">1.008</span></p>
+                    <p><strong>Electron Configuration:</strong> <span id="det-conf">1s<sup>1</sup></span></p>
+                    <p id="det-desc">Hydrogen is the chemical element with the symbol H and atomic number 1. It is the lightest element in the periodic table.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/kekule/dist/kekule.min.js"></script>
+    <script>
+        // Comprehensive fallback naming for elements
+        const elementNames = {
+            1: 'Hydrogen', 2: 'Helium', 3: 'Lithium', 4: 'Beryllium', 5: 'Boron', 6: 'Carbon',
+            7: 'Nitrogen', 8: 'Oxygen', 9: 'Fluorine', 10: 'Neon', 11: 'Sodium', 12: 'Magnesium',
+            13: 'Aluminum', 14: 'Silicon', 15: 'Phosphorus', 16: 'Sulfur', 17: 'Chlorine', 18: 'Argon',
+            19: 'Potassium', 20: 'Calcium', 21: 'Scandium', 22: 'Titanium', 23: 'Vanadium', 24: 'Chromium',
+            25: 'Manganese', 26: 'Iron', 27: 'Cobalt', 28: 'Nickel', 29: 'Copper', 30: 'Zinc',
+            31: 'Gallium', 32: 'Germanium', 33: 'Arsenic', 34: 'Selenium', 35: 'Bromine', 36: 'Krypton',
+            37: 'Rubidium', 38: 'Strontium', 39: 'Yttrium', 40: 'Zirconium', 41: 'Niobium', 42: 'Molybdenum',
+            43: 'Technetium', 44: 'Ruthenium', 45: 'Rhodium', 46: 'Palladium', 47: 'Silver', 48: 'Cadmium',
+            49: 'Indium', 50: 'Tin', 51: 'Antimony', 52: 'Tellurium', 53: 'Iodine', 54: 'Xenon',
+            55: 'Cesium', 56: 'Barium', 57: 'Lanthanum', 58: 'Cerium', 59: 'Praseodymium', 60: 'Neodymium',
+            61: 'Promethium', 62: 'Samarium', 63: 'Europium', 64: 'Gadolinium', 65: 'Terbium', 66: 'Dysprosium',
+            67: 'Holmium', 68: 'Erbium', 69: 'Thulium', 70: 'Ytterbium', 71: 'Lutetium', 72: 'Hafnium',
+            73: 'Tantalum', 74: 'Tungsten', 75: 'Rhenium', 76: 'Osmium', 77: 'Iridium', 78: 'Platinum',
+            79: 'Gold', 80: 'Mercury', 81: 'Thallium', 82: 'Lead', 83: 'Bismuth', 84: 'Polonium',
+            85: 'Astatine', 86: 'Radon', 87: 'Francium', 88: 'Radium', 89: 'Actinium', 90: 'Thorium',
+            91: 'Protactinium', 92: 'Uranium', 93: 'Neptunium', 94: 'Plutonium', 95: 'Americium', 96: 'Curium',
+            97: 'Berkelium', 98: 'Californium', 99: 'Einsteinium', 100: 'Fermium', 101: 'Mendelevium', 102: 'Nobelium',
+            103: 'Lawrencium', 104: 'Rutherfordium', 105: 'Dubnium', 106: 'Seaborgium', 107: 'Bohrium', 108: 'Hassium',
+            109: 'Meitnerium', 110: 'Darmstadtium', 111: 'Roentgenium', 112: 'Copernicium', 113: 'Nihonium', 114: 'Flerovium',
+            115: 'Moscovium', 116: 'Livermorium', 117: 'Tennessine', 118: 'Oganesson'
+        };
+
+        const elementConfigs = {
+            1: '1s<sup>1</sup>', 2: '1s<sup>2</sup>', 3: '[He] 2s<sup>1</sup>', 4: '[He] 2s<sup>2</sup>',
+            5: '[He] 2s<sup>2</sup> 2p<sup>1</sup>', 6: '[He] 2s<sup>2</sup> 2p<sup>2</sup>',
+            7: '[He] 2s<sup>2</sup> 2p<sup>3</sup>', 8: '[He] 2s<sup>2</sup> 2p<sup>4</sup>',
+            9: '[He] 2s<sup>2</sup> 2p<sup>5</sup>', 10: '[He] 2s<sup>2</sup> 2p<sup>6</sup>',
+            11: '[Ne] 3s<sup>1</sup>', 12: '[Ne] 3s<sup>2</sup>',
+            13: '[Ne] 3s<sup>2</sup> 3p<sup>1</sup>', 14: '[Ne] 3s<sup>2</sup> 3p<sup>2</sup>',
+            15: '[Ne] 3s<sup>2</sup> 3p<sup>3</sup>', 16: '[Ne] 3s<sup>2</sup> 3p<sup>4</sup>',
+            17: '[Ne] 3s<sup>2</sup> 3p<sup>5</sup>', 18: '[Ne] 3s<sup>2</sup> 3p<sup>6</sup>',
+            19: '[Ar] 4s<sup>1</sup>', 20: '[Ar] 4s<sup>2</sup>',
+            21: '[Ar] 3d<sup>1</sup> 4s<sup>2</sup>', 22: '[Ar] 3d<sup>2</sup> 4s<sup>2</sup>',
+            23: '[Ar] 3d<sup>3</sup> 4s<sup>2</sup>', 24: '[Ar] 3d<sup>5</sup> 4s<sup>1</sup>',
+            25: '[Ar] 3d<sup>5</sup> 4s<sup>2</sup>', 26: '[Ar] 3d<sup>6</sup> 4s<sup>2</sup>',
+            27: '[Ar] 3d<sup>7</sup> 4s<sup>2</sup>', 28: '[Ar] 3d<sup>8</sup> 4s<sup>2</sup>',
+            29: '[Ar] 3d<sup>10</sup> 4s<sup>1</sup>', 30: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup>',
+            31: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>1</sup>', 32: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>2</sup>',
+            33: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>3</sup>', 34: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>4</sup>',
+            35: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>5</sup>', 36: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>6</sup>',
+            37: '[Kr] 5s<sup>1</sup>', 38: '[Kr] 5s<sup>2</sup>',
+            39: '[Kr] 4d<sup>1</sup> 5s<sup>2</sup>', 40: '[Kr] 4d<sup>2</sup> 5s<sup>2</sup>',
+            41: '[Kr] 4d<sup>4</sup> 5s<sup>1</sup>', 42: '[Kr] 4d<sup>5</sup> 5s<sup>1</sup>',
+            43: '[Kr] 4d<sup>5</sup> 5s<sup>2</sup>', 44: '[Kr] 4d<sup>7</sup> 5s<sup>1</sup>',
+            45: '[Kr] 4d<sup>8</sup> 5s<sup>1</sup>', 46: '[Kr] 4d<sup>10</sup>',
+            47: '[Kr] 4d<sup>10</sup> 5s<sup>1</sup>', 48: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup>',
+            49: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>1</sup>', 50: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>2</sup>',
+            51: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>3</sup>', 52: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>4</sup>',
+            53: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>5</sup>', 54: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>6</sup>',
+            55: '[Xe] 6s<sup>1</sup>', 56: '[Xe] 6s<sup>2</sup>',
+            57: '[Xe] 5d<sup>1</sup> 6s<sup>2</sup>', 58: '[Xe] 4f<sup>1</sup> 5d<sup>1</sup> 6s<sup>2</sup>',
+            59: '[Xe] 4f<sup>3</sup> 6s<sup>2</sup>', 60: '[Xe] 4f<sup>4</sup> 6s<sup>2</sup>',
+            61: '[Xe] 4f<sup>5</sup> 6s<sup>2</sup>', 62: '[Xe] 4f<sup>6</sup> 6s<sup>2</sup>',
+            63: '[Xe] 4f<sup>7</sup> 6s<sup>2</sup>', 64: '[Xe] 4f<sup>7</sup> 5d<sup>1</sup> 6s<sup>2</sup>',
+            65: '[Xe] 4f<sup>9</sup> 6s<sup>2</sup>', 66: '[Xe] 4f<sup>10</sup> 6s<sup>2</sup>',
+            67: '[Xe] 4f<sup>11</sup> 6s<sup>2</sup>', 68: '[Xe] 4f<sup>12</sup> 6s<sup>2</sup>',
+            69: '[Xe] 4f<sup>13</sup> 6s<sup>2</sup>', 70: '[Xe] 4f<sup>14</sup> 6s<sup>2</sup>',
+            71: '[Xe] 4f<sup>14</sup> 5d<sup>1</sup> 6s<sup>2</sup>', 72: '[Xe] 4f<sup>14</sup> 5d<sup>2</sup> 6s<sup>2</sup>',
+            73: '[Xe] 4f<sup>14</sup> 5d<sup>3</sup> 6s<sup>2</sup>', 74: '[Xe] 4f<sup>14</sup> 5d<sup>4</sup> 6s<sup>2</sup>',
+            75: '[Xe] 4f<sup>14</sup> 5d<sup>5</sup> 6s<sup>2</sup>', 76: '[Xe] 4f<sup>14</sup> 5d<sup>6</sup> 6s<sup>2</sup>',
+            77: '[Xe] 4f<sup>14</sup> 5d<sup>7</sup> 6s<sup>2</sup>', 78: '[Xe] 4f<sup>14</sup> 5d<sup>9</sup> 6s<sup>1</sup>',
+            79: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>1</sup>', 80: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup>',
+            81: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>1</sup>', 82: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>2</sup>',
+            83: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>3</sup>', 84: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>4</sup>',
+            85: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>5</sup>', 86: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>6</sup>',
+            87: '[Rn] 7s<sup>1</sup>', 88: '[Rn] 7s<sup>2</sup>',
+            89: '[Rn] 6d<sup>1</sup> 7s<sup>2</sup>', 90: '[Rn] 6d<sup>2</sup> 7s<sup>2</sup>',
+            91: '[Rn] 5f<sup>2</sup> 6d<sup>1</sup> 7s<sup>2</sup>', 92: '[Rn] 5f<sup>3</sup> 6d<sup>1</sup> 7s<sup>2</sup>',
+            93: '[Rn] 5f<sup>4</sup> 6d<sup>1</sup> 7s<sup>2</sup>', 94: '[Rn] 5f<sup>6</sup> 7s<sup>2</sup>',
+            95: '[Rn] 5f<sup>7</sup> 7s<sup>2</sup>', 96: '[Rn] 5f<sup>7</sup> 6d<sup>1</sup> 7s<sup>2</sup>',
+            97: '[Rn] 5f<sup>9</sup> 7s<sup>2</sup>', 98: '[Rn] 5f<sup>10</sup> 7s<sup>2</sup>',
+            99: '[Rn] 5f<sup>11</sup> 7s<sup>2</sup>', 100: '[Rn] 5f<sup>12</sup> 7s<sup>2</sup>',
+            101: '[Rn] 5f<sup>13</sup> 7s<sup>2</sup>', 102: '[Rn] 5f<sup>14</sup> 7s<sup>2</sup>',
+            103: '[Rn] 5f<sup>14</sup> 7s<sup>2</sup> 7p<sup>1</sup>', 104: '[Rn] 5f<sup>14</sup> 6d<sup>2</sup> 7s<sup>2</sup>',
+            105: '[Rn] 5f<sup>14</sup> 6d<sup>3</sup> 7s<sup>2</sup>', 106: '[Rn] 5f<sup>14</sup> 6d<sup>4</sup> 7s<sup>2</sup>',
+            107: '[Rn] 5f<sup>14</sup> 6d<sup>5</sup> 7s<sup>2</sup>', 108: '[Rn] 5f<sup>14</sup> 6d<sup>6</sup> 7s<sup>2</sup>',
+            109: '[Rn] 5f<sup>14</sup> 6d<sup>7</sup> 7s<sup>2</sup>', 110: '[Rn] 5f<sup>14</sup> 6d<sup>9</sup> 7s<sup>1</sup>',
+            111: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>1</sup>', 112: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup>',
+            113: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>1</sup>', 114: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>2</sup>',
+            115: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>3</sup>', 116: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>4</sup>',
+            117: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>5</sup>', 118: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>6</sup>'
+        };
+
+        const elements = [
+            { n: 1, s: 'H', x: 1, y: 1, cat: 'nonmetal', m: 1.008 },
+            { n: 2, s: 'He', x: 18, y: 1, cat: 'noblegas', m: 4.0026 },
+            { n: 3, s: 'Li', x: 1, y: 2, cat: 'alkali', m: 6.94 },
+            { n: 4, s: 'Be', x: 2, y: 2, cat: 'alkaline', m: 9.0122 },
+            { n: 5, s: 'B', x: 13, y: 2, cat: 'metalloid', m: 10.81 },
+            { n: 6, s: 'C', x: 14, y: 2, cat: 'nonmetal', m: 12.011 },
+            { n: 7, s: 'N', x: 15, y: 2, cat: 'nonmetal', m: 14.007 },
+            { n: 8, s: 'O', x: 16, y: 2, cat: 'nonmetal', m: 15.999 },
+            { n: 9, s: 'F', x: 17, y: 2, cat: 'halogen', m: 18.998 },
+            { n: 10, s: 'Ne', x: 18, y: 2, cat: 'noblegas', m: 20.180 },
+            { n: 11, s: 'Na', x: 1, y: 3, cat: 'alkali', m: 22.990 },
+            { n: 12, s: 'Mg', x: 2, y: 3, cat: 'alkaline', m: 24.305 },
+            { n: 13, s: 'Al', x: 13, y: 3, cat: 'post-transition', m: 26.982 },
+            { n: 14, s: 'Si', x: 14, y: 3, cat: 'metalloid', m: 28.085 },
+            { n: 15, s: 'P', x: 15, y: 3, cat: 'nonmetal', m: 30.974 },
+            { n: 16, s: 'S', x: 16, y: 3, cat: 'nonmetal', m: 32.06 },
+            { n: 17, s: 'Cl', x: 17, y: 3, cat: 'halogen', m: 35.45 },
+            { n: 18, s: 'Ar', x: 18, y: 3, cat: 'noblegas', m: 39.948 },
+            { n: 19, s: 'K', x: 1, y: 4, cat: 'alkali', m: 39.098 },
+            { n: 20, s: 'Ca', x: 2, y: 4, cat: 'alkaline', m: 40.078 },
+            { n: 21, s: 'Sc', x: 3, y: 4, cat: 'transition', m: 44.956 },
+            { n: 22, s: 'Ti', x: 4, y: 4, cat: 'transition', m: 47.867 },
+            { n: 23, s: 'V', x: 5, y: 4, cat: 'transition', m: 50.942 },
+            { n: 24, s: 'Cr', x: 6, y: 4, cat: 'transition', m: 51.996 },
+            { n: 25, s: 'Mn', x: 7, y: 4, cat: 'transition', m: 54.938 },
+            { n: 26, s: 'Fe', x: 8, y: 4, cat: 'transition', m: 55.845 },
+            { n: 27, s: 'Co', x: 9, y: 4, cat: 'transition', m: 58.933 },
+            { n: 28, s: 'Ni', x: 10, y: 4, cat: 'transition', m: 58.693 },
+            { n: 29, s: 'Cu', x: 11, y: 4, cat: 'transition', m: 63.546 },
+            { n: 30, s: 'Zn', x: 12, y: 4, cat: 'transition', m: 65.38 },
+            { n: 31, s: 'Ga', x: 13, y: 4, cat: 'post-transition', m: 69.723 },
+            { n: 32, s: 'Ge', x: 14, y: 4, cat: 'metalloid', m: 72.630 },
+            { n: 33, s: 'As', x: 15, y: 4, cat: 'metalloid', m: 74.922 },
+            { n: 34, s: 'Se', x: 16, y: 4, cat: 'nonmetal', m: 78.971 },
+            { n: 35, s: 'Br', x: 17, y: 4, cat: 'halogen', m: 79.904 },
+            { n: 36, s: 'Kr', x: 18, y: 4, cat: 'noblegas', m: 83.798 },
+            { n: 37, s: 'Rb', x: 1, y: 5, cat: 'alkali', m: 85.468 },
+            { n: 38, s: 'Sr', x: 2, y: 5, cat: 'alkaline', m: 87.62 },
+            { n: 39, s: 'Y', x: 3, y: 5, cat: 'transition', m: 88.906 },
+            { n: 40, s: 'Zr', x: 4, y: 5, cat: 'transition', m: 91.224 },
+            { n: 41, s: 'Nb', x: 5, y: 5, cat: 'transition', m: 92.906 },
+            { n: 42, s: 'Mo', x: 6, y: 5, cat: 'transition', m: 95.95 },
+            { n: 43, s: 'Tc', x: 7, y: 5, cat: 'transition', m: 98 },
+            { n: 44, s: 'Ru', x: 8, y: 5, cat: 'transition', m: 101.07 },
+            { n: 45, s: 'Rh', x: 9, y: 5, cat: 'transition', m: 102.91 },
+            { n: 46, s: 'Pd', x: 10, y: 5, cat: 'transition', m: 106.42 },
+            { n: 47, s: 'Ag', x: 11, y: 5, cat: 'transition', m: 107.87 },
+            { n: 48, s: 'Cd', x: 12, y: 5, cat: 'transition', m: 112.41 },
+            { n: 49, s: 'In', x: 13, y: 5, cat: 'post-transition', m: 114.82 },
+            { n: 50, s: 'Sn', x: 14, y: 5, cat: 'post-transition', m: 118.71 },
+            { n: 51, s: 'Sb', x: 15, y: 5, cat: 'metalloid', m: 121.76 },
+            { n: 52, s: 'Te', x: 16, y: 5, cat: 'metalloid', m: 127.6 },
+            { n: 53, s: 'I', x: 17, y: 5, cat: 'halogen', m: 126.90 },
+            { n: 54, s: 'Xe', x: 18, y: 5, cat: 'noblegas', m: 131.29 },
+            { n: 55, s: 'Cs', x: 1, y: 6, cat: 'alkali', m: 132.91 },
+            { n: 56, s: 'Ba', x: 2, y: 6, cat: 'alkaline', m: 137.33 },
+            { n: 57, s: 'La', x: 3, y: 9, cat: 'lanthanide', m: 138.91 },
+            { n: 58, s: 'Ce', x: 4, y: 9, cat: 'lanthanide', m: 140.12 },
+            { n: 59, s: 'Pr', x: 5, y: 9, cat: 'lanthanide', m: 140.91 },
+            { n: 60, s: 'Nd', x: 6, y: 9, cat: 'lanthanide', m: 144.24 },
+            { n: 61, s: 'Pm', x: 7, y: 9, cat: 'lanthanide', m: 145 },
+            { n: 62, s: 'Sm', x: 8, y: 9, cat: 'lanthanide', m: 150.36 },
+            { n: 63, s: 'Eu', x: 9, y: 9, cat: 'lanthanide', m: 151.96 },
+            { n: 64, s: 'Gd', x: 10, y: 9, cat: 'lanthanide', m: 157.25 },
+            { n: 65, s: 'Tb', x: 11, y: 9, cat: 'lanthanide', m: 158.93 },
+            { n: 66, s: 'Dy', x: 12, y: 9, cat: 'lanthanide', m: 162.5 },
+            { n: 67, s: 'Ho', x: 13, y: 9, cat: 'lanthanide', m: 164.93 },
+            { n: 68, s: 'Er', x: 14, y: 9, cat: 'lanthanide', m: 167.26 },
+            { n: 69, s: 'Tm', x: 15, y: 9, cat: 'lanthanide', m: 168.93 },
+            { n: 70, s: 'Yb', x: 16, y: 9, cat: 'lanthanide', m: 173.05 },
+            { n: 71, s: 'Lu', x: 17, y: 9, cat: 'lanthanide', m: 174.97 },
+            { n: 72, s: 'Hf', x: 4, y: 6, cat: 'transition', m: 178.49 },
+            { n: 73, s: 'Ta', x: 5, y: 6, cat: 'transition', m: 180.95 },
+            { n: 74, s: 'W', x: 6, y: 6, cat: 'transition', m: 183.84 },
+            { n: 75, s: 'Re', x: 7, y: 6, cat: 'transition', m: 186.21 },
+            { n: 76, s: 'Os', x: 8, y: 6, cat: 'transition', m: 190.23 },
+            { n: 77, s: 'Ir', x: 9, y: 6, cat: 'transition', m: 192.22 },
+            { n: 78, s: 'Pt', x: 10, y: 6, cat: 'transition', m: 195.08 },
+            { n: 79, s: 'Au', x: 11, y: 6, cat: 'transition', m: 196.97 },
+            { n: 80, s: 'Hg', x: 12, y: 6, cat: 'transition', m: 200.59 },
+            { n: 81, s: 'Tl', x: 13, y: 6, cat: 'post-transition', m: 204.38 },
+            { n: 82, s: 'Pb', x: 14, y: 6, cat: 'post-transition', m: 207.2 },
+            { n: 83, s: 'Bi', x: 15, y: 6, cat: 'post-transition', m: 208.98 },
+            { n: 84, s: 'Po', x: 16, y: 6, cat: 'post-transition', m: 209 },
+            { n: 85, s: 'At', x: 17, y: 6, cat: 'metalloid', m: 210 },
+            { n: 86, s: 'Rn', x: 18, y: 6, cat: 'noblegas', m: 222 },
+            { n: 87, s: 'Fr', x: 1, y: 7, cat: 'alkali', m: 223 },
+            { n: 88, s: 'Ra', x: 2, y: 7, cat: 'alkaline', m: 226 },
+            { n: 89, s: 'Ac', x: 3, y: 10, cat: 'actinide', m: 227 },
+            { n: 90, s: 'Th', x: 4, y: 10, cat: 'actinide', m: 232.04 },
+            { n: 91, s: 'Pa', x: 5, y: 10, cat: 'actinide', m: 231.04 },
+            { n: 92, s: 'U', x: 6, y: 10, cat: 'actinide', m: 238.03 },
+            { n: 93, s: 'Np', x: 7, y: 10, cat: 'actinide', m: 237 },
+            { n: 94, s: 'Pu', x: 8, y: 10, cat: 'actinide', m: 244 },
+            { n: 95, s: 'Am', x: 9, y: 10, cat: 'actinide', m: 243 },
+            { n: 96, s: 'Cm', x: 10, y: 10, cat: 'actinide', m: 247 },
+            { n: 97, s: 'Bk', x: 11, y: 10, cat: 'actinide', m: 247 },
+            { n: 98, s: 'Cf', x: 12, y: 10, cat: 'actinide', m: 251 },
+            { n: 99, s: 'Es', x: 13, y: 10, cat: 'actinide', m: 252 },
+            { n: 100, s: 'Fm', x: 14, y: 10, cat: 'actinide', m: 257 },
+            { n: 101, s: 'Md', x: 15, y: 10, cat: 'actinide', m: 258 },
+            { n: 102, s: 'No', x: 16, y: 10, cat: 'actinide', m: 259 },
+            { n: 103, s: 'Lr', x: 17, y: 10, cat: 'actinide', m: 262 },
+            { n: 104, s: 'Rf', x: 4, y: 7, cat: 'transition', m: 267 },
+            { n: 105, s: 'Db', x: 5, y: 7, cat: 'transition', m: 268 },
+            { n: 106, s: 'Sg', x: 6, y: 7, cat: 'transition', m: 269 },
+            { n: 107, s: 'Bh', x: 7, y: 7, cat: 'transition', m: 270 },
+            { n: 108, s: 'Hs', x: 8, y: 7, cat: 'transition', m: 277 },
+            { n: 109, s: 'Mt', x: 9, y: 7, cat: 'transition', m: 278 },
+            { n: 110, s: 'Ds', x: 10, y: 7, cat: 'transition', m: 281 },
+            { n: 111, s: 'Rg', x: 11, y: 7, cat: 'transition', m: 280 },
+            { n: 112, s: 'Cn', x: 12, y: 7, cat: 'transition', m: 285 },
+            { n: 113, s: 'Nh', x: 13, y: 7, cat: 'post-transition', m: 286 },
+            { n: 114, s: 'Fl', x: 14, y: 7, cat: 'post-transition', m: 289 },
+            { n: 115, s: 'Mc', x: 15, y: 7, cat: 'post-transition', m: 289 },
+            { n: 116, s: 'Lv', x: 16, y: 7, cat: 'post-transition', m: 293 },
+            { n: 117, s: 'Ts', x: 17, y: 7, cat: 'halogen', m: 294 },
+            { n: 118, s: 'Og', x: 18, y: 7, cat: 'noblegas', m: 294 }
+        ];
+
+        const container = document.getElementById('ptable');
+
+        function initPTable() {
+            container.innerHTML = ''; 
+            for (let y = 1; y <= 10; y++) {
+                for (let x = 1; x <= 18; x++) {
+                    const el = elements.find(e => e.x === x && e.y === y);
+                    const div = document.createElement('div');
+                    if (el) {
+                        div.className = `element-cell ${el.cat}`;
+                        div.id = `el-${el.n}`;
+                        div.innerHTML = `<span class="atomic-num">${el.n}</span><span class="symbol">${el.s}</span>`;
+                        div.onclick = () => showDetails(el);
+                    } else {
+                        div.className = 'element-cell empty';
+                        div.style.border = 'none';
+                    }
+                    container.appendChild(div);
+                }
+            }
+            if (elements.length > 0) showDetails(elements[0]);
+        }
+
+        function showDetails(el) {
+            // UI Feedback
+            document.querySelectorAll('.element-cell').forEach(c => c.classList.remove('active-selection'));
+            const cell = document.getElementById(`el-${el.n}`);
+            if (cell) cell.classList.add('active-selection');
+
+            // Set Basic Data
+            document.getElementById('det-num').textContent = el.n;
+            document.getElementById('det-sym').textContent = el.s;
+            document.getElementById('det-mass').textContent = el.m;
+            document.getElementById('det-cat').textContent = el.cat;
+
+            // Fetch name and configuration from Kekule or local fallback
+            let name = elementNames[el.n] || el.s;
+            let conf = elementConfigs[el.n] || 'N/A';
+            
+            try {
+                if (window.Kekule && Kekule.ChemicalElementsData) {
+                    const kInfo = Kekule.ChemicalElementsData.getElementInfo(el.n);
+                    if (kInfo) {
+                        name = kInfo.name || name;
+                        // Use Kekule config if local is N/A
+                        if (conf === 'N/A') conf = kInfo.electronConfig || conf;
+                    }
+                }
+            } catch (e) { console.warn('Kekule data not ready', e); }
+
+            document.getElementById('det-name').textContent = name;
+            document.getElementById('det-conf').innerHTML = conf;
+            
+            const categoryLabel = el.cat.replace('-', ' ');
+            document.getElementById('det-desc').innerHTML = `<strong>${name}</strong> is a ${categoryLabel} with the chemical symbol <strong>${el.s}</strong> and atomic number <strong>${el.n}</strong>.`;
+            
+            const box = document.getElementById('detail-box');
+            box.className = `detail-card ${el.cat}`;
+        }
+
+        // Initialize immediately, then try to refresh if Kekule loads late
+        window.addEventListener('DOMContentLoaded', initPTable);
+    </script>
+</body>
+</html>
