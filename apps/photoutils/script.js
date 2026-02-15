@@ -97,7 +97,7 @@ async function startCamera(autoAdjust = false) {
                 }
             }
 
-            viewportContainer.style.aspectRatio = `${widthInput.value}/${heightInput.value}`;
+            viewportContainer.style.aspectRatio = `${video.videoWidth}/${video.videoHeight}`;
             
             // Ensure overlay matches the new video dimensions
             setTimeout(drawOverlay, 300);
@@ -125,7 +125,6 @@ function drawOverlay() {
     
     const targetWidth = parseInt(widthInput.value) || 1920;
     const targetHeight = parseInt(heightInput.value) || 1080;
-    const tRatio = targetWidth / targetHeight;
     
     // Calculate actual video display size (object-fit: contain)
     const displayRatio = Math.min(cW / vW, cH / vH);
@@ -134,19 +133,9 @@ function drawOverlay() {
     const dX = (cW - dW) / 2;
     const dY = (cH - dH) / 2;
 
-    // Calculate crop rectangle relative to the displayed video
-    let rW, rH;
-    const vRatio = vW / vH;
-
-    if (vRatio > tRatio) {
-        // Video is wider than target format
-        rH = dH;
-        rW = dH * tRatio;
-    } else {
-        // Video is taller than target format
-        rW = dW;
-        rH = dW / tRatio;
-    }
+    // Calculate marker rectangle relative to the displayed video
+    const rW = targetWidth * displayRatio;
+    const rH = targetHeight * displayRatio;
 
     const rX = dX + (dW - rW) / 2;
     const rY = dY + (dH - rH) / 2;
@@ -191,20 +180,11 @@ async function capturePhoto() {
     
     const videoWidth = video.videoWidth;
     const videoHeight = video.videoHeight;
-    const videoRatio = videoWidth / videoHeight;
-    const targetRatio = targetWidth / targetHeight;
 
-    let sourceX = 0, sourceY = 0, sourceWidth = videoWidth, sourceHeight = videoHeight;
-
-    if (videoRatio > targetRatio) {
-        // Video is wider than target crop
-        sourceWidth = videoHeight * targetRatio;
-        sourceX = (videoWidth - sourceWidth) / 2;
-    } else {
-        // Video is taller than target crop
-        sourceHeight = videoWidth / targetRatio;
-        sourceY = (videoHeight - sourceHeight) / 2;
-    }
+    let sourceX = (videoWidth - targetWidth) / 2;
+    let sourceY = (videoHeight - targetHeight) / 2;
+    let sourceWidth = targetWidth;
+    let sourceHeight = targetHeight;
 
     // Fill background black first
     ctx.fillStyle = '#000';
@@ -329,7 +309,6 @@ swapDimsBtn.addEventListener('click', swapDimensions);
 [widthInput, heightInput].forEach(el => el.addEventListener('input', () => {
     presetSelect.value = ''; // Reset to manual
     deletePresetBtn.style.display = 'none';
-    viewportContainer.style.aspectRatio = `${widthInput.value}/${heightInput.value}`;
     drawOverlay();
 }));
 maxSizeInput.addEventListener('input', () => {
