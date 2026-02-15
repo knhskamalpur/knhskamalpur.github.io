@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Utils - Camera Capture</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Photo Utils</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="width">Width (px):</label>
+                <input type="number" id="width" value="1920">
+            </div>
+            <div class="control-group">
+                <label for="height">Height (px):</label>
+                <input type="number" id="height" value="1080">
+            </div>
+            <div class="control-group">
+                <label for="max-size">Max File Size (KB):</label>
+                <input type="number" id="max-size" value="500">
+            </div>
+            <button id="start-camera">Start Camera</button>
+            <button id="capture" disabled>Capture Photo</button>
+        </div>
+
+        <div class="viewport-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="overlay"></canvas>
+        </div>
+
+        <canvas id="capture-canvas" style="display: none;"></canvas>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
