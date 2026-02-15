@@ -21,7 +21,7 @@ function swapDimensions() {
     const h = heightInput.value;
     widthInput.value = h;
     heightInput.value = w;
-    drawOverlay();
+    startCamera();
 }
 
 // Initialize camera list
@@ -44,7 +44,7 @@ async function getCameras() {
 
         if (videoDevices.length > 0) {
             // Wait a bit for the select to update
-            setTimeout(() => startCamera(), 100);
+            setTimeout(() => startCamera(true), 100);
         }
     } catch (err) {
         console.error("Error listing cameras:", err);
@@ -52,7 +52,7 @@ async function getCameras() {
     }
 }
 
-async function startCamera() {
+async function startCamera(autoAdjust = false) {
     try {
         captureBtn.disabled = true; // Disable until new stream is ready
         
@@ -80,19 +80,21 @@ async function startCamera() {
             video.play();
             captureBtn.disabled = false;
             
-            // Auto-adjust orientation on first load if camera is portrait
-            const vW = video.videoWidth;
-            const vH = video.videoHeight;
-            const tW = parseInt(widthInput.value);
-            const tH = parseInt(heightInput.value);
+            if (autoAdjust) {
+                // Auto-adjust orientation on first load if camera is portrait
+                const vW = video.videoWidth;
+                const vH = video.videoHeight;
+                const tW = parseInt(widthInput.value);
+                const tH = parseInt(heightInput.value);
 
-            // If camera is portrait but settings are landscape, swap them
-            if (vH > vW && tW > tH) {
-                widthInput.value = tH;
-                heightInput.value = tW;
-            } else if (vW > vH && tH > tW) {
-                widthInput.value = tH;
-                heightInput.value = tW;
+                // If camera is portrait but settings are landscape, swap them
+                if (vH > vW && tW > tH) {
+                    widthInput.value = tH;
+                    heightInput.value = tW;
+                } else if (vW > vH && tH > tW) {
+                    widthInput.value = tH;
+                    heightInput.value = tW;
+                }
             }
 
             viewportContainer.style.aspectRatio = `${widthInput.value}/${heightInput.value}`;
@@ -312,13 +314,12 @@ function applyPreset() {
         deletePresetBtn.style.display = 'none';
     }
 
-    viewportContainer.style.aspectRatio = `${w}/${h}`;
-    drawOverlay();
+    startCamera();
 }
 
-startBtn.addEventListener('click', startCamera);
+startBtn.addEventListener('click', () => startCamera(false));
 captureBtn.addEventListener('click', capturePhoto);
-cameraSelect.addEventListener('change', startCamera);
+cameraSelect.addEventListener('change', () => startCamera(true));
 presetSelect.addEventListener('change', applyPreset);
 savePresetBtn.addEventListener('click', savePreset);
 deletePresetBtn.addEventListener('click', deletePreset);
