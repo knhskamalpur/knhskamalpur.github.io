@@ -81,24 +81,23 @@ async function startCamera(autoAdjust = false) {
             video.play();
             captureBtn.disabled = false;
             
-            if (autoAdjust) {
-                // Auto-adjust orientation on first load if camera is portrait
-                const vW = video.videoWidth;
-                const vH = video.videoHeight;
-                const tW = parseInt(widthInput.value);
-                const tH = parseInt(heightInput.value);
+            const vW = video.videoWidth;
+            const vH = video.videoHeight;
+            const tW = parseInt(widthInput.value);
+            const tH = parseInt(heightInput.value);
 
-                // If camera is portrait but settings are landscape, swap them
-                if (vH > vW && tW > tH) {
+            if (autoAdjust) {
+                // If camera orientation doesn't match target orientation, swap targets and restart
+                if ((vH > vW && tW > tH) || (vW > vH && tH > tW)) {
                     widthInput.value = tH;
                     heightInput.value = tW;
-                } else if (vW > vH && tH > tW) {
-                    widthInput.value = tH;
-                    heightInput.value = tW;
+                    // Restart camera with new ideal constraints matching the orientation
+                    startCamera(false);
+                    return;
                 }
             }
 
-            viewportContainer.style.aspectRatio = `${video.videoWidth}/${video.videoHeight}`;
+            viewportContainer.style.aspectRatio = `${vW}/${vH}`;
             
             // Ensure overlay matches the new video dimensions
             setTimeout(drawOverlay, 300);
