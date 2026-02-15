@@ -9,12 +9,25 @@ main {
 }
 
 h2 {
-    color: var(--accent);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    background: linear-gradient(45deg, var(--accent), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 10px rgba(254, 201, 13, 0.5);
+    transition: text-shadow 0.3s ease;
+    text-shadow: 0 0 20px rgba(254, 201, 13, 0.8), 0 0 30px rgba(254, 201, 13, 0.6);
 }
+
 
 p {
     font-size: 18px;
     line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
 }
 
 .about-card {
@@ -23,10 +36,16 @@ p {
     padding: 30px;
     border: 1px solid var(--glass-border);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     margin-bottom: 40px;
     text-align: justify;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 .about-card p {
