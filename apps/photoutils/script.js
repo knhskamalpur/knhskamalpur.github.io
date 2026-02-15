@@ -22,7 +22,7 @@ function swapDimensions() {
     const h = heightInput.value;
     widthInput.value = h;
     heightInput.value = w;
-    startCamera();
+    drawOverlay();
 }
 
 // Initialize camera list
