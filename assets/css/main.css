@@ -31,13 +31,13 @@ p {
 }
 
 .about-card {
-    background: var(--glass-bg); /* Glassmorphism effect */
+    background: rgba(255, 255, 255, 0.1); /* Explicit glass background */
     border-radius: 15px;
     padding: 30px;
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
     margin-bottom: 40px;
     text-align: justify;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
