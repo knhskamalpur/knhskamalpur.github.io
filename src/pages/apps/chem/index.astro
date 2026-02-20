@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+---
+
+<BaseLayout title="Chemistry Learning Hub">
+  <span slot="head">
+    <link rel="stylesheet" href="/apps/chem/style.css">
+  </span>
+
+  <div class="chem-container">
+      <div class="container">
+          <h2>Chemistry Learning Hub</h2>
+          <p>Explore the world of molecules and elements with our interactive chemistry tools.</p>
+          
+          <div class="chem-grid">
+              <div class="chem-card">
+                  <i class="fa fa-flask"></i>
+                  <h3>Molecular Editor</h3>
+                  <p>Draw and design your own molecules with a full-featured chemical editor.</p>
+                  <a href="/apps/chem/editor" class="btn-chem">Open Editor</a>
+              </div>
+              
+              <div class="chem-card">
+                  <i class="fa fa-eye"></i>
+                  <h3>Molecular Viewer</h3>
+                  <p>Visualize chemical structures in 2D and 3D with interactive controls.</p>
+                  <a href="/apps/chem/viewer" class="btn-chem">Open Viewer</a>
+              </div>
+              
+              <div class="chem-card">
+                  <i class="fa fa-table"></i>
+                  <h3>Periodic Table</h3>
+                  <p>Explore the elements, their properties, and atomic structures.</p>
+                  <a href="/apps/chem/periodic-table" class="btn-chem">Explore Table</a>
+              </div>
+          </div>
+      </div>
+  </div>
+</BaseLayout>

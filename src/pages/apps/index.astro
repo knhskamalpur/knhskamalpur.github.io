@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro"
+---
+
+<BaseLayout title="School Applications">
+  <span slot="head">
+    <style>
+        .app-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 30px 0;
+        }
+        .app-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .app-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .app-item i {
+            font-size: 3.5em;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        .app-item h3 {
+            margin: 10px 0;
+            color: var(--accent);
+            font-size: 1.5em;
+        }
+        .app-item p {
+            font-size: 1rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+    </style>
+  </span>
+
+  <section class="fade-in">
+      <h2>School Applications</h2>
+      <p>A collection of web applications and tools for Kamalpur Netaji High School students and staff.</p>
+      
+      <div class="app-list">
+          <a href="/apps/photoutils" class="app-item">
+              <i class="fa fa-camera"></i>
+              <h3>Photo Utils</h3>
+              <p>Camera capture and photo processing tool for school activities.</p>
+          </a>
+
+          <a href="/apps/chem" class="app-item">
+              <i class="fa fa-flask"></i>
+              <h3>Chemistry Hub</h3>
+              <p>Interactive molecular editor, 3D viewer, and periodic table explorer.</p>
+          </a>
+      </div>
+  </section>
+</BaseLayout>
