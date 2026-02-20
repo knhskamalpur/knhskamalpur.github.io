@@ -39,6 +39,10 @@ export let title = ''
 
     <script is:inline type="text/javascript" src="/assets/js/typer.js"></script>
     <script is:inline>
+        console.log(
+            `%cCopyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956`,
+            "color: #ffd700; background: #012f63; font-family: monospace; font-size: 12px; font-weight: bold; padding: 10px; border-radius: 5px; line-height: 1.2; text-shadow: 1px 1px 0px #000;"
+        );
         document.getElementById('year').textContent = new Date().getFullYear();
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js')
