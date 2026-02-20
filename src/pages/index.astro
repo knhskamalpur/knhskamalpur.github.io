@@ -1,5 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+
+const carouselItems = [
+    { img: "5th_september__L.jpg", title: "5th September" },
+    { img: "annual_function__L.jpg", title: "Annual Function" },
+    { img: "annual_sports__L.jpg", title: "Annual Sports" },
+    { img: "COMPUTER_LITERACY_PROJECT__L.jpg", title: "Computer Literacy Project" },
+    { img: "drawing__L.jpg", title: "Drawing" },
+    { img: "games__L.jpg", title: "Games" },
+    { img: "physical_edication__L.jpg", title: "Physical Education" },
+    { img: "wall_megazine__L.jpg", title: "Wall Magazine" }
+].sort(() => Math.random() - 0.5);
 ---
 
 <BaseLayout title="Home">
@@ -10,38 +21,12 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
     <section id="home">
         <div class="owl-carousel owl-theme">
-            <div class="item">
-                <img src="/assets/images/various_events/5th_september__L.jpg" alt="5th September">
-                <div class="carousel-caption"><h3>5th September</h3></div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/various_events/annual_function__L.jpg" alt="Annual Function">
-                <div class="carousel-caption"><h3>Annual Function</h3></div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/various_events/annual_sports__L.jpg" alt="Annual Sports">
-                <div class="carousel-caption"><h3>Annual Sports</h3></div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/various_events/COMPUTER_LITERACY_PROJECT__L.jpg" alt="Computer Literacy Project">
-                <div class="carousel-caption"><h3>Computer Literacy Project</h3></div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/various_events/drawing__L.jpg" alt="Drawing">
-                <div class="carousel-caption"><h3>Drawing</h3></div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/various_events/games__L.jpg" alt="Games">
-                <div class="carousel-caption"><h3>Games</h3></div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/various_events/physical_edication__L.jpg" alt="Physical Education">
-                <div class="carousel-caption"><h3>Physical Education</h3></div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/various_events/wall_megazine__L.jpg" alt="Wall Magazine">
-                <div class="carousel-caption"><h3>Wall Magazine</h3></div>
-            </div>
+            {carouselItems.map(item => (
+                <div class="item">
+                    <img src={`/assets/images/various_events/${item.img}`} alt={item.title}>
+                    <div class="carousel-caption"><h3>{item.title}</h3></div>
+                </div>
+            ))}
         </div>
         <p>Welcome to the official website of Kamalpur Netaji High School (H.S.)</p>
     </section>
