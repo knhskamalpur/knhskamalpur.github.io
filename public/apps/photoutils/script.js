@@ -1,3 +1,4 @@
+/* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
 const video = document.getElementById('video');
 const overlay = document.getElementById('overlay');
 const captureCanvas = document.getElementById('capture-canvas');
