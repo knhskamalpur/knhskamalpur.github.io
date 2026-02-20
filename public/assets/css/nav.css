@@ -8,7 +8,7 @@ nav {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     display: inline-block;
     vertical-align: middle;
-    margin-bottom: -71px;
+    /* margin-bottom: -71px; */
 }
 
 nav ul {
