@@ -1,3 +1,4 @@
+/* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
 const CACHE_NAME = "knhs-v1";
 const urlsToCache = ["/", "/index.html", "/assets/css/styles.css", "/assets/images/knhs.webp", "/manifest.json", "/assets/js/typer.js"];
 
