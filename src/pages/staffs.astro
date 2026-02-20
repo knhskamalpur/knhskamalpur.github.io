@@ -1,11 +1,173 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+
+const staffList = [
+  { name: "Paramita Mahadani", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Aditya Prasad De", role: "CLERK", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Anindya Sundar Bera", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Anirban Chanda", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Arup Kumar Chowdhury", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Ashis De", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Bablu Kalindi", role: "GROUP D", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Bablu Kumar Kar", role: "CLERK", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Bharati Tudu", role: "GROUP D", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Chaitali Mandal", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Dibyendu Mukhopadhyay", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Mamata Kar", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Manik Lal Rakshit", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Mom Mandal", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Nandalal Mandal", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Parbati Hansda", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Parimal Konar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Pijush Kanti Singhachowdhury", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Prabir Das", role: "CLERK", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Pratima Mandal", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Rabindra Nath Mandal", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Rathin Tantubay", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Samiran Kar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Sanjoy Rakshit", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Santanu Mukhopadhyay", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Sarthak Karmakar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Shyam Sundar Rakshit", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Soumik Kumar De", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Tanmoy Bandyopadhyay", role: "AHM CUM TIC", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Tapas Kumar Rakshit", role: "GROUP D", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Tirtha Chand", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Uttam Kumar Dutta", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Uttam Kumar Karmakar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Ananda Bauri", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Swati Khan", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Pradip Kar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+];
+
+const categories = ["All", "AT", "CLERK", "GROUP D"];
 ---
 
 <BaseLayout title="Staffs">
-  <section class="fade-in">
-    <h2>Staffs</h2>
-    <p>Information about school staff members. (Content migrated from original HTML.)</p>
-    <p>Please verify images and tabular data; update as needed.</p>
-  </section>
+    <link slot="head" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style slot="head">
+        /* Override main max-width from styles.css to allow full bootstrap container width */
+        main {
+            max-width: none !important;
+            padding: 20px 0 !important;
+        }
+
+        /* Helper classes found in snippet */
+        .pt-10 { padding-top: 10px; }
+        .pt-40 { padding-top: 40px; }
+        .pt-60 { padding-top: 60px; }
+        .pb-20 { padding-bottom: 20px; }
+        .pb-30 { padding-bottom: 30px; }
+        .p-20 { padding: 20px; }
+        .mb-30 { margin-bottom: 30px; }
+        .fz-16 { font-size: 16px; }
+        .fw400 { font-weight: 400; }
+        .fw500 { font-weight: 500; }
+
+        .nav_link_active_yellow.active {
+            background-color: #fec90d !important;
+            color: #012f63 !important;
+        }
+
+        .text-black { color: black; }
+
+        /* Glassmorphism Card Style */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            -moz-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            color: #fff;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body { background: transparent; }
+
+        .card .text-primary { color: #fec90d !important; }
+
+        .card-img-top {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        /* Responsive Staff Name Font Size */
+        .card-text {
+            font-size: 1.25rem;
+            line-height: 1.3;
+        }
+        
+        @media (max-width: 1200px) { .card-text { font-size: 1.1rem; } }
+        @media (max-width: 991px) { .card-text { font-size: 1rem; } }
+        @media (max-width: 767px) { .card-text { font-size: 1.2rem; } }
+        @media (max-width: 480px) { .card-text { font-size: 1.1rem; } }
+    </style>
+
+    <div class="container fade-in">
+        <div class="row pt-40">
+            <div class="col-md-12">
+                <h2 class="pb-20">Our Staff</h2>
+                <p class="text-justify fz-16 fw400 line_height text-white">
+                    OUR TEACHERS PLAY AN INSTRUMENTAL ROLE IN THE LEARNING AND DEVELOPMENT OF THE THE KIDS. THEY HELPES THE STUDENTS RAISE THE BAR IN THE FIELD OF EDUCATION AND GIVE THEM PROPER GUIDE FOR FUTURE LIFE.
+                </p>
+            </div>
+            <div class="col-md-12 pt-60">
+                <h2 class="pb-30">Our Staff list</h2>
+                <ul class="nav nav-pills mb-30 row justify-content-center" id="pills-tab" role="tablist">
+                    {categories.map((category, index) => (
+                        <li class="nav-item">
+                            <a 
+                                class={`nav-link nav_link_active_yellow ${index === 0 ? 'active' : ''}`} 
+                                id={`pills-${category.toLowerCase().replace(' ', '')}-tab`} 
+                                data-toggle="pill" 
+                                href={`#pills-${category.toLowerCase().replace(' ', '')}`} 
+                                role="tab" 
+                                aria-controls={`pills-${category.toLowerCase().replace(' ', '')}`} 
+                                aria-selected={index === 0 ? 'true' : 'false'}
+                            >
+                                {category}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    {categories.map((category, index) => (
+                        <div 
+                            class={`tab-pane fade ${index === 0 ? 'show active' : ''}`} 
+                            id={`pills-${category.toLowerCase().replace(' ', '')}`} 
+                            role="tabpanel" 
+                            aria-labelledby={`pills-${category.toLowerCase().replace(' ', '')}-tab`}
+                        >
+                            <div class="row">
+                                {staffList.filter(staff => category === 'All' || (category === 'AT' && (staff.role === 'AT' || staff.role === 'AHM CUM TIC')) || staff.role === category).map(staff => (
+                                    <div class="col-md-3" style="padding-bottom: 15px">
+                                        <div class="card" style="width: 100%">
+                                            <img class="card-img-top" src={staff.img} alt={staff.name} />
+                                            <div class="card-body" style="height: 160px">
+                                                <p class="pt-10 mb-0 text-primary fw500">{staff.role}</p>
+                                                <h4 class="card-text">{staff.name}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <Fragment slot="scripts">
+        <script is:inline src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script is:inline src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script is:inline src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </Fragment>
 </BaseLayout>
