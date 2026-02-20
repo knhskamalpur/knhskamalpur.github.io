@@ -1,5 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+
+const images = [
+  "114243.jpg", "119825.jpg", "129111.jpg", "161752.jpg", "165520.jpg",
+  "195411.jpg", "221256.jpg", "239499.jpg", "26715.jpg", "267997.jpg",
+  "398037.jpg", "41287.jpg", "435462.jpg", "450344.jpg", "491710.jpg",
+  "511479.jpg", "561537.jpg", "563423.jpg", "566774.jpg", "583733.jpg",
+  "587816.jpg", "652351.jpg", "655142.jpg", "702762.jpg", "726267.jpg",
+  "733715.jpg", "808033.jpg", "811507.jpg", "813070.jpg", "820099.jpg",
+  "82443.jpg", "82517.jpg", "829353.jpg", "840160.jpg", "850163.jpg",
+  "872161.jpg", "964003.jpg", "969723.jpg", "991940.jpg"
+].sort(() => Math.random() - 0.5);
 ---
 
 <BaseLayout title="Gallery">
@@ -13,45 +24,11 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     <h2>School Gallery</h2>
     <p>Moments captured around our campus.</p>
     <div class="gallery-grid">
-      <div class="gallery-item"><img src="/assets/images/gallery/114243.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/119825.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/129111.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/161752.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/165520.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/195411.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/221256.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/239499.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/26715.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/267997.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/398037.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/41287.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/435462.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/450344.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/491710.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/511479.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/561537.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/563423.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/566774.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/583733.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/587816.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/652351.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/655142.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/702762.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/726267.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/733715.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/808033.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/811507.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/813070.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/820099.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/82443.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/82517.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/829353.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/840160.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/850163.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/872161.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/964003.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/969723.jpg" alt="Gallery Image" loading="lazy"></div>
-      <div class="gallery-item"><img src="/assets/images/gallery/991940.jpg" alt="Gallery Image" loading="lazy"></div>
+      {images.map(img => (
+        <div class="gallery-item">
+          <img src={`/assets/images/gallery/${img}`} alt="Gallery Image" loading="lazy">
+        </div>
+      ))}
     </div>
   </section>
 </BaseLayout>

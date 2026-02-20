@@ -1,5 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+
+const events = [
+  { img: "5th_september__L.jpg", caption: "5th September" },
+  { img: "annual_function__L.jpg", caption: "Annual Function" },
+  { img: "annual_sports__L.jpg", caption: "Annual Sports" },
+  { img: "a_memorable_day__P.jpg", caption: "A Memorable Day" },
+  { img: "caltural_function_by_students__P.jpg", caption: "Cultural Function by Students" },
+  { img: "comment_of_ex_students__P.jpg", caption: "Comment of Ex-Students" },
+  { img: "COMPUTER_LITERACY_PROJECT__L.jpg", caption: "Computer Literacy Project" },
+  { img: "drawing__L.jpg", caption: "Drawing" },
+  { img: "games__L.jpg", caption: "Games" },
+  { img: "physical_edication__L.jpg", caption: "Physical Education" },
+  { img: "plantation__P.jpg", caption: "Plantation" },
+  { img: "respect_to_ex_hm__P__1.jpg", caption: "Respect to Ex-HM" },
+  { img: "respect_to_ex_hm__P__2.jpg", caption: "Respect to Ex-HM" },
+  { img: "students_habit__P.jpg", caption: "Students Habit" },
+  { img: "wall_megazine__L.jpg", caption: "Wall Magazine" }
+].sort(() => Math.random() - 0.5);
 ---
 
 <BaseLayout title="Various Events">
@@ -7,21 +25,12 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     <h2>Various Events</h2>
     <p>Glimpses of activities and events at our school.</p>
     <div class="gallery-grid">
-      <div class="gallery-item"><img src="/assets/images/various_events/5th_september__L.jpg" alt="5th September" class="gallery-image" loading="lazy"><div class="gallery-caption">5th September</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/annual_function__L.jpg" alt="Annual Function" class="gallery-image" loading="lazy"><div class="gallery-caption">Annual Function</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/annual_sports__L.jpg" alt="Annual Sports" class="gallery-image" loading="lazy"><div class="gallery-caption">Annual Sports</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/a_memorable_day__P.jpg" alt="A Memorable Day" class="gallery-image" loading="lazy"><div class="gallery-caption">A Memorable Day</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/caltural_function_by_students__P.jpg" alt="Cultural Function by Students" class="gallery-image" loading="lazy"><div class="gallery-caption">Cultural Function by Students</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/comment_of_ex_students__P.jpg" alt="Comment of Ex-Students" class="gallery-image" loading="lazy"><div class="gallery-caption">Comment of Ex-Students</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/COMPUTER_LITERACY_PROJECT__L.jpg" alt="Computer Literacy Project" class="gallery-image" loading="lazy"><div class="gallery-caption">Computer Literacy Project</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/drawing__L.jpg" alt="Drawing" class="gallery-image" loading="lazy"><div class="gallery-caption">Drawing</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/games__L.jpg" alt="Games" class="gallery-image" loading="lazy"><div class="gallery-caption">Games</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/physical_edication__L.jpg" alt="Physical Education" class="gallery-image" loading="lazy"><div class="gallery-caption">Physical Education</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/plantation__P.jpg" alt="Plantation" class="gallery-image" loading="lazy"><div class="gallery-caption">Plantation</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/respect_to_ex_hm__P__1.jpg" alt="Respect to Ex-HM" class="gallery-image" loading="lazy"><div class="gallery-caption">Respect to Ex-HM</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/respect_to_ex_hm__P__2.jpg" alt="Respect to Ex-HM" class="gallery-image" loading="lazy"><div class="gallery-caption">Respect to Ex-HM</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/students_habit__P.jpg" alt="Students Habit" class="gallery-image" loading="lazy"><div class="gallery-caption">Students Habit</div></div>
-      <div class="gallery-item"><img src="/assets/images/various_events/wall_megazine__L.jpg" alt="Wall Magazine" class="gallery-image" loading="lazy"><div class="gallery-caption">Wall Magazine</div></div>
+      {events.map(event => (
+        <div class="gallery-item">
+          <img src={`/assets/images/various_events/${event.img}`} alt={event.caption} class="gallery-image" loading="lazy">
+          <div class="gallery-caption">{event.caption}</div>
+        </div>
+      ))}
     </div>
   </section>
 </BaseLayout>
