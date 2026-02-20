@@ -7,6 +7,7 @@ BRANCH_NAME="$1" # Passed as first argument
 
 # Create ASCII art with build information
 cat << 'EOF' > build_info.txt
+All Copyright belongs to 
    _  __ _   _ _   _  ____ 
   | |/ /| \ | | |_| |/ ___|
   | ' / |  \| |  _  |\___ \
