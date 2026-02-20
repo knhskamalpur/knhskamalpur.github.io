@@ -3,10 +3,10 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
 ---
 
 <BaseLayout title="Molecular Editor">
-  <span slot="head">
+  <Fragment slot="head">
     <link rel="stylesheet" href="/apps/chem/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/kekule/dist/themes/default/kekule.css" />
-    <style>
+    <style is:inline>
         #composer-container {
             height: 70vh;
             border: 2px solid #012f63;
@@ -32,7 +32,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
             color: var(--accent);
         }
     </style>
-  </span>
+  </Fragment>
 
   <div class="chem-container">
       <h2>Molecular Editor</h2>
