@@ -36,7 +36,7 @@ nav a i {
     margin-right: 3px;
 }
 
-nav a:hover, nav a:focus {
+nav a:hover, nav a:focus, nav a.active {
     background-color: var(--accent);
     color: var(--primary-bg);
     text-decoration: none;
