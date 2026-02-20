@@ -1,3 +1,4 @@
+/* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
 main {
     flex: 1;
     padding: 40px 20px;
@@ -54,3 +55,4 @@ p {
     color: var(--accent);
     font-style: normal;
 }
+

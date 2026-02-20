@@ -1,3 +1,4 @@
+/* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
 document.addEventListener("DOMContentLoaded", function () {
     const targetElement = document.querySelector(".header-text h1");
     if (!targetElement) return;
@@ -37,3 +38,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     setTimeout(type, 5000);
 });
+

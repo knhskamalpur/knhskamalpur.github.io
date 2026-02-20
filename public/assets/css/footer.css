@@ -1,3 +1,4 @@
+/* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
 footer {
     background: linear-gradient(0deg, var(--footer-bg-start) 0%, var(--footer-bg-end) 100%);
     color: var(--text-secondary);
@@ -126,3 +127,4 @@ footer::before {
 footer p {
     margin: 0;
 }
+
