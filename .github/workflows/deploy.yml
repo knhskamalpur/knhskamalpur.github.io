@@ -2,7 +2,7 @@ name: Deploy with Automated Versioning
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "feat/astro"]
   workflow_dispatch:
 
 permissions:
@@ -15,14 +15,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Update Service Worker Version
         run: |
@@ -30,9 +36,16 @@ jobs:
           VERSION="knhs-$(git rev-parse --short HEAD)"
           echo "Updating Service Worker cache name to: $VERSION"
           
-          # Replace the CACHE_NAME line in sw.js
-          # This looks for "const CACHE_NAME =" and replaces the whole line
-          sed -i "s/const CACHE_NAME = .*/const CACHE_NAME = '$VERSION';/" sw.js
+          # Replace the CACHE_NAME line in public/sw.js (Astro's source for SW)
+          if [ -f "public/sw.js" ]; then
+            sed -i "s/const CACHE_NAME = .*/const CACHE_NAME = '$VERSION';/" public/sw.js
+          fi
+          if [ -f "sw.js" ]; then
+            sed -i "s/const CACHE_NAME = .*/const CACHE_NAME = '$VERSION';/" sw.js
+          fi
+
+      - name: Build Astro
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -40,8 +53,15 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'dist'
 
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
