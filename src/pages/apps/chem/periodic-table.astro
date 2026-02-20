@@ -104,6 +104,14 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
   </Fragment>
 
   <div class="chem-container">
+      <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+          <a href="/apps" class="btn-chem" style="padding: 8px 15px; font-size: 0.9em;">
+              <i class="fa fa-arrow-left"></i> Back to Apps
+          </a>
+          <a href="/apps/chem" class="btn-chem" style="padding: 8px 15px; font-size: 0.9em;">
+              <i class="fa fa-flask"></i> Back to Chem Lab
+          </a>
+      </div>
       <h2>Periodic Table of Elements</h2>
       <p>Click on an element to see more details.</p>
       
@@ -123,6 +131,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
               <p><strong>Electron Configuration:</strong> <span id="det-conf">1s<sup>1</sup></span></p>
               <p id="det-desc">Hydrogen is the chemical element with the symbol H and atomic number 1. It is the lightest element in the periodic table.</p>
           </div>
+
       </div>
   </div>
 
