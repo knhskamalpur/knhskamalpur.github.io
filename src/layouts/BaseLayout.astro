@@ -9,6 +9,15 @@ export let title = ''
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#012f63">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KNHS">
+    <meta name="description" content="Official website for Kamalpur Netaji High School (H.S.)">
+    <meta property="og:title" content={title ? `${title} - Kamalpur Netaji High School` : 'Kamalpur Netaji High School'}>
+    <meta property="og:description" content="Official website for Kamalpur Netaji High School (H.S.)">
+    <meta property="og:image" content="https://knhs.in/assets/images/knhs.webp">
+    <meta property="og:url" content="https://knhs.in">
+    <meta property="og:type" content="website">
     <title>{title ? `${title} - Kamalpur Netaji High School` : 'Kamalpur Netaji High School'}</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
@@ -25,8 +34,15 @@ export let title = ''
     </main>
     <Footer />
 
-    <script is:inline type="text/javascript">document.getElementById('year').textContent = new Date().getFullYear();</script>
     <script is:inline type="text/javascript" src="/assets/js/typer.js"></script>
+    <script is:inline>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => console.log('SW registered'))
+                .catch(error => console.log('SW registration failed'));
+        }
+    </script>
     <slot name="scripts" />
   </body>
 </html>
