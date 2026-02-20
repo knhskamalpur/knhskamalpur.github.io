@@ -1,124 +1,63 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro'
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#012f63">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="KNHS">
-    <meta name="description" content="Official website for Kamalpur Netaji High School (H.S.)">
-    <meta property="og:title" content="Kamalpur Netaji High School (H.S.)">
-    <meta property="og:description" content="Official website for Kamalpur Netaji High School (H.S.)">
-    <meta property="og:image" content="https://knhs.in/assets/images/knhs.webp">
-    <meta property="og:url" content="https://knhs.in">
-    <meta property="og:type" content="website">
-    <title>Kamalpur Netaji High School</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-    <link rel="stylesheet" href="/assets/css/styles.css">
-</head>
-<body>
-    <header>
-        <div class="header-content">
-            <a href="/"><img src="/assets/images/knhs.webp" alt="KNHS Logo" class="logo"></a>
-            <div class="header-text">
-                <h1>Kamalpur Netaji High School (H.S.)</h1>
-                <p class="header-subtitle">Kamalpur &bull; Chhatna &bull; Bankura &bull; West Bengal &bull; 722137</p>
+
+<BaseLayout title="Home">
+    <span slot="head">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="KNHS">
+        <meta name="description" content="Official website for Kamalpur Netaji High School (H.S.)">
+        <meta property="og:title" content="Kamalpur Netaji High School (H.S.)">
+        <meta property="og:description" content="Official website for Kamalpur Netaji High School (H.S.)">
+        <meta property="og:image" content="https://knhs.in/assets/images/knhs.webp">
+        <meta property="og:url" content="https://knhs.in">
+        <meta property="og:type" content="website">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    </span>
+
+    <section id="home">
+        <div class="owl-carousel owl-theme">
+            <div class="item">
+                <img src="/assets/images/various_events/5th_september__L.jpg" alt="5th September">
+                <div class="carousel-caption"><h3>5th September</h3></div>
+            </div>
+            <div class="item">
+                <img src="/assets/images/various_events/annual_function__L.jpg" alt="Annual Function">
+                <div class="carousel-caption"><h3>Annual Function</h3></div>
+            </div>
+            <div class="item">
+                <img src="/assets/images/various_events/annual_sports__L.jpg" alt="Annual Sports">
+                <div class="carousel-caption"><h3>Annual Sports</h3></div>
+            </div>
+            <div class="item">
+                <img src="/assets/images/various_events/COMPUTER_LITERACY_PROJECT__L.jpg" alt="Computer Literacy Project">
+                <div class="carousel-caption"><h3>Computer Literacy Project</h3></div>
+            </div>
+            <div class="item">
+                <img src="/assets/images/various_events/drawing__L.jpg" alt="Drawing">
+                <div class="carousel-caption"><h3>Drawing</h3></div>
+            </div>
+            <div class="item">
+                <img src="/assets/images/various_events/games__L.jpg" alt="Games">
+                <div class="carousel-caption"><h3>Games</h3></div>
+            </div>
+            <div class="item">
+                <img src="/assets/images/various_events/physical_edication__L.jpg" alt="Physical Education">
+                <div class="carousel-caption"><h3>Physical Education</h3></div>
+            </div>
+            <div class="item">
+                <img src="/assets/images/various_events/wall_megazine__L.jpg" alt="Wall Magazine">
+                <div class="carousel-caption"><h3>Wall Magazine</h3></div>
             </div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="/index.html"><i class="fa fa-home"></i> Home</a></li>
-                <li><a href="/about.html"><i class="fa fa-info-circle"></i> About</a></li>
-                <li><a href="/index.html#academics"><i class="fa fa-book"></i> Academics</a></li>
-                <li><a href="/staffs.html"><i class="fa fa-users"></i> Staffs</a></li>
-                <li><a href="/various_events.html"><i class="fa fa-calendar"></i> Various Events</a></li>
-                <li><a href="/gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
-                <li><a href="/contact.html"><i class="fa fa-phone"></i> Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+        <p>Welcome to the official website of Kamalpur Netaji High School (H.S.)</p>
+    </section>
 
-    <main>
-        <section id="home">
-            <div class="owl-carousel owl-theme">
-                <div class="item">
-                    <img src="/assets/images/various_events/5th_september__L.jpg" alt="5th September">
-                    <div class="carousel-caption"><h3>5th September</h3></div>
-                </div>
-                <div class="item">
-                    <img src="/assets/images/various_events/annual_function__L.jpg" alt="Annual Function">
-                    <div class="carousel-caption"><h3>Annual Function</h3></div>
-                </div>
-                <div class="item">
-                    <img src="/assets/images/various_events/annual_sports__L.jpg" alt="Annual Sports">
-                    <div class="carousel-caption"><h3>Annual Sports</h3></div>
-                </div>
-                <div class="item">
-                    <img src="/assets/images/various_events/COMPUTER_LITERACY_PROJECT__L.jpg" alt="Computer Literacy Project">
-                    <div class="carousel-caption"><h3>Computer Literacy Project</h3></div>
-                </div>
-                <div class="item">
-                    <img src="/assets/images/various_events/drawing__L.jpg" alt="Drawing">
-                    <div class="carousel-caption"><h3>Drawing</h3></div>
-                </div>
-                <div class="item">
-                    <img src="/assets/images/various_events/games__L.jpg" alt="Games">
-                    <div class="carousel-caption"><h3>Games</h3></div>
-                </div>
-                <div class="item">
-                    <img src="/assets/images/various_events/physical_edication__L.jpg" alt="Physical Education">
-                    <div class="carousel-caption"><h3>Physical Education</h3></div>
-                </div>
-                <div class="item">
-                    <img src="/assets/images/various_events/wall_megazine__L.jpg" alt="Wall Magazine">
-                    <div class="carousel-caption"><h3>Wall Magazine</h3></div>
-                </div>
-            </div>
-            <p>Welcome to the official website of Kamalpur Netaji High School (H.S.)</p>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-content" style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: left; margin-bottom: 20px;">
-            <div class="single-footer-widget">
-                <h4>QUICK LINKS</h4>
-                <ul style="list-style: none; padding: 0;">
-                    <li><a href="http://www.wbbse.org/" style="color: #aaa; text-decoration: none;">WBBSE</a></li>
-                    <li><a href="http://wbchse.nic.in/html/index.html" style="color: #aaa; text-decoration: none;">WBCHSE</a></li>
-                    <li><a href="#" style="color: #aaa; text-decoration: none;">School Education WB</a></li>
-                    <li><a href="#" style="color: #aaa; text-decoration: none;">Kanyashree</a></li>
-                    <li><a href="/apps">Apps</a></li>
-                </ul>
-            </div>
-
-            <div class="single-footer-widget">
-                <h4>INSTITUTION ADDRESS</h4>
-                <ul style="list-style: none; padding: 0;">
-                    <li><i class="fa fa-university mr-10" aria-hidden="true"></i> KAMALPUR NETAJI HIGH SCHOOL (H.S.)</li>
-                    <li><i class="fa fa-map-marker mr-10" aria-hidden="true"></i> Vill + Post.: KAMALPUR, P.S.: CHHATNA(S), Dist.: BANKURA,  PIN.: 722137 , West Bengal</li>
-                    <li><i class="fa fa-mobile mr-10" aria-hidden="true"></i> 9434393164</li>
-                    <li><i class="fa fa-envelope-o mr-10" aria-hidden="true"></i> knhskamalpur@gmail.com</li>
-    
-                    <li><i class="fa fa-desktop mr-10" aria-hidden="true"></i> www.knhs.in</li>
-                    
-                </ul>
-            </div>
-        </div>
-        <p>&copy; <span id="year"></span> Kamalpur Netaji High School. All rights reserved.</p>
-    </footer>
-
-    <script is:inline type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script is:inline type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-    <script is:inline>
+    <script slot="scripts" is:inline type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script slot="scripts" is:inline type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script slot="scripts" is:inline>
         $(document).ready(function(){
             $(".owl-carousel").owlCarousel({
                 loop:true,
@@ -129,34 +68,19 @@
                 autoplayHoverPause:true,
                 responsiveClass:true,
                 responsive:{
-                    0:{
-                        items:1,
-                        nav:true,
-                        loop:true
-                    },
-                    600:{
-                        items:1,
-                        nav:true,
-                        loop:true
-                    },
-                    1000:{
-                        items:1,
-                        nav:true,
-                        loop:true
-                    }
+                    0:{items:1,nav:true,loop:true},
+                    600:{items:1,nav:true,loop:true},
+                    1000:{items:1,nav:true,loop:true}
                 }
             });
         });
     </script>
-    <script is:inline>
-        document.getElementById('year').textContent = new Date().getFullYear();
 
+    <script slot="scripts" is:inline>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js')
-                .then(registration => console.log('SW registered'))
-                .catch(error => console.log('SW registration failed'));
+                .then(() => console.log('SW registered'))
+                .catch(() => console.log('SW registration failed'));
         }
     </script>
-    <script is:inline type="text/javascript" src="/assets/js/typer.js"></script>
-</body>
-</html>
+</BaseLayout>

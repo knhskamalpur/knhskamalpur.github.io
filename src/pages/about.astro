@@ -1,214 +1,148 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro'
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#012f63">
-    <title>About Us - Kamalpur Netaji High School</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/assets/css/styles.css">
+
+<BaseLayout title="About">
+  <span slot="head">
     <style>
-        nav a[href="/about.html"] {
-            background-color: #fec90d;
-            color: #012f63;
-        }
+      nav a[href="/about.html"] { background-color: #fec90d; color: #012f63; }
     </style>
-</head>
-<body>
-    <header>
-        <div class="header-content">
-            <a href="/"><img src="/assets/images/knhs.webp" alt="KNHS Logo" class="logo"></a>
-            <div class="header-text">
-                <h1>Kamalpur Netaji High School (H.S.)</h1>
-                <p class="header-subtitle">Kamalpur &bull; Chhatna &bull; Bankura &bull; West Bengal &bull; 722137</p>
-            </div>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="/index.html"><i class="fa fa-home"></i> Home</a></li>
-                <li><a href="/about.html"><i class="fa fa-info-circle"></i> About</a></li>
-                <li><a href="/index.html#academics"><i class="fa fa-book"></i> Academics</a></li>
-                <li><a href="/staffs.html"><i class="fa fa-users"></i> Staffs</a></li>
-                <li><a href="/various_events.html"><i class="fa fa-calendar"></i> Various Events</a></li>
-                <li><a href="/gallery.html"><i class="fa fa-image"></i> Gallery</a></li>
-                <li><a href="/contact.html"><i class="fa fa-phone"></i> Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+  </span>
 
-    <main>
-        <section class="fade-in">
-            <h2>About Our School</h2>
-            <div class="about-card">
-                <p>
-                    Kamalpur Netaji High School, located in Chhatna, Bankura district of West Bengal, was established on <strong>January 23, 1956</strong>. Founded by <em>Lt. Sudhir Kumar Rakshit</em>, it is a co-educational institution providing education from grades 5 to 12 with a focus on academics, sports, and cultural development.
-                </p>
-                <div class="anthem-section">
-                    <h3>Our School Anthem</h3>
-                    <div class="custom-player">
-                        <div class="player-header">
-                            <span class="now-playing">NOW PLAYING</span>
-                        </div>
-                        <div class="player-art-wrapper">
-                            <img src="/assets/images/knhs.webp" alt="KNHS Logo" id="player-art" class="player-art">
-                        </div>
-                        <div class="track-info">
-                            <div class="track-title">School Anthem</div>
-                            <div class="track-artist">KNHS</div>
-                        </div>
-
-                        <div class="seekbar-container">
-                            <input type="range" id="seek-bar" value="0" step="0.1">
-                            <div class="time-display">
-                                <span id="current-time">0:00</span>
-                                <span id="duration">0:00</span>
-                            </div>
-                        </div>
-
-                        <div class="main-controls">
-                            <button id="repeat-btn" class="control-btn" title="Repeat"><i class="fa fa-repeat" id="repeat-icon"></i></button>
-                            <button id="play-btn" class="play-btn-large"><i class="fa fa-play" id="play-icon"></i></button>
-                            <button id="mute-btn" class="control-btn" title="Mute"><i class="fa fa-volume-up" id="mute-icon"></i></button>
-                        </div>
-                        
-                        <div class="volume-container">
-                             <i class="fa fa-volume-down small-icon"></i>
-                             <input type="range" id="volume-bar" min="0" max="1" step="0.05" value="0.3">
-                             <i class="fa fa-volume-up small-icon"></i>
-                        </div>
-                        
-                        <audio id="audio-player" preload="metadata">
-                            <source src="/assets/audio/knhs.opus" type="audio/ogg; codecs=opus">
-                            <source src="/assets/audio/knhs.opus" type="audio/opus">
-                        </audio>
-                    </div>
+  <section class="fade-in">
+    <h2>About Our School</h2>
+    <div class="about-card">
+      <p>
+        Kamalpur Netaji High School, located in Chhatna, Bankura district of West Bengal, was established on <strong>January 23, 1956</strong>. Founded by <em>Lt. Sudhir Kumar Rakshit</em>, it is a co-educational institution providing education from grades 5 to 12 with a focus on academics, sports, and cultural development.
+      </p>
+      <div class="anthem-section">
+        <h3>Our School Anthem</h3>
+        <div class="custom-player">
+          <div class="player-container">
+            <div class="player-top">
+              <div class="art-wrapper">
+                <div class="art-container" id="player-art">
+                  <img src="/assets/images/knhs.webp" alt="Album Art">
                 </div>
+              </div>
+              <div class="info-group">
+                <div class="song-details">
+                  <h4 class="song-title">School Anthem</h4>
+                  <p class="artist-name">KNHS Students</p>
+                </div>
+                <div class="controls-main">
+                  <button class="control-btn repeat" id="repeat-btn" title="Repeat One: Off"><i class="fa fa-refresh" id="repeat-icon"></i></button>
+                  <button class="control-btn play-pause" id="play-btn"><i class="fa fa-play" id="play-icon"></i></button>
+                  <button class="control-btn mute" id="mute-btn"><i class="fa fa-volume-up" id="mute-icon"></i></button>
+                </div>
+              </div>
             </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-content" style="display: flex; justify-content: space-around; flex-wrap: wrap; text-align: left; margin-bottom: 20px;">
-            <div class="single-footer-widget">
-                <h4>QUICK LINKS</h4>
-                <ul style="list-style: none; padding: 0;">
-                    <li><a href="http://www.wbbse.org/" style="color: #aaa; text-decoration: none;">WBBSE</a></li>
-                    <li><a href="http://wbchse.nic.in/html/index.html" style="color: #aaa; text-decoration: none;">WBCHSE</a></li>
-                    <li><a href="#" style="color: #aaa; text-decoration: none;">School Education WB</a></li>
-                    <li><a href="#" style="color: #aaa; text-decoration: none;">Kanyashree</a></li>
-                    <li><a href="/apps">Apps</a></li>
-                </ul>
+            <div class="player-bottom">
+              <div class="progress-group">
+                <span class="time" id="current-time">0:00</span>
+                <input type="range" class="seek-bar" id="seek-bar" value="0" step="0.1">
+                <span class="time" id="duration">0:00</span>
+              </div>
+              <div class="volume-group">
+                <i class="fa fa-volume-down"></i>
+                <input type="range" class="volume-bar" id="volume-bar" min="0" max="1" step="0.01" value="0.3">
+                <i class="fa fa-volume-up"></i>
+              </div>
             </div>
-
-            <div class="single-footer-widget">
-                <h4>INSTITUTION ADDRESS</h4>
-                <ul style="list-style: none; padding: 0;">
-                    <li><i class="fa fa-university mr-10" aria-hidden="true"></i> KAMALPUR NETAJI HIGH SCHOOL (H.S.)</li>
-                    <li><i class="fa fa-map-marker mr-10" aria-hidden="true"></i> Vill + Post.: KAMALPUR, P.S.: CHHATNA(S), Dist.: BANKURA,  PIN.: 722137 , West Bengal</li>
-                    <li><i class="fa fa-mobile mr-10" aria-hidden="true"></i> 9434393164</li>
-                    <li><i class="fa fa-envelope-o mr-10" aria-hidden="true"></i> knhskamalpur@gmail.com</li>
-                </ul>
-            </div>
+          </div>
+          <audio id="audio-player" src="/assets/audio/knhs.opus"></audio>
         </div>
-        <p>&copy; <span id="year"></span> Kamalpur Netaji High School. All rights reserved.</p>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <script is:inline type="text/javascript">
-        document.getElementById('year').textContent = new Date().getFullYear();
+  <script slot="scripts" is:inline type="text/javascript">
+    // Audio Player Logic (migrated from original about page)
+    const audio = document.getElementById('audio-player');
+    const playBtn = document.getElementById('play-btn');
+    const playIcon = document.getElementById('play-icon');
+    const art = document.getElementById('player-art');
+    const seekBar = document.getElementById('seek-bar');
+    const currentTimeSpan = document.getElementById('current-time');
+    const durationSpan = document.getElementById('duration');
+    const volumeBar = document.getElementById('volume-bar');
+    const muteBtn = document.getElementById('mute-btn');
+    const muteIcon = document.getElementById('mute-icon');
+    const repeatBtn = document.getElementById('repeat-btn');
+    const repeatIcon = document.getElementById('repeat-icon');
 
-        // Audio Player Logic (kept inline)
-        const audio = document.getElementById('audio-player');
-        const playBtn = document.getElementById('play-btn');
-        const playIcon = document.getElementById('play-icon');
-        const art = document.getElementById('player-art');
-        const seekBar = document.getElementById('seek-bar');
-        const currentTimeSpan = document.getElementById('current-time');
-        const durationSpan = document.getElementById('duration');
-        const volumeBar = document.getElementById('volume-bar');
-        const muteBtn = document.getElementById('mute-btn');
-        const muteIcon = document.getElementById('mute-icon');
-        const repeatBtn = document.getElementById('repeat-btn');
-        const repeatIcon = document.getElementById('repeat-icon');
+    if (audio) {
+      audio.volume = 0.3;
 
-        audio.volume = 0.3;
+      function updateRangeBackground(range) {
+        const min = range.min ? parseFloat(range.min) : 0;
+        const max = range.max ? parseFloat(range.max) : 100;
+        const val = range.value ? parseFloat(range.value) : 0;
+        const percentage = ((val - min) / (max - min)) * 100;
+        range.style.background = `linear-gradient(to right, #fec90d ${percentage}%, rgba(255, 255, 255, 0.15) ${percentage}%)`;
+        range.style.backgroundSize = '100% 4px';
+        range.style.backgroundPosition = 'center';
+        range.style.backgroundRepeat = 'no-repeat';
+      }
 
-        function updateRangeBackground(range) {
-            const min = range.min ? parseFloat(range.min) : 0;
-            const max = range.max ? parseFloat(range.max) : 100;
-            const val = range.value ? parseFloat(range.value) : 0;
-            const percentage = ((val - min) / (max - min)) * 100;
-            range.style.background = `linear-gradient(to right, #fec90d ${percentage}%, rgba(255, 255, 255, 0.15) ${percentage}%)`;
-            range.style.backgroundSize = '100% 4px';
-            range.style.backgroundPosition = 'center';
-            range.style.backgroundRepeat = 'no-repeat';
-        }
+      updateRangeBackground(volumeBar);
+      updateRangeBackground(seekBar);
 
-        updateRangeBackground(volumeBar);
-        updateRangeBackground(seekBar);
+      let isRepeating = false;
+      let rotationAngle = 0;
+      let isDragging = false;
+      let lastPointerAngle = 0;
+      let dragHasMoved = false;
 
-        let isRepeating = false;
-        let rotationAngle = 0;
-        let isDragging = false;
-        let lastPointerAngle = 0;
-        let dragHasMoved = false;
+      requestAnimationFrame(animateArt);
 
+      function animateArt() {
+        if (!audio.paused && !isDragging) { rotationAngle = (rotationAngle + 0.5) % 360; }
+        if (art) art.style.transform = `rotate(${rotationAngle}deg)`;
         requestAnimationFrame(animateArt);
+      }
 
-        function animateArt() {
-            if (!audio.paused && !isDragging) {
-                rotationAngle = (rotationAngle + 0.5) % 360; 
-            }
-            art.style.transform = `rotate(${rotationAngle}deg)`;
-            requestAnimationFrame(animateArt);
-        }
+      function getPointerAngle(e) {
+        const rect = art.getBoundingClientRect();
+        const center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return Math.atan2(clientY - center.y, clientX - center.x) * (180 / Math.PI);
+      }
 
-        function getPointerAngle(e) {
-            const rect = art.getBoundingClientRect();
-            const center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return Math.atan2(clientY - center.y, clientX - center.x) * (180 / Math.PI);
-        }
+      function startDrag(e) { if (e.type === 'mousedown' && e.button !== 0) return; e.preventDefault(); isDragging = true; dragHasMoved = false; lastPointerAngle = getPointerAngle(e); }
+      function doDrag(e) { if (!isDragging) return; e.preventDefault(); dragHasMoved = true; const currentPointerAngle = getPointerAngle(e); let delta = currentPointerAngle - lastPointerAngle; if (delta > 180) delta -= 360; if (delta < -180) delta += 360; rotationAngle += delta; lastPointerAngle = currentPointerAngle; if (audio.duration) { const seekTimeChange = delta * (15 / 360); audio.currentTime = Math.min(Math.max(audio.currentTime + seekTimeChange, 0), audio.duration); } }
+      function endDrag(e) { if (!isDragging) return; isDragging = false; if (!dragHasMoved) { togglePlay(); } }
 
-        function startDrag(e) { if (e.type === 'mousedown' && e.button !== 0) return; e.preventDefault(); isDragging = true; dragHasMoved = false; lastPointerAngle = getPointerAngle(e); }
-        function doDrag(e) { if (!isDragging) return; e.preventDefault(); dragHasMoved = true; const currentPointerAngle = getPointerAngle(e); let delta = currentPointerAngle - lastPointerAngle; if (delta > 180) delta -= 360; if (delta < -180) delta += 360; rotationAngle += delta; lastPointerAngle = currentPointerAngle; if (audio.duration) { const seekTimeChange = delta * (15 / 360); audio.currentTime = Math.min(Math.max(audio.currentTime + seekTimeChange, 0), audio.duration); } }
-        function endDrag(e) { if (!isDragging) return; isDragging = false; if (!dragHasMoved) { togglePlay(); } }
+      art && art.addEventListener('mousedown', startDrag);
+      art && art.addEventListener('touchstart', startDrag, { passive: false });
+      window.addEventListener('mousemove', doDrag);
+      window.addEventListener('touchmove', doDrag, { passive: false });
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('touchend', endDrag);
 
-        art.addEventListener('mousedown', startDrag);
-        art.addEventListener('touchstart', startDrag, { passive: false });
-        window.addEventListener('mousemove', doDrag);
-        window.addEventListener('touchmove', doDrag, { passive: false });
-        window.addEventListener('mouseup', endDrag);
-        window.addEventListener('touchend', endDrag);
+      playBtn && playBtn.addEventListener('click', togglePlay);
 
-        playBtn.addEventListener('click', togglePlay);
+      function togglePlay() { if (audio.paused) { audio.play(); playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); } else { audio.pause(); playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); } }
 
-        function togglePlay() { if (audio.paused) { audio.play(); playIcon.classList.remove('fa-play'); playIcon.classList.add('fa-pause'); } else { audio.pause(); playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); } }
+      audio.addEventListener('timeupdate', () => { const value = (audio.currentTime / audio.duration) * 100; seekBar.value = value || 0; currentTimeSpan.textContent = formatTime(audio.currentTime); updateRangeBackground(seekBar); });
+      audio.addEventListener('loadedmetadata', () => { durationSpan.textContent = formatTime(audio.duration); });
+      if(audio.readyState >= 1) { durationSpan.textContent = formatTime(audio.duration); }
 
-        audio.addEventListener('timeupdate', () => { const value = (audio.currentTime / audio.duration) * 100; seekBar.value = value || 0; currentTimeSpan.textContent = formatTime(audio.currentTime); updateRangeBackground(seekBar); });
-        audio.addEventListener('loadedmetadata', () => { durationSpan.textContent = formatTime(audio.duration); });
-        if(audio.readyState >= 1) { durationSpan.textContent = formatTime(audio.duration); }
+      seekBar.addEventListener('input', () => { const time = (seekBar.value / 100) * audio.duration; audio.currentTime = time; updateRangeBackground(seekBar); });
 
-        seekBar.addEventListener('input', () => { const time = (seekBar.value / 100) * audio.duration; audio.currentTime = time; updateRangeBackground(seekBar); });
+      volumeBar.addEventListener('input', (e) => { audio.volume = e.target.value; if (audio.volume > 0 && audio.muted) { audio.muted = false; } updateMuteIcon(); updateRangeBackground(volumeBar); });
 
-        volumeBar.addEventListener('input', (e) => { audio.volume = e.target.value; if (audio.volume > 0 && audio.muted) { audio.muted = false; } updateMuteIcon(); updateRangeBackground(volumeBar); });
+      muteBtn && muteBtn.addEventListener('click', () => { if (audio.muted) { audio.muted = false; if (audio.volume === 0) { audio.volume = 0.3; } volumeBar.value = audio.volume; } else { audio.muted = true; volumeBar.value = 0; } updateMuteIcon(); updateRangeBackground(volumeBar); });
 
-        muteBtn.addEventListener('click', () => { if (audio.muted) { audio.muted = false; if (audio.volume === 0) { audio.volume = 0.3; } volumeBar.value = audio.volume; } else { audio.muted = true; volumeBar.value = 0; } updateMuteIcon(); updateRangeBackground(volumeBar); });
+      function updateMuteIcon() { if (audio.muted || audio.volume === 0) { muteIcon.className = 'fa fa-volume-off'; } else if (audio.volume < 0.5) { muteIcon.className = 'fa fa-volume-down'; } else { muteIcon.className = 'fa fa-volume-up'; } }
 
-        function updateMuteIcon() { if (audio.muted || audio.volume === 0) { muteIcon.className = 'fa fa-volume-off'; } else if (audio.volume < 0.5) { muteIcon.className = 'fa fa-volume-down'; } else { muteIcon.className = 'fa fa-volume-up'; } }
+      repeatBtn && repeatBtn.addEventListener('click', () => { isRepeating = !isRepeating; if (isRepeating) { repeatIcon.style.color = '#fec90d'; audio.loop = true; repeatBtn.title = "Repeat One: On"; } else { repeatIcon.style.color = 'inherit'; audio.loop = false; repeatBtn.title = "Repeat One: Off"; } });
 
-        repeatBtn.addEventListener('click', () => { isRepeating = !isRepeating; if (isRepeating) { repeatIcon.style.color = '#fec90d'; audio.loop = true; repeatBtn.title = "Repeat One: On"; } else { repeatIcon.style.color = 'inherit'; audio.loop = false; repeatBtn.title = "Repeat One: Off"; } });
+      audio.addEventListener('ended', () => { if(!isRepeating) { playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); rotationAngle = 0; art && (art.style.transform = `rotate(0deg)`); seekBar.value = 0; currentTimeSpan.textContent = "0:00"; } });
 
-        audio.addEventListener('ended', () => { if(!isRepeating) { playIcon.classList.remove('fa-pause'); playIcon.classList.add('fa-play'); rotationAngle = 0; art.style.transform = `rotate(0deg)`; seekBar.value = 0; currentTimeSpan.textContent = "0:00"; } });
+      function formatTime(seconds) { if(isNaN(seconds)) return "0:00"; const mins = Math.floor(seconds / 60); const secs = Math.floor(seconds % 60); return `${mins}:${secs < 10 ? '0' : ''}${secs}`; }
+    }
+  </script>
+</BaseLayout>
 
-        function formatTime(seconds) { if(isNaN(seconds)) return "0:00"; const mins = Math.floor(seconds / 60); const secs = Math.floor(seconds % 60); return `${mins}:${secs < 10 ? '0' : ''}${secs}`; }
-    </script>
-    <script is:inline type="text/javascript" src="/assets/js/typer.js"></script>
-</body>
-</html>
