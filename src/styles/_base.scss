@@ -1,6 +1,10 @@
 /* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
 body {
     font-family: var(--font-family);
+    font-optical-sizing: var(--font-optical-sizing, auto);
+    font-weight: var(--font-weight, 400);
+    font-style: var(--font-style, normal);
+    font-variation-settings: var(--font-variation-settings, "wdth" 100);
     margin: 0;
     padding: 0;
     background: linear-gradient(rgba(1, 47, 99, 0.8), rgba(1, 47, 99, 0.8)), url('/assets/images/bg.jpg');
