@@ -15,8 +15,8 @@
     .gallery-item {
         background: var(--glass-bg);
         border: 1px solid var(--glass-border);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
         border-radius: 12px;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
