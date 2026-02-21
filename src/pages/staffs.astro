@@ -141,7 +141,7 @@ const categories = ["All", "AT", "CLERK", "GROUP D"];
                         >
                             <div class="row">
                                 {staffList.filter(staff => category === 'All' || (category === 'AT' && (staff.role === 'AT' || staff.role === 'AHM CUM TIC')) || staff.role === category).map(staff => (
-                                    <div class="col-md-3" style="padding-bottom: 15px">
+                                    <div class="col-6 col-md-3" style="padding-bottom: 15px">
                                         <div class="card" style="width: 100%">
                                             <img class="card-img-top" src={staff.img} alt={staff.name} />
                                             <div class="card-body" style="height: 160px">
