@@ -15,7 +15,7 @@
 
     .chem-card {
         background: var(--primary-bg);
-        border-radius: 8px;
+        border-radius: var(--radius);
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         padding: 20px;
         text-align: center;
@@ -52,7 +52,7 @@
     color: var(--primary-bg);
     font-weight: bold;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: calc(var(--radius) * 0.625);
     transition: all 0.3s ease;
 
     &:hover {

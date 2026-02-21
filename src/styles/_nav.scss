@@ -2,9 +2,9 @@
 nav {
     background: rgba(255, 255, 255, 0.08);
     padding: 8px 10px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    border-radius: 50px;
+    -webkit-border-radius: calc(var(--radius) * 6.25);
+    -moz-border-radius: calc(var(--radius) * 6.25);
+    border-radius: calc(var(--radius) * 6.25);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     border: 1px solid var(--glass-border);
@@ -16,9 +16,9 @@ nav {
 
     @media (max-width: 768px) {
         width: 95%;
-        -webkit-border-radius: 25px;
-        -moz-border-radius: 25px;
-        border-radius: 25px;
+        -webkit-border-radius: calc(var(--radius) * 3.125);
+        -moz-border-radius: calc(var(--radius) * 3.125);
+        border-radius: calc(var(--radius) * 3.125);
         padding: 8px;
         margin-top: 15px;
     }
@@ -49,9 +49,9 @@ nav {
         font-size: 1.05em;
         font-weight: 500;
         padding: 10px 20px;
-        -webkit-border-radius: 30px;
-        -moz-border-radius: 30px;
-        border-radius: 30px;
+        -webkit-border-radius: calc(var(--radius) * 3.75);
+        -moz-border-radius: calc(var(--radius) * 3.75);
+        border-radius: calc(var(--radius) * 3.75);
         display: block;
 
         @media (max-width: 768px) {

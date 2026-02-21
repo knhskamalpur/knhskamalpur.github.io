@@ -41,9 +41,9 @@ main {
         -webkit-backdrop-filter: blur(3px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         padding: 2rem;
-        -webkit-border-radius: 15px;
-        -moz-border-radius: 15px;
-        border-radius: 15px;
+        -webkit-border-radius: var(--radius);
+        -moz-border-radius: var(--radius);
+        border-radius: var(--radius);
         -webkit-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         -moz-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);

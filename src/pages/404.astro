@@ -50,7 +50,7 @@ import '../styles/styles.scss';
             color: #00234a;
             padding: 12px 30px;
             text-decoration: none;
-            border-radius: 25px;
+            border-radius: calc(var(--radius) * 3.125);
             font-weight: bold;
             font-size: 1.1rem;
             transition: all 0.3s ease;
@@ -67,7 +67,7 @@ import '../styles/styles.scss';
             margin-top: 40px;
             padding: 20px;
             background: var(--glass-bg, rgba(255, 255, 255, 0.1));
-            border-radius: 15px;
+            border-radius: var(--radius);
             border: 2px dashed var(--accent, #fec90d);
             max-width: 400px;
             width: 90%;
@@ -100,7 +100,7 @@ import '../styles/styles.scss';
             width: 90px;
             padding: 10px;
             font-size: 1.2rem;
-            border-radius: 8px;
+            border-radius: var(--radius);
             border: 2px solid var(--glass-border, rgba(255,255,255,0.1));
             background: rgba(255, 255, 255, 0.9);
             color: #012f63;
@@ -113,7 +113,7 @@ import '../styles/styles.scss';
             color: #00234a;
             border: none;
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: var(--radius);
             cursor: pointer;
             font-weight: bold;
             font-size: 1rem;
@@ -143,7 +143,7 @@ import '../styles/styles.scss';
         .stat-box {
             background: rgba(0, 0, 0, 0.2);
             padding: 5px 12px;
-            border-radius: 20px;
+            border-radius: var(--radius);
         }
     </style>
 </head>
@@ -157,7 +157,7 @@ import '../styles/styles.scss';
             
             <div id="game-container">
                 <div class="game-title">Lost? Solve this to find your way!</div>
-                <div id="timer-bar" style="height: 4px; background: var(--accent); width: 0%; margin-bottom: 10px; transition: width 0.1s linear; border-radius: 2px;"></div>
+                <div id="timer-bar" style="height: 4px; background: var(--accent); width: 0%; margin-bottom: 10px; transition: width 0.1s linear; border-radius: calc(var(--radius) / 4);"></div>
                 <div class="game-play-area">
                     <span id="equation">...</span>
                     <input type="text" id="answer-input" placeholder="?">

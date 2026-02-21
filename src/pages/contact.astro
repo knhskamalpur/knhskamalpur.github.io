@@ -11,9 +11,9 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         -webkit-backdrop-filter: blur(3px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         padding: 2rem;
-        -webkit-border-radius: 15px;
-        -moz-border-radius: 15px;
-        border-radius: 15px;
+        -webkit-border-radius: var(--radius);
+        -moz-border-radius: var(--radius);
+        border-radius: var(--radius);
         max-width: 900px;
         width: 100%;
         text-align: left;
@@ -56,9 +56,9 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         margin: 30px auto 0;
         background-color: rgba(255, 255, 255, 0.05);
         padding: 20px;
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
-        border-radius: 8px;
+        -webkit-border-radius: var(--radius);
+        -moz-border-radius: var(--radius);
+        border-radius: var(--radius);
       }
     </style>
   </span>
@@ -91,7 +91,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3664.4161162409273!2d86.84419097532219!3d23.30065647897977!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f6544c82bf163f%3A0x548626cd6e7c166d!2sKamalpur%20Netaji%20High%20School!5e0!3m2!1sen!2sin!4v1769774306759!5m2!1sen!2sin"
         width="600"
         height="450"
-        style="border: 0; max-width: 100%; -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px"
+        style="border: 0; max-width: 100%; -webkit-border-radius: var(--radius); -moz-border-radius: var(--radius); border-radius: var(--radius)"
         allowfullscreen=""
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"

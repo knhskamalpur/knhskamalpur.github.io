@@ -10,7 +10,7 @@ import "../../../styles/apps/chem/style.scss"
         #composer-container {
             height: 70vh;
             border: 2px solid #012f63;
-            border-radius: 8px;
+            border-radius: var(--radius);
             overflow: hidden;
         }
         .controls-panel {
@@ -24,7 +24,7 @@ import "../../../styles/apps/chem/style.scss"
             background: var(--primary-bg);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: calc(var(--radius) / 2);
             cursor: pointer;
         }
         .btn-action:hover {

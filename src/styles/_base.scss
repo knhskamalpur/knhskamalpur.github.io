@@ -52,11 +52,11 @@ section {
 }
 ::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
+    border-radius: var(--radius);
 }
 ::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, var(--accent), #e0b00b);
-    border-radius: 6px;
+    border-radius: var(--radius);
     border: 3px solid transparent;
     background-clip: content-box;
 }

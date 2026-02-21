@@ -17,7 +17,7 @@
         border: 1px solid var(--glass-border);
         backdrop-filter: blur(2px);
         -webkit-backdrop-filter: blur(2px);
-        border-radius: 7px;
+        border-radius: var(--radius);
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         display: inline-block;
