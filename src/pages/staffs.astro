@@ -44,124 +44,273 @@ const categories = ["All", "AT", "CLERK", "GROUP D"];
 ---
 
 <BaseLayout title="Staffs">
-    <link slot="head" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <style slot="head">
-        /* Override main max-width from styles.css to allow full bootstrap container width */
-        main {
-            max-width: none !important;
-            padding: 20px 0 !important;
+        /* Custom Staff Styles */
+        .staff-section {
+            padding: 20px 0;
+            margin-bottom: 60px;
         }
 
-        /* Helper classes found in snippet */
-        .pt-10 { padding-top: 10px; }
-        .pt-40 { padding-top: 40px; }
-        .pt-60 { padding-top: 60px; }
-        .pb-20 { padding-bottom: 20px; }
-        .pb-30 { padding-bottom: 30px; }
-        .p-20 { padding: 20px; }
-        .mb-30 { margin-bottom: 30px; }
-        .fz-16 { font-size: 16px; }
-        .fw400 { font-weight: 400; }
-        .fw500 { font-weight: 500; }
+        .staff-header-text {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #fff;
+            text-align: center;
+        }
 
-        .nav_link_active_yellow.active {
+        .staff-intro {
+            text-align: justify;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #fff;
+            margin-bottom: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Tabs Styling */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tab-item {
+            display: inline-block;
+        }
+
+        .tab-btn {
+            display: block;
+            padding: 12px 24px;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
             background-color: #fec90d !important;
             color: #012f63 !important;
+            box-shadow: 0 4px 15px rgba(254, 201, 13, 0.3);
         }
 
-        .text-black { color: black; }
+        /* Content Container */
+        .tab-content {
+            position: relative;
+            min-height: 400px;
+        }
+
+        /* Grid Layout */
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1100px) {
+            .staff-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .staff-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .staff-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
         /* Glassmorphism Card Style */
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px);
-            -moz-backdrop-filter: blur(3px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .staff-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             color: #fff;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
         }
 
-
-        .card .text-primary { color: #fec90d !important; }
-
-        .card-img-top {
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
+        .staff-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
         }
 
-        /* Responsive Staff Name Font Size */
-        .card-text {
-            font-size: 1.25rem;
-            line-height: 1.3;
+        .staff-img-container {
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
         }
-        
-        @media (max-width: 1200px) { .card-text { font-size: 1.1rem; } }
-        @media (max-width: 991px) { .card-text { font-size: 1rem; } }
-        @media (max-width: 767px) { .card-text { font-size: 1.2rem; } }
-        @media (max-width: 480px) { .card-text { font-size: 1.1rem; } }
+
+        .staff-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .staff-card:hover .staff-img {
+            transform: scale(1.05);
+        }
+
+        .staff-body {
+            padding: 20px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .staff-role {
+            color: #fec90d;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            opacity: 0.9;
+        }
+
+        .staff-name {
+            font-size: 1.15rem;
+            line-height: 1.4;
+            margin: 0;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Tab Content Visibility */
+        .tab-pane {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.4s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1200px) { .staff-name { font-size: 1.1rem; } }
+        @media (max-width: 991px) { .staff-name { font-size: 1rem; } }
     </style>
 
-    <div class="container">
-        <div class="row pt-40">
-            <div class="col-md-12">
-                <h2 class="pb-20">Our Staff</h2>
-                <p class="text-justify fz-16 fw400 line_height text-white">
-                    OUR TEACHERS PLAY AN INSTRUMENTAL ROLE IN THE LEARNING AND DEVELOPMENT OF THE THE KIDS. THEY HELPES THE STUDENTS RAISE THE BAR IN THE FIELD OF EDUCATION AND GIVE THEM PROPER GUIDE FOR FUTURE LIFE.
-                </p>
-            </div>
-            <div class="col-md-12 pt-60">
-                <h2 class="pb-30">Our Staff list</h2>
-                <ul class="nav nav-pills mb-30 row justify-content-center" id="pills-tab" role="tablist">
-                    {categories.map((category, index) => (
-                        <li class="nav-item">
-                            <a 
-                                class={`nav-link nav_link_active_yellow ${index === 0 ? 'active' : ''}`} 
-                                id={`pills-${category.toLowerCase().replace(' ', '')}-tab`} 
-                                data-toggle="pill" 
-                                href={`#pills-${category.toLowerCase().replace(' ', '')}`} 
-                                role="tab" 
-                                aria-controls={`pills-${category.toLowerCase().replace(' ', '')}`} 
-                                aria-selected={index === 0 ? 'true' : 'false'}
-                            >
-                                {category}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    {categories.map((category, index) => (
-                        <div 
-                            class={`tab-pane fade ${index === 0 ? 'show active' : ''}`} 
-                            id={`pills-${category.toLowerCase().replace(' ', '')}`} 
-                            role="tabpanel" 
-                            aria-labelledby={`pills-${category.toLowerCase().replace(' ', '')}-tab`}
+    <section class="staff-section">
+        <h2 class="staff-header-text">Our Staff</h2>
+        <p class="staff-intro">
+            OUR TEACHERS PLAY AN INSTRUMENTAL ROLE IN THE LEARNING AND DEVELOPMENT OF THE THE KIDS. THEY HELPES THE STUDENTS RAISE THE BAR IN THE FIELD OF EDUCATION AND GIVE THEM PROPER GUIDE FOR FUTURE LIFE.
+        </p>
+        
+        <h2 class="staff-header-text" style="margin-top: 80px; margin-bottom: 40px;">Staff Directory</h2>
+        
+        <div class="category-nav" aria-label="Staff category filtering">
+            <ul class="category-tabs">
+                {categories.map((category, index) => (
+                    <li class="tab-item">
+                        <button 
+                            class={`tab-btn ${index === 0 ? 'active' : ''}`} 
+                            data-target={`pane-${category.toLowerCase().replace(/\s+/g, '-')}`}
+                            aria-pressed={index === 0 ? 'true' : 'false'}
                         >
-                            <div class="row">
-                                {staffList.filter(staff => category === 'All' || (category === 'AT' && (staff.role === 'AT' || staff.role === 'AHM CUM TIC')) || staff.role === category).map(staff => (
-                                    <div class="col-6 col-md-3" style="padding-bottom: 15px">
-                                        <div class="card" style="width: 100%">
-                                            <img class="card-img-top" src={staff.img} alt={staff.name} />
-                                            <div class="card-body" style="height: 160px">
-                                                <p class="pt-10 mb-0 text-primary fw500">{staff.role}</p>
-                                                <h4 class="card-text">{staff.name}</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+                            {category}
+                        </button>
+                    </li>
+                ))}
+            </ul>
         </div>
-    </div>
 
-    <Fragment slot="scripts">
-        <script is:inline src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script is:inline src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-        <script is:inline src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </Fragment>
+        <div class="tab-content">
+            {categories.map((category, index) => (
+                <div 
+                    class={`tab-pane ${index === 0 ? 'active' : ''}`} 
+                    id={`pane-${category.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                    <div class="staff-grid">
+                        {staffList.filter(staff => category === 'All' || (category === 'AT' && (staff.role === 'AT' || staff.role === 'AHM CUM TIC')) || staff.role === category).map(staff => (
+                            <div class="staff-card">
+                                <div class="staff-img-container">
+                                    <img class="staff-img" src={staff.img} alt={`Photo of ${staff.name}`} loading="lazy" />
+                                </div>
+                                <div class="staff-body">
+                                    <span class="staff-role">{staff.role}</span>
+                                    <h4 class="staff-name">{staff.name}</h4>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </section>
+
+    <script is:inline>
+        function initStaffTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.getAttribute('data-target');
+
+                    // Update Tab UI
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                        t.setAttribute('aria-pressed', 'false');
+                    });
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-pressed', 'true');
+
+                    // Update Panes UI
+                    panes.forEach(p => {
+                        if (p.id === targetId) {
+                            p.classList.add('active');
+                        } else {
+                            p.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Run on initial load
+        initStaffTabs();
+
+        // Support for Astro view transitions
+        document.addEventListener('astro:after-swap', initStaffTabs);
+    </script>
 </BaseLayout>
