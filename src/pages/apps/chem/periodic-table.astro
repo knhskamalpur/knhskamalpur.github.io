@@ -18,7 +18,9 @@ import "../../../styles/apps/chem/style.scss"
             gap: 3px;
             margin: 20px 0;
             padding: 15px;
-            background: #fff;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: calc(var(--radius) * 1.5);
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             width: 100%;
@@ -75,12 +77,14 @@ import "../../../styles/apps/chem/style.scss"
         #element-details {
             margin-top: 30px;
             padding: 20px;
-            background: #f4f4f4;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: var(--radius);
             display: flex;
             gap: 30px;
             align-items: center;
-            color: #333;
+            color: var(--accent);
         }
         .detail-card {
             background: white;
@@ -89,7 +93,7 @@ import "../../../styles/apps/chem/style.scss"
             text-align: center;
             min-width: 150px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            color: #333;
+            color: var(--primary-bg);
         }
         .detail-card .symbol-large {
             font-size: 4rem;
@@ -97,7 +101,7 @@ import "../../../styles/apps/chem/style.scss"
             display: block;
         }
         .detail-info p {
-            color: #444;
+            color: var(--accent)
             margin: 5px 0;
         }
     </style>
