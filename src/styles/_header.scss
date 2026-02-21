@@ -1,20 +1,34 @@
 /* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
 header {
+    background: -webkit-linear-gradient(315deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
+    background: -moz-linear-gradient(315deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
+    background: -o-linear-gradient(315deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
     background: linear-gradient(135deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
     padding: 25px 0 35px;
+    -webkit-box-shadow: 0 4px 20px var(--shadow-dark);
+    -moz-box-shadow: 0 4px 20px var(--shadow-dark);
     box-shadow: 0 4px 20px var(--shadow-dark);
     position: relative;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     text-align: center; /* Ensures nav centers */
 
     .header-content {
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
         align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
         justify-content: center;
         gap: 25px;
         margin-bottom: 25px;
 
         @media (max-width: 768px) {
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
             flex-direction: column;
             text-align: center;
         }
@@ -23,6 +37,9 @@ header {
     .logo {
         width: 100px;
         height: 100px;
+        -webkit-filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.862));
+        -moz-filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.862));
+        -o-filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.862));
         filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.862));
 
         @media (max-width: 768px) {
@@ -42,11 +59,20 @@ header {
     }
 
     .header-text {
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
         flex-direction: column;
+        -webkit-box-align: start;
+        -ms-flex-align: start;
         align-items: flex-start; /* Align text to the left relative to the container */
 
         @media (max-width: 768px) {
+            -webkit-box-align: center;
+            -ms-flex-align: center;
             align-items: center; /* Center text on mobile */
         }
     }

@@ -1,5 +1,7 @@
 /* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
 main {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
     flex: 1;
     padding: 40px 20px;
     max-width: 1000px;
@@ -18,6 +20,10 @@ main {
         -webkit-text-fill-color: transparent;
         background-clip: text;
         text-shadow: 0 0 10px rgba(254, 201, 13, 0.5);
+        -webkit-transition: text-shadow 0.3s ease;
+        -moz-transition: text-shadow 0.3s ease;
+        -ms-transition: text-shadow 0.3s ease;
+        -o-transition: text-shadow 0.3s ease;
         transition: text-shadow 0.3s ease;
         text-shadow: 0 0 20px rgba(254, 201, 13, 0.8), 0 0 30px rgba(254, 201, 13, 0.6);
     }
@@ -35,12 +41,18 @@ main {
         -webkit-backdrop-filter: blur(3px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         padding: 2rem;
+        -webkit-border-radius: 15px;
+        -moz-border-radius: 15px;
         border-radius: 15px;
+        -webkit-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        -moz-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         max-width: 900px;
         width: 100%;
         text-align: center;
         color: white;
+        -webkit-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 
         p {
