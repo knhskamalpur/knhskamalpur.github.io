@@ -3,7 +3,7 @@ body {
     font-family: var(--font-family);
     margin: 0;
     padding: 0;
-    background: linear-gradient(rgba(1, 47, 99, 0.8), rgba(1, 47, 99, 0.8)), url('../images/bg.jpg');
+    background: linear-gradient(rgba(1, 47, 99, 0.8), rgba(1, 47, 99, 0.8)), url('/assets/images/bg.jpg');
     background-repeat: repeat;
     color: var(--text-primary);
     display: flex;
