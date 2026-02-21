@@ -1,0 +1,58 @@
+/* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
+.gallery-grid {
+    column-count: 3;
+    column-gap: 25px;
+    padding: 20px 0;
+
+    @media (max-width: 900px) {
+        column-count: 2;
+    }
+
+    @media (max-width: 600px) {
+        column-count: 1;
+    }
+
+    .gallery-item {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 25px;
+        break-inside: avoid;
+        padding: 18px;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .gallery-image, img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0;
+            border-radius: 0; /* Let container handle radius */
+        }
+
+        .gallery-caption {
+            padding: 15px;
+            color: var(--accent);
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 500;
+            text-transform: capitalize;
+            background: rgba(0, 0, 0, 0.2);
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
