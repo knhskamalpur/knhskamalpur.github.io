@@ -32,7 +32,7 @@ nav {
     }
 
     a {
-        color: rgba(255, 255, 255);
+        color: #ffffff;
         text-decoration: none;
         font-size: 1.05em;
         font-weight: 500;
@@ -52,7 +52,7 @@ nav {
 
         &:hover, &:focus, &.active {
             background-color: var(--accent);
-            color: var(--primary-bg) !important;
+            color: #012f63 !important;
             text-decoration: none;
             box-shadow: 0 4px 12px rgba(254, 201, 13, 0.3);
         }
