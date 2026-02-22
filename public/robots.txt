@@ -1,0 +1,6 @@
+# Allow all robots to access the entire site
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://knhs.in/sitemap-index.xml
