@@ -1,7 +1,8 @@
 ---
 import HitsCounter from './HitsCounter.astro';
 
-const buildTime = new Date().toLocaleString('en-IN', {
+const now = new Date();
+const buildTime = now.toLocaleString('en-IN', {
   year: 'numeric',
   month: 'short',
   day: 'numeric',
@@ -11,6 +12,8 @@ const buildTime = new Date().toLocaleString('en-IN', {
   timeZone: 'Asia/Kolkata',
   timeZoneName: 'short'
 });
+
+const year = now.getFullYear();
 ---
 <footer>
   <div class="footer-content" style="display:flex;justify-content:space-around;flex-wrap:wrap;text-align:left;margin-bottom:20px;">
@@ -35,6 +38,6 @@ const buildTime = new Date().toLocaleString('en-IN', {
     </div>
   </div>
   <HitsCounter />
-  <p>&copy; <span id="year"></span> Kamalpur Netaji High School. All rights reserved.</p>
+  <p>&copy; <span id="year">{year}</span> Kamalpur Netaji High School. All rights reserved.</p>
   <!-- <p style="font-size: 0.6em; color: #aaa; margin-top: 5px;">Last Updated: {buildTime}</p> -->
 </footer>
