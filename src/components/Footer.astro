@@ -1,4 +1,6 @@
 ---
+import HitsCounter from './HitsCounter.astro';
+
 const buildTime = new Date().toLocaleString('en-IN', {
   year: 'numeric',
   month: 'short',
@@ -32,6 +34,7 @@ const buildTime = new Date().toLocaleString('en-IN', {
       </ul>
     </div>
   </div>
+  <HitsCounter />
   <p>&copy; <span id="year"></span> Kamalpur Netaji High School. All rights reserved.</p>
   <!-- <p style="font-size: 0.6em; color: #aaa; margin-top: 5px;">Last Updated: {buildTime}</p> -->
 </footer>
