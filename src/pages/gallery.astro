@@ -10,7 +10,7 @@ const images = [
   "733715.jpg", "808033.jpg", "811507.jpg", "813070.jpg", "820099.jpg",
   "82443.jpg", "82517.jpg", "829353.jpg", "840160.jpg", "850163.jpg",
   "872161.jpg", "964003.jpg", "969723.jpg", "991940.jpg"
-].sort(() => Math.random() - 0.5);
+];
 ---
 
 <BaseLayout title="Gallery">
@@ -31,4 +31,21 @@ const images = [
       ))}
     </div>
   </section>
+
+  <script is:inline>
+    function shuffleGallery() {
+      const grid = document.querySelector('.gallery-grid');
+      if (grid) {
+        const nodes = Array.from(grid.children);
+        nodes.sort(() => Math.random() - 0.5);
+        nodes.forEach(node => grid.appendChild(node));
+      }
+    }
+
+    // Run on initial load
+    shuffleGallery();
+
+    // Support for Astro view transitions
+    document.addEventListener('astro:after-swap', shuffleGallery);
+  </script>
 </BaseLayout>

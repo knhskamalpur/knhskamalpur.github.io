@@ -17,7 +17,7 @@ const events = [
   { img: "respect_to_ex_hm__P__2.jpg", caption: "Respect to Ex-HM" },
   { img: "students_habit__P.jpg", caption: "Students Habit" },
   { img: "wall_megazine__L.jpg", caption: "Wall Magazine" }
-].sort(() => Math.random() - 0.5);
+];
 ---
 
 <BaseLayout title="Various Events">
@@ -33,4 +33,21 @@ const events = [
       ))}
     </div>
   </section>
+
+  <script is:inline>
+    function shuffleEvents() {
+      const grid = document.querySelector('.gallery-grid');
+      if (grid) {
+        const nodes = Array.from(grid.children);
+        nodes.sort(() => Math.random() - 0.5);
+        nodes.forEach(node => grid.appendChild(node));
+      }
+    }
+
+    // Run on initial load
+    shuffleEvents();
+
+    // Support for Astro view transitions
+    document.addEventListener('astro:after-swap', shuffleEvents);
+  </script>
 </BaseLayout>

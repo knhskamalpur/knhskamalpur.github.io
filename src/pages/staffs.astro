@@ -38,7 +38,7 @@ const staffList = [
   { name: "Ananda Bauri", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
   { name: "Swati Khan", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
   { name: "Pradip Kar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
-].sort(() => Math.random() - 0.5);
+];
 
 const categories = ["All", "AT", "CLERK", "GROUP D"];
 ---
@@ -279,9 +279,21 @@ const categories = ["All", "AT", "CLERK", "GROUP D"];
     </section>
 
     <script is:inline>
+        function shuffleGrids() {
+            const grids = document.querySelectorAll('.staff-grid');
+            grids.forEach(grid => {
+                const nodes = Array.from(grid.children);
+                nodes.sort(() => Math.random() - 0.5);
+                nodes.forEach(node => grid.appendChild(node));
+            });
+        }
+
         function initStaffTabs() {
             const tabs = document.querySelectorAll('.tab-btn');
             const panes = document.querySelectorAll('.tab-pane');
+
+            // Randomize grids on runtime
+            shuffleGrids();
 
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {

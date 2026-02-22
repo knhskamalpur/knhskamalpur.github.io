@@ -10,7 +10,7 @@ const carouselItems = [
     { img: "games__L.jpg", title: "Games" },
     { img: "physical_edication__L.jpg", title: "Physical Education" },
     { img: "wall_megazine__L.jpg", title: "Wall Magazine" }
-].sort(() => Math.random() - 0.5);
+];
 ---
 
 <BaseLayout title="Home">
@@ -34,8 +34,16 @@ const carouselItems = [
     <script slot="scripts" is:inline type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script slot="scripts" is:inline type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script slot="scripts" is:inline>
-        $(document).ready(function(){
-            $(".owl-carousel").owlCarousel({
+        function initCarousel() {
+            const $carousel = $(".owl-carousel");
+            if (!$carousel.length) return;
+
+            // Randomize items
+            const $items = $carousel.children('.item');
+            $items.sort(() => Math.random() - 0.5);
+            $carousel.empty().append($items);
+
+            $carousel.owlCarousel({
                 loop:true,
                 margin:10,
                 nav:true,
@@ -49,6 +57,9 @@ const carouselItems = [
                     1000:{items:1,nav:true,loop:true}
                 }
             });
-        });
+        }
+
+        $(document).ready(initCarousel);
+        document.addEventListener('astro:after-swap', initCarousel);
     </script>
 </BaseLayout>
