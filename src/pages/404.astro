@@ -1,0 +1,303 @@
+---
+import '../styles/styles.scss';
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#012f63">
+    <title>Page Not Found - Kamalpur Netaji High School</title>
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <style>
+        .error-content {
+            text-align: center;
+            padding: 60px 20px;
+            min-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .error-code {
+            font-size: 8rem;
+            color: #fec90d;
+            margin: 0;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .error-title {
+            font-size: 2rem;
+            margin: 10px 0 20px;
+        }
+        .error-desc {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .back-btn {
+            display: inline-block;
+            background-color: #fec90d;
+            color: #00234a;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: calc(var(--radius) * 3.125);
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+            background-color: #e6b60c;
+        }
+
+        /* Math Game Styles */
+        #game-container {
+            margin-top: 40px;
+            padding: 20px;
+            background: var(--glass-bg, rgba(255, 255, 255, 0.1));
+            border-radius: var(--radius);
+            border: 2px dashed var(--accent, #fec90d);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .game-title {
+            font-size: 1.2rem;
+            color: var(--accent, #fec90d);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .game-play-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        #equation {
+            font-size: 2.2rem;
+            margin: 0;
+            color: var(--text-primary, #fff);
+            letter-spacing: 2px;
+            font-family: var(--font-family, serif);
+        }
+        #answer-input {
+            width: 90px;
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: var(--radius);
+            border: 2px solid var(--glass-border, rgba(255,255,255,0.1));
+            background: rgba(255, 255, 255, 0.9);
+            color: #012f63;
+            text-align: center;
+            margin: 0;
+            outline: none;
+        }
+        #submit-ans {
+            background-color: var(--accent, #fec90d);
+            color: #00234a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        #submit-ans:hover {
+            background-color: #e6b60c;
+            transform: translateY(-1px);
+        }
+        #submit-ans:active {
+            transform: scale(0.95);
+        }
+        #feedback {
+            margin-top: 15px;
+            min-height: 24px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .streak {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary, #ccc);
+            display: flex;
+            justify-content: space-around;
+        }
+        .stat-box {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 12px;
+            border-radius: var(--radius);
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="error-content">
+            <img src="/assets/images/knhs.webp" alt="KNHS Logo" class="logo" style="max-width: 150px; margin-bottom: 20px;">
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Page Not Found</h2>
+            <p class="error-desc">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+            
+            <div id="game-container">
+                <div class="game-title">Lost? Solve this to find your way!</div>
+                <div id="timer-bar" style="height: 4px; background: var(--accent); width: 0%; margin-bottom: 10px; transition: width 0.1s linear; border-radius: calc(var(--radius) / 4);"></div>
+                <div class="game-play-area">
+                    <span id="equation">...</span>
+                    <input type="text" id="answer-input" placeholder="?">
+                    <button id="submit-ans">Check</button>
+                </div>
+                <div id="feedback"></div>
+                <div class="streak">
+                    <span class="stat-box">Streak: <span id="streak-count">0</span></span>
+                    <span class="stat-box">Best: <span id="best-time">--</span>s</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <a href="/" class="back-btn"><i class="fa fa-home"></i> Back to Home</a>
+            </div>
+        </div>
+    </main>
+    <script is:inline>
+        (function() {
+            const equationEl = document.getElementById('equation');
+            const inputEl = document.getElementById('answer-input');
+            const submitBtn = document.getElementById('submit-ans');
+            const feedbackEl = document.getElementById('feedback');
+            const streakEl = document.getElementById('streak-count');
+            const bestTimeEl = document.getElementById('best-time');
+            const timerBar = document.getElementById('timer-bar');
+            
+            let currentAnswer;
+            let streak = 0;
+            let startTime;
+            let bestTime = Infinity;
+            let timerInterval;
+
+            function updateTimer() {
+                const elapsed = (Date.now() - startTime) / 1000;
+                const timeLimit = 10; // 10 seconds to solve - reduced from 15
+                const percent = Math.min((elapsed / timeLimit) * 100, 100);
+                
+                timerBar.style.width = percent + '%';
+                
+                if (percent >= 100) {
+                    clearInterval(timerInterval);
+                    streak = 0;
+                    streakEl.textContent = streak;
+                    feedbackEl.textContent = "Time's up! Next one... ⏰";
+                    feedbackEl.style.color = '#ff9800';
+                    // Quick retry after time expires
+                    setTimeout(generateEquation, 1); 
+                } else if (percent >= 70) {
+                    timerBar.style.background = '#f44336'; // Turn red when almost out of time
+                } else {
+                    timerBar.style.background = 'var(--accent, #fec90d)';
+                }
+            }
+
+            function generateEquation() {
+                clearInterval(timerInterval);
+                const ops = ['+', '-', '*'];
+                let op = ops[Math.floor(Math.random() * (streak > 5 ? 3 : 2))]; 
+                let a, b;
+
+                if (streak > 15) op = '*'; 
+
+                if (op === '*') {
+                    const max = streak > 10 ? 15 : 12;
+                    a = Math.floor(Math.random() * max) + 2;
+                    b = Math.floor(Math.random() * max) + 2;
+                } else {
+                    const max = streak > 10 ? 100 : 50;
+                    a = Math.floor(Math.random() * max) + 10;
+                    b = Math.floor(Math.random() * max) + 10;
+                }
+
+                if (op === '-' && a < b) [a, b] = [b, a];
+
+                equationEl.textContent = `${a} ${op === '*' ? '×' : op} ${b} =`;
+                currentAnswer = op === '+' ? a + b : op === '-' ? a - b : a * b;
+                inputEl.value = '';
+                inputEl.focus();
+                
+                startTime = Date.now();
+                timerBar.style.width = '0%';
+                timerInterval = setInterval(updateTimer, 100);
+            }
+
+            function checkAnswer() {
+                const userAns = parseInt(inputEl.value);
+                if (userAns === currentAnswer) {
+                    clearInterval(timerInterval);
+                    const timeTaken = (Date.now() - startTime) / 1000;
+                    streak++;
+                    
+                    let speedRank = '';
+                    if (timeTaken < 1.5) speedRank = '⚡ Lightning Fast!';
+                    else if (timeTaken < 3) speedRank = '🚀 Super Quick!';
+                    else speedRank = '✅ Correct!';
+
+                    let timeMsg = `${speedRank} (${timeTaken.toFixed(1)}s)`;
+                    
+                    if (timeTaken < bestTime && streak > 1) {
+                        bestTime = timeTaken;
+                        bestTimeEl.textContent = bestTime.toFixed(1);
+                        timeMsg = `🔥 New Record: ${timeTaken.toFixed(1)}s!`;
+                    } else if (streak === 1) {
+                        bestTime = timeTaken;
+                        bestTimeEl.textContent = bestTime.toFixed(1);
+                    }
+
+                    feedbackEl.textContent = streak % 5 === 0 ? `Streak ${streak}! ${timeMsg}` : timeMsg;
+                    feedbackEl.style.color = '#4CAF50';
+                    streakEl.textContent = streak;
+                    
+                    if (streak % 10 === 0) {
+                        feedbackEl.style.fontSize = '1.2rem';
+                        // Revert font size scaling after animation
+                        setTimeout(() => feedbackEl.style.fontSize = '1.1rem', 300);
+                    }
+
+                    // Delay before showing next question on success
+                    setTimeout(generateEquation, 600); 
+                } else {
+                    if (inputEl.value !== '') {
+                        clearInterval(timerInterval);
+                        streak = 0;
+                        feedbackEl.textContent = 'Concentrate! Next one... ❌';
+                        feedbackEl.style.color = '#f44336';
+                        streakEl.textContent = streak;
+                        // Delay before showing next question on failure
+                        setTimeout(generateEquation, 600); 
+                    }
+                }
+            }
+
+            submitBtn.addEventListener('click', checkAnswer);
+            inputEl.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkAnswer();
+            });
+
+            generateEquation();
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+---
+export let title = "Kamalpur Netaji High School (H.S.)";
+const { pathname } = Astro.url;
+
+// Helper to check if a path is active
+const isActive = (path) => {
+  if (path === "/") {
+    return pathname === "/" || pathname === "/index.html";
+  }
+  // Remove trailing slashes for comparison
+  const normalizedPathname = pathname.replace(/\/$/, "");
+  const normalizedPath = path.replace(/\/$/, "");
+  return normalizedPathname === normalizedPath || normalizedPathname.startsWith(normalizedPath + "/");
+};
+---
+<header>
+  <div class="header-content">
+    <a href="/"><img src="/assets/images/knhs.webp" alt="KNHS Logo" class="logo"></a>
+    <div class="header-text">
+      <h1>{title}</h1>
+      <p class="header-subtitle">Kamalpur • Chhatna • Bankura • West Bengal • 722137</p>
+    </div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="/" class={isActive("/") ? "active" : ""}><i class="fa fa-home"></i>Home</a></li>
+      <li><a href="/staffs" class={isActive("/staffs") ? "active" : ""}><i class="fa fa-users"></i>Staffs</a></li>
+      <li><a href="/various_events" class={isActive("/various_events") ? "active" : ""}><i class="fa fa-calendar"></i>Various Events</a></li>
+      <li><a href="/#academics"><i class="fa fa-book"></i>Academics</a></li>
+      <li><a href="/gallery" class={isActive("/gallery") ? "active" : ""}><i class="fa fa-image"></i>Gallery</a></li>
+      <li><a href="/contact" class={isActive("/contact") ? "active" : ""}><i class="fa fa-phone"></i>Contact</a></li>
+      <li><a href="/about" class={isActive("/about") ? "active" : ""}><i class="fa fa-info-circle"></i>About</a></li>
+    </ul>
+  </nav>
+</header>

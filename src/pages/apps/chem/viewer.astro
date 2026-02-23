@@ -1,0 +1,122 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import "../../../styles/apps/chem/style.scss"
+---
+
+<BaseLayout title="Molecular Viewer">
+  <Fragment slot="head">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/kekule/dist/themes/default/kekule.css" />
+    <style is:inline>
+        #viewer-container {
+            height: 60vh;
+            border: 2px solid #012f63;
+            border-radius: var(--radius);
+            background: #fcfcfc;
+        }
+        .molecule-list {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        .mol-item {
+            padding: 8px 15px;
+            background: #e0e0e0;
+            border-radius: calc(var(--radius) * 2.5);
+            cursor: pointer;
+            white-space: nowrap;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+        .mol-item:hover {
+            background: #d0d0d0;
+        }
+        .mol-item.active {
+            background: var(--primary-bg);
+            color: white;
+            border-color: var(--primary-bg);
+        }
+        .viewer-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+  </Fragment>
+
+  <div class="chem-container">
+      <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+          <a href="/apps" class="btn-chem" style="padding: 8px 15px; font-size: 0.9em;">
+              <i class="fa fa-arrow-left"></i> Back to Apps
+          </a>
+          <a href="/apps/chem" class="btn-chem" style="padding: 8px 15px; font-size: 0.9em;">
+              <i class="fa fa-flask"></i> Back to Chem Lab
+          </a>
+      </div>
+      <h2>3D & 2D Molecule Viewer</h2>
+      <p>Select a molecule from the list below to visualize it.</p>
+      
+      <div class="molecule-list" id="mol-list">
+          <div class="mol-item active" data-smiles="C" data-name="Methane (CH4)">Methane</div>
+          <div class="mol-item" data-smiles="CC" data-name="Ethane (C2H6)">Ethane</div>
+          <div class="mol-item" data-smiles="C=C" data-name="Ethene (C2H4)">Ethene</div>
+          <div class="mol-item" data-smiles="C#C" data-name="Ethyne (C2H2)">Ethyne</div>
+          <div class="mol-item" data-smiles="c1ccccc1" data-name="Benzene (C6H6)">Benzene</div>
+          <div class="mol-item" data-smiles="CCO" data-name="Ethanol (C2H5OH)">Ethanol</div>
+          <div class="mol-item" data-smiles="CC(=O)O" data-name="Acetic Acid">Acetic Acid</div>
+          <div class="mol-item" data-smiles="CN1C=NC2=C1C(=O)N(C(=O)N2C)C" data-name="Caffeine">Caffeine</div>
+          <div class="mol-item" data-smiles="O" data-name="Water (H2O)">Water</div>
+      </div>
+
+      <div id="viewer-container" 
+           data-widget="Kekule.ChemWidget.Viewer" 
+           data-predefined-setting="fullFunc"
+           data-render-type="3"
+           data-enable-direct-interaction="true">
+      </div>
+
+      <div class="viewer-controls">
+          <button id="toggle-dim" class="btn-chem">Switch 2D/3D</button>
+          <button id="zoom-in" class="btn-chem"><i class="fa fa-search-plus"></i></button>
+          <button id="zoom-out" class="btn-chem"><i class="fa fa-search-minus"></i></button>
+      </div>
+  </div>
+
+  <span slot="scripts">
+    <script is:inline src="https://cdn.jsdelivr.net/npm/kekule/dist/kekule.js?modules=chemWidget,io,algorithm"></script>
+    <script is:inline>
+        let viewer;
+        
+        Kekule.X.domReady(() => {
+            viewer = Kekule.Widget.getWidgetById('viewer-container');
+            loadMolecule('C');
+
+            document.querySelectorAll('.mol-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.mol-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    loadMolecule(item.dataset.smiles);
+                });
+            });
+
+            document.getElementById('toggle-dim').addEventListener('click', toggleDim);
+            document.getElementById('zoom-in').addEventListener('click', zoomIn);
+            document.getElementById('zoom-out').addEventListener('click', zoomOut);
+        });
+
+        function loadMolecule(smiles) {
+            const mol = Kekule.IO.loadFormatData(smiles, 'smi');
+            viewer.setChemObj(mol);
+        }
+
+        function toggleDim() {
+            const current = viewer.getRenderType();
+            viewer.setRenderType(current === 3 ? 2 : 3);
+        }
+
+        function zoomIn() { viewer.setZoom(viewer.getZoom() * 1.2); }
+        function zoomOut() { viewer.setZoom(viewer.getZoom() / 1.2); }
+    </script>
+  </span>
+</BaseLayout>

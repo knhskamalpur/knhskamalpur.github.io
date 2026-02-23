@@ -1,0 +1,43 @@
+---
+import HitsCounter from './HitsCounter.astro';
+
+const now = new Date();
+const buildTime = now.toLocaleString('en-IN', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  timeZone: 'Asia/Kolkata',
+  timeZoneName: 'short'
+});
+
+const year = now.getFullYear();
+---
+<footer>
+  <div class="footer-content" style="display:flex;justify-content:space-around;flex-wrap:wrap;text-align:left;margin-bottom:20px;">
+    <div class="single-footer-widget">
+      <h4>QUICK LINKS</h4>
+      <ul style="list-style:none;padding:0;">
+        <li><a href="http://www.wbbse.org/" style="color:#aaa;text-decoration:none;">WBBSE</a></li>
+        <li><a href="http://wbchse.nic.in/html/index.html" style="color:#aaa;text-decoration:none;">WBCHSE</a></li>
+        <li><a href="#" style="color:#aaa;text-decoration:none;">School Education WB</a></li>
+        <li><a href="#" style="color:#aaa;text-decoration:none;">Kanyashree</a></li>
+        <li><a href="/apps" style="color:#aaa;text-decoration:none;">Apps</a></li>
+      </ul>
+    </div>
+    <div class="single-footer-widget">
+      <h4>INSTITUTION ADDRESS</h4>
+      <ul style="list-style:none;padding:0;">
+        <li><i class="fa fa-university mr-10" aria-hidden="true"></i> KAMALPUR NETAJI HIGH SCHOOL (H.S.)</li>
+        <li><i class="fa fa-map-marker mr-10" aria-hidden="true"></i> Vill + Post.: KAMALPUR, P.S.: CHHATNA(S), Dist.: BANKURA, PIN.: 722137 , West Bengal</li>
+        <li><i class="fa fa-mobile mr-10" aria-hidden="true"></i> 9434393164</li>
+        <li><i class="fa fa-envelope-o mr-10" aria-hidden="true"></i> knhskamalpur@gmail.com</li>
+      </ul>
+    </div>
+  </div>
+  <HitsCounter />
+  <p>&copy; <span id="year">{year}</span> Kamalpur Netaji High School. All rights reserved.</p>
+  <!-- <p style="font-size: 0.6em; color: #aaa; margin-top: 5px;">Last Updated: {buildTime}</p> -->
+</footer>

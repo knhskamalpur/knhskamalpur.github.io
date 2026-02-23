@@ -1,0 +1,330 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import "../../../styles/apps/chem/style.scss"
+---
+
+<BaseLayout title="Periodic Table">
+  <Fragment slot="head">
+    <style is:inline>
+        .chem-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            color: #333;
+        }
+        .ptable-container {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 3px;
+            margin: 20px 0;
+            padding: 15px;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: calc(var(--radius) * 1.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 100%;
+            overflow-x: auto;
+            box-sizing: border-box;
+        }
+        .element-cell {
+            aspect-ratio: 1/1;
+            border: 1px solid #ddd;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            min-width: 40px;
+            color: #333;
+            border-radius: calc(var(--radius) / 2);
+        }
+        .element-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .element-cell.active-selection {
+            outline: 3px solid #012f63;
+            outline-offset: -3px;
+            z-index: 5;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+        }
+        .element-cell .symbol {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .element-cell .atomic-num {
+            font-size: 0.6rem;
+            align-self: flex-start;
+        }
+        
+        /* Category Colors */
+        .alkali { background: #ff8a8a !important; }
+        .alkaline { background: #ffcc80 !important; }
+        .transition { background: #ffb5c5 !important; }
+        .post-transition { background: #d1d1d1 !important; }
+        .metalloid { background: #d4d4aa !important; }
+        .nonmetal { background: #a5d6a7 !important; }
+        .halogen { background: #fff59d !important; }
+        .noblegas { background: #81d4fa !important; }
+        .lanthanide { background: #ce93d8 !important; }
+        .actinide { background: #f48fb1 !important; }
+        
+        #element-details {
+            margin-top: 30px;
+            padding: 20px;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            color: var(--accent);
+        }
+        .detail-card {
+            background: white;
+            padding: 30px;
+            border-radius: calc(var(--radius) * 1.5);
+            text-align: center;
+            min-width: 150px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: var(--primary-bg);
+        }
+        .detail-card .symbol-large {
+            font-size: 4rem;
+            font-weight: bold;
+            display: block;
+        }
+        .detail-info p {
+            color: var(--accent)
+            margin: 5px 0;
+        }
+    </style>
+  </Fragment>
+
+  <div class="chem-container">
+      <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+          <a href="/apps" class="btn-chem" style="padding: 8px 15px; font-size: 0.9em;">
+              <i class="fa fa-arrow-left"></i> Back to Apps
+          </a>
+          <a href="/apps/chem" class="btn-chem" style="padding: 8px 15px; font-size: 0.9em;">
+              <i class="fa fa-flask"></i> Back to Chem Lab
+          </a>
+      </div>
+      <h2>Periodic Table of Elements</h2>
+      <p>Click on an element to see more details.</p>
+      
+      <div class="ptable-container" id="ptable">
+          <!-- Javascript will populate this -->
+      </div>
+
+      <div id="element-details">
+          <div class="detail-card" id="detail-box">
+              <span class="atomic-num" id="det-num">1</span>
+              <span class="symbol-large" id="det-sym">H</span>
+              <h3 id="det-name">Hydrogen</h3>
+          </div>
+          <div class="detail-info">
+              <p><strong>Category:</strong> <span id="det-cat">Non-metal</span></p>
+              <p><strong>Atomic Mass:</strong> <span id="det-mass">1.008</span></p>
+              <p><strong>Electron Configuration:</strong> <span id="det-conf">1s<sup>1</sup></span></p>
+              <p id="det-desc">Hydrogen is the chemical element with the symbol H and atomic number 1. It is the lightest element in the periodic table.</p>
+          </div>
+
+      </div>
+  </div>
+
+  <span slot="scripts">
+    <script is:inline src="https://cdn.jsdelivr.net/npm/kekule/dist/kekule.min.js"></script>
+    <script is:inline>
+        const elements = [
+            { n: 1, s: 'H', x: 1, y: 1, cat: 'nonmetal', m: 1.008, name: 'Hydrogen', conf: '1s<sup>1</sup>' },
+            { n: 2, s: 'He', x: 18, y: 1, cat: 'noblegas', m: 4.0026, name: 'Helium', conf: '1s<sup>2</sup>' },
+            { n: 3, s: 'Li', x: 1, y: 2, cat: 'alkali', m: 6.94, name: 'Lithium', conf: '[He] 2s<sup>1</sup>' },
+            { n: 4, s: 'Be', x: 2, y: 2, cat: 'alkaline', m: 9.0122, name: 'Beryllium', conf: '[He] 2s<sup>2</sup>' },
+            { n: 5, s: 'B', x: 13, y: 2, cat: 'metalloid', m: 10.81, name: 'Boron', conf: '[He] 2s<sup>2</sup> 2p<sup>1</sup>' },
+            { n: 6, s: 'C', x: 14, y: 2, cat: 'nonmetal', m: 12.011, name: 'Carbon', conf: '[He] 2s<sup>2</sup> 2p<sup>2</sup>' },
+            { n: 7, s: 'N', x: 15, y: 2, cat: 'nonmetal', m: 14.007, name: 'Nitrogen', conf: '[He] 2s<sup>2</sup> 2p<sup>3</sup>' },
+            { n: 8, s: 'O', x: 16, y: 2, cat: 'nonmetal', m: 15.999, name: 'Oxygen', conf: '[He] 2s<sup>2</sup> 2p<sup>4</sup>' },
+            { n: 9, s: 'F', x: 17, y: 2, cat: 'halogen', m: 18.998, name: 'Fluorine', conf: '[He] 2s<sup>2</sup> 2p<sup>5</sup>' },
+            { n: 10, s: 'Ne', x: 18, y: 2, cat: 'noblegas', m: 20.180, name: 'Neon', conf: '[He] 2s<sup>2</sup> 2p<sup>6</sup>' },
+            { n: 11, s: 'Na', x: 1, y: 3, cat: 'alkali', m: 22.990, name: 'Sodium', conf: '[Ne] 3s<sup>1</sup>' },
+            { n: 12, s: 'Mg', x: 2, y: 3, cat: 'alkaline', m: 24.305, name: 'Magnesium', conf: '[Ne] 3s<sup>2</sup>' },
+            { n: 13, s: 'Al', x: 13, y: 3, cat: 'post-transition', m: 26.982, name: 'Aluminum', conf: '[Ne] 3s<sup>2</sup> 3p<sup>1</sup>' },
+            { n: 14, s: 'Si', x: 14, y: 3, cat: 'metalloid', m: 28.085, name: 'Silicon', conf: '[Ne] 3s<sup>2</sup> 3p<sup>2</sup>' },
+            { n: 15, s: 'P', x: 15, y: 3, cat: 'nonmetal', m: 30.974, name: 'Phosphorus', conf: '[Ne] 3s<sup>2</sup> 3p<sup>3</sup>' },
+            { n: 16, s: 'S', x: 16, y: 3, cat: 'nonmetal', m: 32.06, name: 'Sulfur', conf: '[Ne] 3s<sup>2</sup> 3p<sup>4</sup>' },
+            { n: 17, s: 'Cl', x: 17, y: 3, cat: 'halogen', m: 35.45, name: 'Chlorine', conf: '[Ne] 3s<sup>2</sup> 3p<sup>5</sup>' },
+            { n: 18, s: 'Ar', x: 18, y: 3, cat: 'noblegas', m: 39.948, name: 'Argon', conf: '[Ne] 3s<sup>2</sup> 3p<sup>6</sup>' },
+            { n: 19, s: 'K', x: 1, y: 4, cat: 'alkali', m: 39.098, name: 'Potassium', conf: '[Ar] 4s<sup>1</sup>' },
+            { n: 20, s: 'Ca', x: 2, y: 4, cat: 'alkaline', m: 40.078, name: 'Calcium', conf: '[Ar] 4s<sup>2</sup>' },
+            { n: 21, s: 'Sc', x: 3, y: 4, cat: 'transition', m: 44.956, name: 'Scandium', conf: '[Ar] 3d<sup>1</sup> 4s<sup>2</sup>' },
+            { n: 22, s: 'Ti', x: 4, y: 4, cat: 'transition', m: 47.867, name: 'Titanium', conf: '[Ar] 3d<sup>2</sup> 4s<sup>2</sup>' },
+            { n: 23, s: 'V', x: 5, y: 4, cat: 'transition', m: 50.942, name: 'Vanadium', conf: '[Ar] 3d<sup>3</sup> 4s<sup>2</sup>' },
+            { n: 24, s: 'Cr', x: 6, y: 4, cat: 'transition', m: 51.996, name: 'Chromium', conf: '[Ar] 3d<sup>5</sup> 4s<sup>1</sup>' },
+            { n: 25, s: 'Mn', x: 7, y: 4, cat: 'transition', m: 54.938, name: 'Manganese', conf: '[Ar] 3d<sup>5</sup> 4s<sup>2</sup>' },
+            { n: 26, s: 'Fe', x: 8, y: 4, cat: 'transition', m: 55.845, name: 'Iron', conf: '[Ar] 3d<sup>6</sup> 4s<sup>2</sup>' },
+            { n: 27, s: 'Co', x: 9, y: 4, cat: 'transition', m: 58.933, name: 'Cobalt', conf: '[Ar] 3d<sup>7</sup> 4s<sup>2</sup>' },
+            { n: 28, s: 'Ni', x: 10, y: 4, cat: 'transition', m: 58.693, name: 'Nickel', conf: '[Ar] 3d<sup>8</sup> 4s<sup>2</sup>' },
+            { n: 29, s: 'Cu', x: 11, y: 4, cat: 'transition', m: 63.546, name: 'Copper', conf: '[Ar] 3d<sup>10</sup> 4s<sup>1</sup>' },
+            { n: 30, s: 'Zn', x: 12, y: 4, cat: 'transition', m: 65.38, name: 'Zinc', conf: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup>' },
+            { n: 31, s: 'Ga', x: 13, y: 4, cat: 'post-transition', m: 69.723, name: 'Gallium', conf: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>1</sup>' },
+            { n: 32, s: 'Ge', x: 14, y: 4, cat: 'metalloid', m: 72.630, name: 'Germanium', conf: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>2</sup>' },
+            { n: 33, s: 'As', x: 15, y: 4, cat: 'metalloid', m: 74.922, name: 'Arsenic', conf: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>3</sup>' },
+            { n: 34, s: 'Se', x: 16, y: 4, cat: 'nonmetal', m: 78.971, name: 'Selenium', conf: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>4</sup>' },
+            { n: 35, s: 'Br', x: 17, y: 4, cat: 'halogen', m: 79.904, name: 'Bromine', conf: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>5</sup>' },
+            { n: 36, s: 'Kr', x: 18, y: 4, cat: 'noblegas', m: 83.798, name: 'Krypton', conf: '[Ar] 3d<sup>10</sup> 4s<sup>2</sup> 4p<sup>6</sup>' },
+            { n: 37, s: 'Rb', x: 1, y: 5, cat: 'alkali', m: 85.468, name: 'Rubidium', conf: '[Kr] 5s<sup>1</sup>' },
+            { n: 38, s: 'Sr', x: 2, y: 5, cat: 'alkaline', m: 87.62, name: 'Strontium', conf: '[Kr] 5s<sup>2</sup>' },
+            { n: 39, s: 'Y', x: 3, y: 5, cat: 'transition', m: 88.906, name: 'Yttrium', conf: '[Kr] 4d<sup>1</sup> 5s<sup>2</sup>' },
+            { n: 40, s: 'Zr', x: 4, y: 5, cat: 'transition', m: 91.224, name: 'Zirconium', conf: '[Kr] 4d<sup>2</sup> 5s<sup>2</sup>' },
+            { n: 41, s: 'Nb', x: 5, y: 5, cat: 'transition', m: 92.906, name: 'Niobium', conf: '[Kr] 4d<sup>4</sup> 5s<sup>1</sup>' },
+            { n: 42, s: 'Mo', x: 6, y: 5, cat: 'transition', m: 95.95, name: 'Molybdenum', conf: '[Kr] 4d<sup>5</sup> 5s<sup>1</sup>' },
+            { n: 43, s: 'Tc', x: 7, y: 5, cat: 'transition', m: 98, name: 'Technetium', conf: '[Kr] 4d<sup>5</sup> 5s<sup>2</sup>' },
+            { n: 44, s: 'Ru', x: 8, y: 5, cat: 'transition', m: 101.07, name: 'Ruthenium', conf: '[Kr] 4d<sup>7</sup> 5s<sup>1</sup>' },
+            { n: 45, s: 'Rh', x: 9, y: 5, cat: 'transition', m: 102.91, name: 'Rhodium', conf: '[Kr] 4d<sup>8</sup> 5s<sup>1</sup>' },
+            { n: 46, s: 'Pd', x: 10, y: 5, cat: 'transition', m: 106.42, name: 'Palladium', conf: '[Kr] 4d<sup>10</sup>' },
+            { n: 47, s: 'Ag', x: 11, y: 5, cat: 'transition', m: 107.87, name: 'Silver', conf: '[Kr] 4d<sup>10</sup> 5s<sup>1</sup>' },
+            { n: 48, s: 'Cd', x: 12, y: 5, cat: 'transition', m: 112.41, name: 'Cadmium', conf: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup>' },
+            { n: 49, s: 'In', x: 13, y: 5, cat: 'post-transition', m: 114.82, name: 'Indium', conf: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>1</sup>' },
+            { n: 50, s: 'Sn', x: 14, y: 5, cat: 'post-transition', m: 118.71, name: 'Tin', conf: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>2</sup>' },
+            { n: 51, s: 'Sb', x: 15, y: 5, cat: 'metalloid', m: 121.76, name: 'Antimony', conf: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>3</sup>' },
+            { n: 52, s: 'Te', x: 16, y: 5, cat: 'metalloid', m: 127.6, name: 'Tellurium', conf: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>4</sup>' },
+            { n: 53, s: 'I', x: 17, y: 5, cat: 'halogen', m: 126.90, name: 'Iodine', conf: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>5</sup>' },
+            { n: 54, s: 'Xe', x: 18, y: 5, cat: 'noblegas', m: 131.29, name: 'Xenon', conf: '[Kr] 4d<sup>10</sup> 5s<sup>2</sup> 5p<sup>6</sup>' },
+            { n: 55, s: 'Cs', x: 1, y: 6, cat: 'alkali', m: 132.91, name: 'Cesium', conf: '[Xe] 6s<sup>1</sup>' },
+            { n: 56, s: 'Ba', x: 2, y: 6, cat: 'alkaline', m: 137.33, name: 'Barium', conf: '[Xe] 6s<sup>2</sup>' },
+            { n: 57, s: 'La', x: 3, y: 9, cat: 'lanthanide', m: 138.91, name: 'Lanthanum', conf: '[Xe] 5d<sup>1</sup> 6s<sup>2</sup>' },
+            { n: 58, s: 'Ce', x: 4, y: 9, cat: 'lanthanide', m: 140.12, name: 'Cerium', conf: '[Xe] 4f<sup>1</sup> 5d<sup>1</sup> 6s<sup>2</sup>' },
+            { n: 59, s: 'Pr', x: 5, y: 9, cat: 'lanthanide', m: 140.91, name: 'Praseodymium', conf: '[Xe] 4f<sup>3</sup> 6s<sup>2</sup>' },
+            { n: 60, s: 'Nd', x: 6, y: 9, cat: 'lanthanide', m: 144.24, name: 'Neodymium', conf: '[Xe] 4f<sup>4</sup> 6s<sup>2</sup>' },
+            { n: 61, s: 'Pm', x: 7, y: 9, cat: 'lanthanide', m: 145, name: 'Promethium', conf: '[Xe] 4f<sup>5</sup> 6s<sup>2</sup>' },
+            { n: 62, s: 'Sm', x: 8, y: 9, cat: 'lanthanide', m: 150.36, name: 'Samarium', conf: '[Xe] 4f<sup>6</sup> 6s<sup>2</sup>' },
+            { n: 63, s: 'Eu', x: 9, y: 9, cat: 'lanthanide', m: 151.96, name: 'Europium', conf: '[Xe] 4f<sup>7</sup> 6s<sup>2</sup>' },
+            { n: 64, s: 'Gd', x: 10, y: 9, cat: 'lanthanide', m: 157.25, name: 'Gadolinium', conf: '[Xe] 4f<sup>7</sup> 5d<sup>1</sup> 6s<sup>2</sup>' },
+            { n: 65, s: 'Tb', x: 11, y: 9, cat: 'lanthanide', m: 158.93, name: 'Terbium', conf: '[Xe] 4f<sup>9</sup> 6s<sup>2</sup>' },
+            { n: 66, s: 'Dy', x: 12, y: 9, cat: 'lanthanide', m: 162.5, name: 'Dysprosium', conf: '[Xe] 4f<sup>10</sup> 6s<sup>2</sup>' },
+            { n: 67, s: 'Ho', x: 13, y: 9, cat: 'lanthanide', m: 164.93, name: 'Holmium', conf: '[Xe] 4f<sup>11</sup> 6s<sup>2</sup>' },
+            { n: 68, s: 'Er', x: 14, y: 9, cat: 'lanthanide', m: 167.26, name: 'Erbium', conf: '[Xe] 4f<sup>12</sup> 6s<sup>2</sup>' },
+            { n: 69, s: 'Tm', x: 15, y: 9, cat: 'lanthanide', m: 168.93, name: 'Thulium', conf: '[Xe] 4f<sup>13</sup> 6s<sup>2</sup>' },
+            { n: 70, s: 'Yb', x: 16, y: 9, cat: 'lanthanide', m: 173.05, name: 'Ytterbium', conf: '[Xe] 4f<sup>14</sup> 6s<sup>2</sup>' },
+            { n: 71, s: 'Lu', x: 17, y: 9, cat: 'lanthanide', m: 174.97, name: 'Lutetium', conf: '[Xe] 4f<sup>14</sup> 5d<sup>1</sup> 6s<sup>2</sup>' },
+            { n: 72, s: 'Hf', x: 4, y: 6, cat: 'transition', m: 178.49, name: 'Hafnium', conf: '[Xe] 4f<sup>14</sup> 5d<sup>2</sup> 6s<sup>2</sup>' },
+            { n: 73, s: 'Ta', x: 5, y: 6, cat: 'transition', m: 180.95, name: 'Tantalum', conf: '[Xe] 4f<sup>14</sup> 5d<sup>3</sup> 6s<sup>2</sup>' },
+            { n: 74, s: 'W', x: 6, y: 6, cat: 'transition', m: 183.84, name: 'Tungsten', conf: '[Xe] 4f<sup>14</sup> 5d<sup>4</sup> 6s<sup>2</sup>' },
+            { n: 75, s: 'Re', x: 7, y: 6, cat: 'transition', m: 186.21, name: 'Rhenium', conf: '[Xe] 4f<sup>14</sup> 5d<sup>5</sup> 6s<sup>2</sup>' },
+            { n: 76, s: 'Os', x: 8, y: 6, cat: 'transition', m: 190.23, name: 'Osmium', conf: '[Xe] 4f<sup>14</sup> 5d<sup>6</sup> 6s<sup>2</sup>' },
+            { n: 77, s: 'Ir', x: 9, y: 6, cat: 'transition', m: 192.22, name: 'Iridium', conf: '[Xe] 4f<sup>14</sup> 5d<sup>7</sup> 6s<sup>2</sup>' },
+            { n: 78, s: 'Pt', x: 10, y: 6, cat: 'transition', m: 195.08, name: 'Platinum', conf: '[Xe] 4f<sup>14</sup> 5d<sup>9</sup> 6s<sup>1</sup>' },
+            { n: 79, s: 'Au', x: 11, y: 6, cat: 'transition', m: 196.97, name: 'Gold', conf: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>1</sup>' },
+            { n: 80, s: 'Hg', x: 12, y: 6, cat: 'transition', m: 200.59, name: 'Mercury', conf: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup>' },
+            { n: 81, s: 'Tl', x: 13, y: 6, cat: 'post-transition', m: 204.38, name: 'Thallium', conf: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>1</sup>' },
+            { n: 82, s: 'Pb', x: 14, y: 6, cat: 'post-transition', m: 207.2, name: 'Lead', conf: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>2</sup>' },
+            { n: 83, s: 'Bi', x: 15, y: 6, cat: 'post-transition', m: 208.98, name: 'Bismuth', conf: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>3</sup>' },
+            { n: 84, s: 'Po', x: 16, y: 6, cat: 'post-transition', m: 209, name: 'Polonium', conf: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>4</sup>' },
+            { n: 85, s: 'At', x: 17, y: 6, cat: 'metalloid', m: 210, name: 'Astatine', conf: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>5</sup>' },
+            { n: 86, s: 'Rn', x: 18, y: 6, cat: 'noblegas', m: 222, name: 'Radon', conf: '[Xe] 4f<sup>14</sup> 5d<sup>10</sup> 6s<sup>2</sup> 6p<sup>6</sup>' },
+            { n: 87, s: 'Fr', x: 1, y: 7, cat: 'alkali', m: 223, name: 'Francium', conf: '[Rn] 7s<sup>1</sup>' },
+            { n: 88, s: 'Ra', x: 2, y: 7, cat: 'alkaline', m: 226, name: 'Radium', conf: '[Rn] 7s<sup>2</sup>' },
+            { n: 89, s: 'Ac', x: 3, y: 10, cat: 'actinide', m: 227, name: 'Actinium', conf: '[Rn] 6d<sup>1</sup> 7s<sup>2</sup>' },
+            { n: 90, s: 'Th', x: 4, y: 10, cat: 'actinide', m: 232.04, name: 'Thorium', conf: '[Rn] 6d<sup>2</sup> 7s<sup>2</sup>' },
+            { n: 91, s: 'Pa', x: 5, y: 10, cat: 'actinide', m: 231.04, name: 'Protactinium', conf: '[Rn] 5f<sup>2</sup> 6d<sup>1</sup> 7s<sup>2</sup>' },
+            { n: 92, s: 'U', x: 6, y: 10, cat: 'actinide', m: 238.03, name: 'Uranium', conf: '[Rn] 5f<sup>3</sup> 6d<sup>1</sup> 7s<sup>2</sup>' },
+            { n: 93, s: 'Np', x: 7, y: 10, cat: 'actinide', m: 237, name: 'Neptunium', conf: '[Rn] 5f<sup>4</sup> 6d<sup>1</sup> 7s<sup>2</sup>' },
+            { n: 94, s: 'Pu', x: 8, y: 10, cat: 'actinide', m: 244, name: 'Plutonium', conf: '[Rn] 5f<sup>6</sup> 7s<sup>2</sup>' },
+            { n: 95, s: 'Am', x: 9, y: 10, cat: 'actinide', m: 243, name: 'Americium', conf: '[Rn] 5f<sup>7</sup> 7s<sup>2</sup>' },
+            { n: 96, s: 'Cm', x: 10, y: 10, cat: 'actinide', m: 247, name: 'Curium', conf: '[Rn] 5f<sup>7</sup> 6d<sup>1</sup> 7s<sup>2</sup>' },
+            { n: 97, s: 'Bk', x: 11, y: 10, cat: 'actinide', m: 247, name: 'Berkelium', conf: '[Rn] 5f<sup>9</sup> 7s<sup>2</sup>' },
+            { n: 98, s: 'Cf', x: 12, y: 10, cat: 'actinide', m: 251, name: 'Californium', conf: '[Rn] 5f<sup>10</sup> 7s<sup>2</sup>' },
+            { n: 99, s: 'Es', x: 13, y: 10, cat: 'actinide', m: 252, name: 'Einsteinium', conf: '[Rn] 5f<sup>11</sup> 7s<sup>2</sup>' },
+            { n: 100, s: 'Fm', x: 14, y: 10, cat: 'actinide', m: 257, name: 'Fermium', conf: '[Rn] 5f<sup>12</sup> 7s<sup>2</sup>' },
+            { n: 101, s: 'Md', x: 15, y: 10, cat: 'actinide', m: 258, name: 'Mendelevium', conf: '[Rn] 5f<sup>13</sup> 7s<sup>2</sup>' },
+            { n: 102, s: 'No', x: 16, y: 10, cat: 'actinide', m: 259, name: 'Nobelium', conf: '[Rn] 5f<sup>14</sup> 7s<sup>2</sup>' },
+            { n: 103, s: 'Lr', x: 17, y: 10, cat: 'actinide', m: 262, name: 'Lawrencium', conf: '[Rn] 5f<sup>14</sup> 7s<sup>2</sup> 7p<sup>1</sup>' },
+            { n: 104, s: 'Rf', x: 4, y: 7, cat: 'transition', m: 267, name: 'Rutherfordium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>2</sup> 7s<sup>2</sup>' },
+            { n: 105, s: 'Db', x: 5, y: 7, cat: 'transition', m: 268, name: 'Dubnium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>3</sup> 7s<sup>2</sup>' },
+            { n: 106, s: 'Sg', x: 6, y: 7, cat: 'transition', m: 269, name: 'Seaborgium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>4</sup> 7s<sup>2</sup>' },
+            { n: 107, s: 'Bh', x: 7, y: 7, cat: 'transition', m: 270, name: 'Bohrium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>5</sup> 7s<sup>2</sup>' },
+            { n: 108, s: 'Hs', x: 8, y: 7, cat: 'transition', m: 277, name: 'Hassium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>6</sup> 7s<sup>2</sup>' },
+            { n: 109, s: 'Mt', x: 9, y: 7, cat: 'transition', m: 278, name: 'Meitnerium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>7</sup> 7s<sup>2</sup>' },
+            { n: 110, s: 'Ds', x: 10, y: 7, cat: 'transition', m: 281, name: 'Darmstadtium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>9</sup> 7s<sup>1</sup>' },
+            { n: 111, s: 'Rg', x: 11, y: 7, cat: 'transition', m: 280, name: 'Roentgenium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>1</sup>' },
+            { n: 112, s: 'Cn', x: 12, y: 7, cat: 'transition', m: 285, name: 'Copernicium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup>' },
+            { n: 113, s: 'Nh', x: 13, y: 7, cat: 'post-transition', m: 286, name: 'Nihonium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>1</sup>' },
+            { n: 114, s: 'Fl', x: 14, y: 7, cat: 'post-transition', m: 289, name: 'Flerovium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>2</sup>' },
+            { n: 115, s: 'Mc', x: 15, y: 7, cat: 'post-transition', m: 289, name: 'Moscovium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>3</sup>' },
+            { n: 116, s: 'Lv', x: 16, y: 7, cat: 'post-transition', m: 293, name: 'Livermorium', conf: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>4</sup>' },
+            { n: 117, s: 'Ts', x: 17, y: 7, cat: 'halogen', m: 294, name: 'Tennessine', conf: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>5</sup>' },
+            { n: 118, s: 'Og', x: 18, y: 7, cat: 'noblegas', m: 294, name: 'Oganesson', conf: '[Rn] 5f<sup>14</sup> 6d<sup>10</sup> 7s<sup>2</sup> 7p<sup>6</sup>' }
+        ];
+
+
+        const container = document.getElementById('ptable');
+
+        function initPTable() {
+            container.innerHTML = ''; 
+            for (let y = 1; y <= 10; y++) {
+                for (let x = 1; x <= 18; x++) {
+                    const el = elements.find(e => e.x === x && e.y === y);
+                    const div = document.createElement('div');
+                    if (el) {
+                        div.className = `element-cell ${el.cat}`;
+                        div.id = `el-${el.n}`;
+                        div.innerHTML = `<span class="atomic-num">${el.n}</span><span class="symbol">${el.s}</span>`;
+                        div.onclick = () => showDetails(el);
+                    } else {
+                        div.className = 'element-cell empty';
+                        div.style.border = 'none';
+                    }
+                    container.appendChild(div);
+                }
+            }
+            if (elements.length > 0) showDetails(elements[0]);
+        }
+
+        function showDetails(el) {
+            // UI Feedback
+            document.querySelectorAll('.element-cell').forEach(c => c.classList.remove('active-selection'));
+            const cell = document.getElementById(`el-${el.n}`);
+            if (cell) cell.classList.add('active-selection');
+
+            // Set Basic Data
+            document.getElementById('det-num').textContent = el.n;
+            document.getElementById('det-sym').textContent = el.s;
+            document.getElementById('det-mass').textContent = el.m;
+            document.getElementById('det-cat').textContent = el.cat;
+
+            // Use data from merged elements array with Kekule as enhancement
+            let name = el.name || el.s;
+            let conf = el.conf || 'N/A';
+            
+            try {
+                if (window.Kekule && Kekule.ChemicalElementsData) {
+                    const kInfo = Kekule.ChemicalElementsData.getElementInfo(el.n);
+                    if (kInfo) {
+                        name = kInfo.name || name;
+                        if (conf === 'N/A') conf = kInfo.electronConfig || conf;
+                    }
+                }
+            } catch (e) { console.warn('Kekule data not ready', e); }
+
+            document.getElementById('det-name').textContent = name;
+            document.getElementById('det-conf').innerHTML = conf;
+            
+            const categoryLabel = el.cat.replace('-', ' ');
+            document.getElementById('det-desc').innerHTML = `<strong>${name}</strong> is a ${categoryLabel} with the chemical symbol <strong>${el.s}</strong> and atomic number <strong>${el.n}</strong>.`;
+            
+            const box = document.getElementById('detail-box');
+            box.className = `detail-card ${el.cat}`;
+        }
+
+        // Initialize immediately
+        initPTable();
+    </script>
+  </span>
+</BaseLayout>

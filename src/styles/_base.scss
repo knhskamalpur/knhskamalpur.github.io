@@ -1,0 +1,72 @@
+/* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
+body {
+    font-family: var(--font-family);
+    font-optical-sizing: var(--font-optical-sizing, auto);
+    font-weight: var(--font-weight, 400);
+    font-style: var(--font-style, normal);
+    font-variation-settings: var(--font-variation-settings, "wdth" 100);
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(rgba(1, 47, 99, 0.8), rgba(1, 47, 99, 0.8)), url('/assets/images/bg.jpg');
+    background-repeat: repeat;
+    background-attachment: fixed;
+    color: var(--text-primary);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal scroll causing issues */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+section {
+    padding: 40px 0;
+}
+
+#home {
+    overflow: hidden; /* Prevent carousel from overflowing horizontally */
+    width: 100%;
+}
+
+.mr-10 { margin-right: 10px; }
+
+/* Slick Scrollbar */
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent), #e0b00b);
+    border-radius: var(--radius);
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent); 
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+

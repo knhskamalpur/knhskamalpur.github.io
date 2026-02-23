@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import "../../../styles/apps/chem/style.scss"
+---
+
+<BaseLayout title="Molecular Editor">
+  <Fragment slot="head">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/kekule/dist/themes/default/kekule.css" />
+    <style is:inline>
+        #composer-container {
+            height: 70vh;
+            border: 2px solid #012f63;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .controls-panel {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-action {
+            padding: 8px 15px;
+            background: var(--primary-bg);
+            color: white;
+            border: none;
+            border-radius: calc(var(--radius) / 2);
+            cursor: pointer;
+        }
+        .btn-action:hover {
+            background: var(--header-bg-start);
+            color: var(--accent);
+        }
+    </style>
+  </Fragment>
+
+  <div class="chem-container">
+      <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+          <a href="/apps" class="btn-chem" style="padding: 8px 15px; font-size: 0.9em;">
+              <i class="fa fa-arrow-left"></i> Back to Apps
+          </a>
+          <a href="/apps/chem" class="btn-chem" style="padding: 8px 15px; font-size: 0.9em;">
+              <i class="fa fa-flask"></i> Back to Chem Lab
+          </a>
+      </div>
+      <h2>Molecular Editor</h2>
+      <p>Draw and design your own molecules with a full-featured chemical editor.</p>
+      
+      <div id="composer-container" 
+           data-widget="Kekule.Editor.Composer" 
+           data-predefined-setting="fullFunc">
+      </div>
+
+      <div class="controls-panel">
+          <button id="clear-btn" class="btn-action"><i class="fa fa-trash"></i> Clear</button>
+          <button id="export-btn" class="btn-action"><i class="fa fa-download"></i> Export SMILES</button>
+      </div>
+  </div>
+
+  <span slot="scripts">
+    <script is:inline src="https://cdn.jsdelivr.net/npm/kekule/dist/kekule.js?modules=chemWidget,io,algorithm"></script>
+    <script is:inline>
+        let composer;
+        Kekule.X.domReady(() => {
+            composer = Kekule.Widget.getWidgetById('composer-container');
+            
+            document.getElementById('clear-btn').addEventListener('click', () => {
+                composer.setChemObj(null);
+            });
+
+            document.getElementById('export-btn').addEventListener('click', () => {
+                const mol = composer.getExportableChemObj();
+                if (mol) {
+                    const smiles = Kekule.IO.saveFormatData(mol, 'smi');
+                    alert('SMILES: ' + smiles);
+                } else {
+                    alert('No molecule to export.');
+                }
+            });
+        });
+    </script>
+  </span>
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const images = [
+  "114243.jpg", "119825.jpg", "129111.jpg", "161752.jpg", "165520.jpg",
+  "195411.jpg", "221256.jpg", "239499.jpg", "26715.jpg", "267997.jpg",
+  "398037.jpg", "41287.jpg", "435462.jpg", "450344.jpg", "491710.jpg",
+  "511479.jpg", "561537.jpg", "563423.jpg", "566774.jpg", "583733.jpg",
+  "587816.jpg", "652351.jpg", "655142.jpg", "702762.jpg", "726267.jpg",
+  "733715.jpg", "808033.jpg", "811507.jpg", "813070.jpg", "820099.jpg",
+  "82443.jpg", "82517.jpg", "829353.jpg", "840160.jpg", "850163.jpg",
+  "872161.jpg", "964003.jpg", "969723.jpg", "991940.jpg"
+];
+---
+
+<BaseLayout title="Gallery">
+  <span slot="head">
+    <style>
+      main { max-width: 1200px; }
+    </style>
+  </span>
+
+  <section>
+    <h2>School Gallery</h2>
+    <p>Moments captured around our campus.</p>
+    <div class="gallery-grid">
+      {images.map(img => (
+        <div class="gallery-item">
+          <img src={`/assets/images/gallery/${img}`} alt="Gallery Image" loading="lazy">
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <script is:inline>
+    function shuffleGallery() {
+      const grid = document.querySelector('.gallery-grid');
+      if (grid) {
+        const nodes = Array.from(grid.children);
+        nodes.sort(() => Math.random() - 0.5);
+        nodes.forEach(node => grid.appendChild(node));
+      }
+    }
+
+    // Run on initial load
+    shuffleGallery();
+
+    // Support for Astro view transitions
+    document.addEventListener('astro:after-swap', shuffleGallery);
+  </script>
+</BaseLayout>

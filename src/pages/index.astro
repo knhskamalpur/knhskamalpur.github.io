@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const carouselItems = [
+    { img: "5th_september__L.jpg", title: "5th September" },
+    { img: "annual_function__L.jpg", title: "Annual Function" },
+    { img: "annual_sports__L.jpg", title: "Annual Sports" },
+    { img: "COMPUTER_LITERACY_PROJECT__L.jpg", title: "Computer Literacy Project" },
+    { img: "drawing__L.jpg", title: "Drawing" },
+    { img: "games__L.jpg", title: "Games" },
+    { img: "physical_edication__L.jpg", title: "Physical Education" },
+    { img: "wall_megazine__L.jpg", title: "Wall Magazine" }
+];
+---
+
+<BaseLayout title="Home">
+    <span slot="head">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    </span>
+
+    <section id="home">
+        <div class="owl-carousel owl-theme">
+            {carouselItems.map(item => (
+                <div class="item">
+                    <img src={`/assets/images/various_events/${item.img}`} alt={item.title}>
+                    <div class="carousel-caption"><h3>{item.title}</h3></div>
+                </div>
+            ))}
+        </div>
+        <p>Welcome to the official website of Kamalpur Netaji High School (H.S.)</p>
+    </section>
+
+    <script slot="scripts" is:inline type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script slot="scripts" is:inline type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script slot="scripts" is:inline>
+        function initCarousel() {
+            const $carousel = $(".owl-carousel");
+            if (!$carousel.length) return;
+
+            // Randomize items
+            const $items = $carousel.children('.item');
+            $items.sort(() => Math.random() - 0.5);
+            $carousel.empty().append($items);
+
+            $carousel.owlCarousel({
+                loop:true,
+                margin:10,
+                nav:true,
+                autoplay:true,
+                autoplayTimeout:5000,
+                autoplayHoverPause:true,
+                responsiveClass:true,
+                responsive:{
+                    0:{items:1,nav:true,loop:true},
+                    600:{items:1,nav:true,loop:true},
+                    1000:{items:1,nav:true,loop:true}
+                }
+            });
+        }
+
+        $(document).ready(initCarousel);
+        document.addEventListener('astro:after-swap', initCarousel);
+    </script>
+</BaseLayout>

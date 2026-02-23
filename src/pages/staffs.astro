@@ -1,0 +1,328 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const staffList = [
+  { name: "Paramita Mahadani", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Aditya Prasad De", role: "CLERK", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Anindya Sundar Bera", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Anirban Chanda", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Arup Kumar Chowdhury", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Ashis De", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Bablu Kalindi", role: "GROUP D", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Bablu Kumar Kar", role: "CLERK", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Bharati Tudu", role: "GROUP D", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Chaitali Mandal", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Dibyendu Mukhopadhyay", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Mamata Kar", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Manik Lal Rakshit", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Mom Mandal", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Nandalal Mandal", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Parbati Hansda", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Parimal Konar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Pijush Kanti Singhachowdhury", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Prabir Das", role: "CLERK", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Pratima Mandal", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Rabindra Nath Mandal", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Rathin Tantubay", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Samiran Kar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Sanjoy Rakshit", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Santanu Mukhopadhyay", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Sarthak Karmakar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Shyam Sundar Rakshit", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Soumik Kumar De", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Tanmoy Bandyopadhyay", role: "AHM CUM TIC", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Tapas Kumar Rakshit", role: "GROUP D", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Tirtha Chand", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Uttam Kumar Dutta", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Uttam Kumar Karmakar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Ananda Bauri", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+  { name: "Swati Khan", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
+  { name: "Pradip Kar", role: "AT", img: "/assets/images/teachers/teacher_avatar.jpg" },
+];
+
+const categories = ["All", "AT", "CLERK", "GROUP D"];
+---
+
+<BaseLayout title="Staffs">
+    <style slot="head">
+        /* Custom Staff Styles */
+        .staff-section {
+            padding: 20px 0;
+            margin-bottom: 60px;
+        }
+
+        .staff-header-text {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #fff;
+            text-align: center;
+        }
+
+        .staff-intro {
+            text-align: justify;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #fff;
+            margin-bottom: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Tabs Styling */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tab-item {
+            display: inline-block;
+        }
+
+        .tab-btn {
+            display: block;
+            padding: 12px 24px;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: calc(var(--radius) * 3.75);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background-color: #fec90d !important;
+            color: #012f63 !important;
+            box-shadow: 0 4px 15px rgba(254, 201, 13, 0.3);
+        }
+
+        /* Content Container */
+        .tab-content {
+            position: relative;
+            min-height: 400px;
+        }
+
+        /* Grid Layout */
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1100px) {
+            .staff-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .staff-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .staff-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glassmorphism Card Style */
+        .staff-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: calc(var(--radius) * 2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #fff;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+        }
+
+        .staff-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .staff-img-container {
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .staff-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .staff-card:hover .staff-img {
+            transform: scale(1.05);
+        }
+
+        .staff-body {
+            padding: 20px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .staff-role {
+            color: #fec90d;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            opacity: 0.9;
+        }
+
+        .staff-name {
+            font-size: 1.15rem;
+            line-height: 1.4;
+            margin: 0;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Tab Content Visibility */
+        .tab-pane {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.4s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1200px) { .staff-name { font-size: 1.1rem; } }
+        @media (max-width: 991px) { .staff-name { font-size: 1rem; } }
+    </style>
+
+    <section class="staff-section">
+        <h2 class="staff-header-text">Our Staff</h2>
+        <p class="staff-intro">
+            OUR TEACHERS PLAY AN INSTRUMENTAL ROLE IN THE LEARNING AND DEVELOPMENT OF THE THE KIDS. THEY HELPES THE STUDENTS RAISE THE BAR IN THE FIELD OF EDUCATION AND GIVE THEM PROPER GUIDE FOR FUTURE LIFE.
+        </p>
+        
+        <h2 class="staff-header-text" style="margin-top: 80px; margin-bottom: 40px;">Staff Directory</h2>
+        
+        <div class="category-nav" aria-label="Staff category filtering">
+            <ul class="category-tabs">
+                {categories.map((category, index) => (
+                    <li class="tab-item">
+                        <button 
+                            class={`tab-btn ${index === 0 ? 'active' : ''}`} 
+                            data-target={`pane-${category.toLowerCase().replace(/\s+/g, '-')}`}
+                            aria-pressed={index === 0 ? 'true' : 'false'}
+                        >
+                            {category}
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+
+        <div class="tab-content">
+            {categories.map((category, index) => (
+                <div 
+                    class={`tab-pane ${index === 0 ? 'active' : ''}`} 
+                    id={`pane-${category.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                    <div class="staff-grid">
+                        {staffList.filter(staff => category === 'All' || (category === 'AT' && (staff.role === 'AT' || staff.role === 'AHM CUM TIC')) || staff.role === category).map(staff => (
+                            <div class="staff-card">
+                                <div class="staff-img-container">
+                                    <img class="staff-img" src={staff.img} alt={`Photo of ${staff.name}`} loading="lazy" />
+                                </div>
+                                <div class="staff-body">
+                                    <span class="staff-role">{staff.role}</span>
+                                    <h4 class="staff-name">{staff.name}</h4>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </section>
+
+    <script is:inline>
+        function shuffleGrids() {
+            const grids = document.querySelectorAll('.staff-grid');
+            grids.forEach(grid => {
+                const nodes = Array.from(grid.children);
+                nodes.sort(() => Math.random() - 0.5);
+                nodes.forEach(node => grid.appendChild(node));
+            });
+        }
+
+        function initStaffTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            // Randomize grids on runtime
+            shuffleGrids();
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.getAttribute('data-target');
+
+                    // Update Tab UI
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                        t.setAttribute('aria-pressed', 'false');
+                    });
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-pressed', 'true');
+
+                    // Update Panes UI
+                    panes.forEach(p => {
+                        if (p.id === targetId) {
+                            p.classList.add('active');
+                        } else {
+                            p.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Run on initial load
+        initStaffTabs();
+
+        // Support for Astro view transitions
+        document.addEventListener('astro:after-swap', initStaffTabs);
+    </script>
+</BaseLayout>

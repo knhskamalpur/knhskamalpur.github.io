@@ -1,0 +1,139 @@
+/* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
+footer {
+    background: -webkit-linear-gradient(90deg, var(--footer-bg-start) 0%, var(--footer-bg-end) 100%);
+    background: -moz-linear-gradient(90deg, var(--footer-bg-start) 0%, var(--footer-bg-end) 100%);
+    background: -o-linear-gradient(90deg, var(--footer-bg-start) 0%, var(--footer-bg-end) 100%);
+    background: linear-gradient(0deg, var(--footer-bg-start) 0%, var(--footer-bg-end) 100%);
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 50px 20px 20px;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 0, 0, 0.15);
+    -webkit-box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
+    -moz-box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 50% 100%, rgba(254, 201, 13, 0.05), transparent 50%);
+        pointer-events: none;
+    }
+
+    .footer-content {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        gap: 40px;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        text-align: left;
+        margin-bottom: 40px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .single-footer-widget {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        padding: 30px;
+        -webkit-border-radius: var(--radius);
+        -moz-border-radius: var(--radius);
+        border-radius: var(--radius);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        -moz-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        min-width: 250px;
+        max-width: 400px;
+        -webkit-transition: -webkit-transform 0.3s ease, -webkit-box-shadow 0.3s ease;
+        -moz-transition: -moz-transform 0.3s ease, -moz-box-shadow 0.3s ease;
+        -o-transition: -o-transform 0.3s ease, -o-box-shadow 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+
+        h4 {
+            color: var(--accent);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+
+            &::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 40px;
+                height: 3px;
+                background: var(--accent);
+                border-radius: calc(var(--radius) / 4);
+            }
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                color: rgba(255, 255, 255, 0.7) !important;
+            }
+        }
+
+        a, i {
+            color: rgba(255, 255, 255, 0.7) !important;
+            text-decoration: none;
+            font-size: 0.95em;
+
+            &:hover {
+                color: var(--accent) !important;
+                padding-left: 8px;
+                text-shadow: 0 0 10px rgba(254, 201, 13, 0.3);
+            }
+        }
+
+        i {
+            color: var(--accent) !important;
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+    }
+
+    .footer-bottom-text {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 25px;
+        font-size: 0.9em;
+        color: var(--text-muted);
+        position: relative;
+        z-index: 1;
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
