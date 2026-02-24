@@ -3,9 +3,10 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
 import "../../../styles/apps/chem/style.scss"
 
 const description = "Explore the interactive Periodic Table of Elements at Kamalpur Netaji High School (KNHS). Detailed information about atomic numbers, symbols, categories, and electronic configurations for all 118 elements.";
+const keywords = "Periodic Table, Chemistry, Elements, Interactive Periodic Table, Atomic Number, Chemical Symbols, Science Education, KNHS Chem Lab";
 ---
 
-<BaseLayout title="Periodic Table" description={description}>
+<BaseLayout title="Periodic Table" description={description} keywords={keywords}>
   <Fragment slot="head">
     <style is:inline>
         .chem-container {

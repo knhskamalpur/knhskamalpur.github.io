@@ -2,9 +2,11 @@
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import '../styles/styles.scss'
+const defaultKeywords = 'Kamalpur Netaji High School, KNHS, School, Education, West Bengal, Bankura, Chhatna, H.S. School';
 const {
   title = '',
   description = 'Official website for Kamalpur Netaji High School (H.S.) Estd 1956.',
+  keywords = defaultKeywords,
   image = '/assets/images/knhs.webp'
 } = Astro.props;
 
@@ -12,6 +14,7 @@ const siteName = 'Official Website of Kamalpur Netaji High School | KNHS';
 const fullTitle = title ? `${title} - ${siteName}` : siteName;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.url);
+const mergedKeywords = `${keywords}, ${defaultKeywords}`;
 ---
 <!doctype html>
 <html lang="en">
@@ -23,6 +26,7 @@ const socialImageURL = new URL(image, Astro.url);
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="KNHS">
     <meta name="description" content={description}>
+    <meta name="keywords" content={mergedKeywords}>
     <meta name="color-schema" content="light dark">
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description}>
