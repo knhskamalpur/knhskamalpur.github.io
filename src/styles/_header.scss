@@ -37,10 +37,10 @@ header {
     .logo {
         width: 100px;
         height: 100px;
-        -webkit-filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.619));
-        -moz-filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.619));
-        -o-filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.619));
-        filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.619));
+        -webkit-filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.300));
+        -moz-filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.300));
+        -o-filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.300));
+        filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.300));
 
         @media (max-width: 768px) {
             width: 80px;
