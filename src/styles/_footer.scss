@@ -87,12 +87,6 @@ footer {
         -o-transition: -o-transform 0.3s ease, -o-box-shadow 0.3s ease;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-        &:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
-            border-color: rgba(254, 201, 13, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-        }
 
         h4 {
             color: var(--accent);
