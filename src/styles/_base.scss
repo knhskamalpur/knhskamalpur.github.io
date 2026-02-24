@@ -7,9 +7,7 @@ body {
     font-variation-settings: var(--font-variation-settings, "wdth" 100);
     margin: 0;
     padding: 0;
-    background: linear-gradient(rgba(1, 47, 99, 0.8), rgba(1, 47, 99, 0.8)), url('/assets/images/bg.jpg');
-    background-repeat: repeat;
-    background-attachment: fixed;
+    background-color: var(--primary-bg);
     color: var(--text-primary);
     display: -webkit-box;
     display: -ms-flexbox;
@@ -20,6 +18,37 @@ body {
     flex-direction: column;
     min-height: 100vh;
     overflow-x: hidden; /* Prevent horizontal scroll causing issues */
+    position: relative;
+
+    &::before {
+        content: '';
+        position: fixed;
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        background: linear-gradient(rgba(1, 47, 99, 0.8), rgba(1, 47, 99, 0.8)), url('/assets/images/bg.jpg');
+        background-repeat: repeat;
+        background-size: auto;
+        z-index: -1;
+        animation: slowBgFloat 40s ease-in-out infinite;
+        pointer-events: none;
+    }
+}
+
+@keyframes slowBgFloat {
+    0% {
+        transform: perspective(1500px) rotateX(0deg) rotateY(0deg) scale(1.05);
+    }
+    33% {
+        transform: perspective(1500px) rotateX(2deg) rotateY(-2deg) scale(1.1);
+    }
+    66% {
+        transform: perspective(1500px) rotateX(-2deg) rotateY(2deg) scale(1.08);
+    }
+    100% {
+        transform: perspective(1500px) rotateX(0deg) rotateY(0deg) scale(1.05);
+    }
 }
 
 img {
