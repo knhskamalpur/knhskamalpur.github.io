@@ -145,6 +145,23 @@ import '../styles/styles.scss';
             padding: 5px 12px;
             border-radius: var(--radius);
         }
+        #reset-stats {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-secondary, #ccc);
+            padding: 4px 8px;
+            border-radius: calc(var(--radius) / 2);
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+            margin-top: 10px;
+            align-self: center;
+        }
+        #reset-stats:hover {
+            color: var(--accent, #fec90d);
+            border-color: var(--accent, #fec90d);
+            background: rgba(254, 201, 13, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -168,6 +185,7 @@ import '../styles/styles.scss';
                     <span class="stat-box">Streak: <span id="streak-count">0</span></span>
                     <span class="stat-box">Best: <span id="best-time">--</span>s</span>
                 </div>
+                <button id="reset-stats"><i class="fa fa-refresh"></i> Reset Stats</button>
             </div>
 
             <div style="margin-top: 30px;">
@@ -184,12 +202,19 @@ import '../styles/styles.scss';
             const streakEl = document.getElementById('streak-count');
             const bestTimeEl = document.getElementById('best-time');
             const timerBar = document.getElementById('timer-bar');
+            const resetBtn = document.getElementById('reset-stats');
             
             let currentAnswer;
-            let streak = 0;
+            let streak = parseInt(localStorage.getItem('math_streak') || '0');
             let startTime;
-            let bestTime = Infinity;
+            let bestTime = parseFloat(localStorage.getItem('math_best_time') || 'Infinity');
             let timerInterval;
+
+            // Load initial values from localStorage
+            streakEl.textContent = streak;
+            if (isFinite(bestTime)) {
+                bestTimeEl.textContent = bestTime.toFixed(1);
+            }
 
             function updateTimer() {
                 const elapsed = (Date.now() - startTime) / 1000;
@@ -201,6 +226,7 @@ import '../styles/styles.scss';
                 if (percent >= 100) {
                     clearInterval(timerInterval);
                     streak = 0;
+                    localStorage.setItem('math_streak', streak);
                     streakEl.textContent = streak;
                     feedbackEl.textContent = "Time's up! Next one... ⏰";
                     feedbackEl.style.color = '#ff9800';
@@ -249,6 +275,7 @@ import '../styles/styles.scss';
                     clearInterval(timerInterval);
                     const timeTaken = (Date.now() - startTime) / 1000;
                     streak++;
+                    localStorage.setItem('math_streak', streak);
                     
                     let speedRank = '';
                     if (timeTaken < 1.5) speedRank = '⚡ Lightning Fast!';
@@ -257,13 +284,11 @@ import '../styles/styles.scss';
 
                     let timeMsg = `${speedRank} (${timeTaken.toFixed(1)}s)`;
                     
-                    if (timeTaken < bestTime && streak > 1) {
+                    if (timeTaken < bestTime) {
                         bestTime = timeTaken;
+                        localStorage.setItem('math_best_time', bestTime);
                         bestTimeEl.textContent = bestTime.toFixed(1);
                         timeMsg = `🔥 New Record: ${timeTaken.toFixed(1)}s!`;
-                    } else if (streak === 1) {
-                        bestTime = timeTaken;
-                        bestTimeEl.textContent = bestTime.toFixed(1);
                     }
 
                     feedbackEl.textContent = streak % 5 === 0 ? `Streak ${streak}! ${timeMsg}` : timeMsg;
@@ -282,6 +307,7 @@ import '../styles/styles.scss';
                     if (inputEl.value !== '') {
                         clearInterval(timerInterval);
                         streak = 0;
+                        localStorage.setItem('math_streak', streak);
                         feedbackEl.textContent = 'Concentrate! Next one... ❌';
                         feedbackEl.style.color = '#f44336';
                         streakEl.textContent = streak;
@@ -290,6 +316,18 @@ import '../styles/styles.scss';
                     }
                 }
             }
+
+            resetBtn.addEventListener('click', () => {
+                localStorage.removeItem('math_streak');
+                localStorage.removeItem('math_best_time');
+                streak = 0;
+                bestTime = Infinity;
+                streakEl.textContent = '0';
+                bestTimeEl.textContent = '--';
+                feedbackEl.textContent = 'Stats Reset! 🔄';
+                feedbackEl.style.color = 'var(--accent)';
+                generateEquation();
+            });
 
             submitBtn.addEventListener('click', checkAnswer);
             inputEl.addEventListener('keypress', (e) => {
