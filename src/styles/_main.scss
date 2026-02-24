@@ -44,15 +44,34 @@ main {
         -webkit-border-radius: var(--radius);
         -moz-border-radius: var(--radius);
         border-radius: var(--radius);
-        -webkit-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        -moz-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         width: 100%;
         text-align: center;
         color: white;
         -webkit-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         -moz-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            -webkit-transition: 0.5s;
+            -moz-transition: 0.5s;
+            transition: 0.5s;
+        }
+
+        &:hover::before {
+            left: 100%;
+            -webkit-transition: 0.8s;
+            -moz-transition: 0.8s;
+            transition: 0.8s;
+        }
 
         p {
             margin: 0;
