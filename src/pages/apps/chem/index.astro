@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import "../../../styles/apps/chem/style.scss"
+
+const description = "Interactive Chemistry utilities including an advanced periodic table, molecular editor, and visualization tools for students at Kamalpur Netaji High School.";
 ---
 
-<BaseLayout title="Chemistry Learning Hub">
+<BaseLayout title="Chemistry Learning Hub" description={description}>
   <Fragment slot="head">
   </Fragment>
 

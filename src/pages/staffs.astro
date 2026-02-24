@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 
+const description = "Meet the dedicated teaching and non-teaching staff members of Kamalpur Netaji High School (H.S.) who work tirelessly to provide quality education.";
+
 const staffList = [
   { name: "Paramita Mahadani", role: "AT", img: "/assets/images/teachers/teacher-female.png" },
   { name: "Aditya Prasad De", role: "CLERK", img: "/assets/images/teachers/teacher_avatar.jpg" },
@@ -43,7 +45,7 @@ const staffList = [
 const categories = ["All", "AT", "CLERK", "GROUP D"];
 ---
 
-<BaseLayout title="Staffs">
+<BaseLayout title="Staffs" description={description}>
     <style slot="head">
         /* Custom Staff Styles */
         .staff-section {

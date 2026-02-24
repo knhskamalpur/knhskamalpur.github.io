@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import "../../../styles/apps/chem/style.scss"
+
+const description = "Explore the interactive Periodic Table of Elements at Kamalpur Netaji High School (KNHS). Detailed information about atomic numbers, symbols, categories, and electronic configurations for all 118 elements.";
 ---
 
-<BaseLayout title="Periodic Table">
+<BaseLayout title="Periodic Table" description={description}>
   <Fragment slot="head">
     <style is:inline>
         .chem-container {

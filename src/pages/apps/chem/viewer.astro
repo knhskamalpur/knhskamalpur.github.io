@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import "../../../styles/apps/chem/style.scss"
+
+const description = "Interactive 3D Molecular Viewer for exploring complex chemical structures and compounds, specifically curated for the students of Kamalpur Netaji High School.";
 ---
 
-<BaseLayout title="Molecular Viewer">
+<BaseLayout title="Molecular Viewer" description={description}>
   <Fragment slot="head">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/kekule/dist/themes/default/kekule.css" />
     <style is:inline>

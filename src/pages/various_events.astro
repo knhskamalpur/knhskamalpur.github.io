@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 
+const description = "Discover the wide range of events and extracurricular activities at Kamalpur Netaji High School (H.S.), from sports and annual functions to cultural programs.";
+
 const events = [
   { img: "5th_september__L.jpg", caption: "5th September" },
   { img: "annual_function__L.jpg", caption: "Annual Function" },
@@ -20,7 +22,7 @@ const events = [
 ];
 ---
 
-<BaseLayout title="Various Events">
+<BaseLayout title="Various Events" description={description}>
   <section>
     <h2>Various Events</h2>
     <p>Glimpses of activities and events at our school.</p>

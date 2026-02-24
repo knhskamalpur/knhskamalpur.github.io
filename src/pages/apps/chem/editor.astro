@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import "../../../styles/apps/chem/style.scss"
+
+const description = "Draw and visualize organic and inorganic chemical structures with our integrated Molecular Editor, designed for students and chemistry enthusiasts.";
 ---
 
-<BaseLayout title="Molecular Editor">
+<BaseLayout title="Molecular Editor" description={description}>
   <Fragment slot="head">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/kekule/dist/themes/default/kekule.css" />
     <style is:inline>

@@ -11,9 +11,11 @@ const carouselItems = [
     { img: "physical_edication__L.jpg", title: "Physical Education" },
     { img: "wall_megazine__L.jpg", title: "Wall Magazine" }
 ];
+
+const description = "Official website of Kamalpur Netaji High School (H.S.). Discover our history, academic excellence, extracurricular achievements, and school facilities since 1956.";
 ---
 
-<BaseLayout title="Home">
+<BaseLayout title="Home" description={description}>
     <span slot="head">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">

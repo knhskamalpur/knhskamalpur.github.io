@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 
+const description = "Explore the vibrant life at Kamalpur Netaji High School (H.S.) through our photo gallery, featuring campus events, students, and school activities.";
+
 const images = [
   "114243.jpg", "119825.jpg", "129111.jpg", "161752.jpg", "165520.jpg",
   "195411.jpg", "221256.jpg", "239499.jpg", "26715.jpg", "267997.jpg",
@@ -13,7 +15,7 @@ const images = [
 ];
 ---
 
-<BaseLayout title="Gallery">
+<BaseLayout title="Gallery" description={description}>
   <span slot="head">
     <style>
       main { max-width: 1200px; }

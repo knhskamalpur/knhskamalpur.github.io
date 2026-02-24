@@ -2,7 +2,16 @@
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import '../styles/styles.scss'
-const { title = '' } = Astro.props;
+const {
+  title = '',
+  description = 'Official website for Kamalpur Netaji High School (H.S.) Estd 1956.',
+  image = '/assets/images/knhs.webp'
+} = Astro.props;
+
+const siteName = 'Official Website of Kamalpur Netaji High School | KNHS';
+const fullTitle = title ? `${title} - ${siteName}` : siteName;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.url);
 ---
 <!doctype html>
 <html lang="en">
@@ -13,20 +22,20 @@ const { title = '' } = Astro.props;
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="KNHS">
-    <meta name="description" content="Official website for Kamalpur Netaji High School (H.S.)">
+    <meta name="description" content={description}>
     <meta name="color-schema" content="light dark">
-    <meta property="og:title" content={title ? `${title} - Kamalpur Netaji High School` : 'Kamalpur Netaji High School'}>
-    <meta property="og:description" content="Official website for Kamalpur Netaji High School (H.S.)">
-    <meta property="og:image" content="https://knhs.in/assets/images/knhs.webp">
-    <meta property="og:url" content="https://knhs.in">
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description}>
+    <meta property="og:image" content={socialImageURL}>
+    <meta property="og:url" content={canonicalURL}>
     <meta property="og:type" content="website">
-    <title>{title ? `${title} - Kamalpur Netaji High School` : 'Kamalpur Netaji High School'}</title>
+    <title>{fullTitle}</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="manifest" href="/manifest.json">
-    <link rel="canonical" href="https://knhs.in" />
+    <link rel="canonical" href={canonicalURL} />
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
