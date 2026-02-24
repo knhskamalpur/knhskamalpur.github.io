@@ -65,7 +65,7 @@ nav {
 
         &:hover, &:focus, &.active {
             background-color: var(--accent);
-            color: #004ea8 !important;
+            color: var(--primary-bg);
             text-decoration: none;
             -webkit-box-shadow: 0 4px 12px rgba(254, 201, 13, 0.3);
             -moz-box-shadow: 0 4px 12px rgba(254, 201, 13, 0.3);
