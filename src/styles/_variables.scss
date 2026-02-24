@@ -1,9 +1,12 @@
 /* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
+$primary-bg: #012f63;
+$accent: #fec90d;
+
 :root {
-  --primary-bg: #012f63;
+  --primary-bg: #{$primary-bg};
   --header-bg-start: #002b5c;
   --header-bg-end: #001a38;
-  --accent: #fec90d;
+  --accent: #{$accent};
   --text-primary: white;
   --text-secondary: rgba(255, 255, 255, 0.8);
   --text-muted: rgba(255, 255, 255, 0.5);

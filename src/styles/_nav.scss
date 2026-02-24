@@ -1,6 +1,8 @@
 /* Copyright belongs to Kamalpur Netaji High School (H.S.) Estd 1956 */
+@use "variables" as vars;
+
 nav {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(white, 0.05);
     padding: 8px 10px;
     -webkit-border-radius: calc(var(--radius) * 6.25);
     -moz-border-radius: calc(var(--radius) * 6.25);
@@ -8,13 +10,13 @@ nav {
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     border: 1px solid var(--glass-border);
-    -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 8px 32px rgba(black, 0.2);
+    -moz-box-shadow: 0 8px 32px rgba(black, 0.2);
+    box-shadow: 0 8px 32px rgba(black, 0.2);
     display: inline-block;
     vertical-align: middle;
     position: relative;
-    border: 1.5px solid rgba(254, 201, 13, 0.3);
+    border: 1.5px solid rgba(vars.$accent, 0.3);
 
     &::before {
         content: 'ESTD 1956';
@@ -29,17 +31,17 @@ nav {
         font-size: 0.6rem;
         letter-spacing: 1.5px;
         color: var(--accent);
-        background: var(--primary-bg);
+        background: vars.$primary-bg;
         padding: 2px 10px;
-        border: 1px solid var(--accent);
+        border: 1px solid rgba(vars.$accent, 0.35);
         -webkit-border-radius: 20px;
         -moz-border-radius: 20px;
         border-radius: 20px;
         text-transform: uppercase;
         font-weight: 700;
-        -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        -moz-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        -webkit-box-shadow: 0 4px 12px rgba(black, 0.4);
+        -moz-box-shadow: 0 4px 12px rgba(black, 0.4);
+        box-shadow: 0 4px 12px rgba(black, 0.4);
         z-index: 2;
         white-space: nowrap;
     }
@@ -98,7 +100,7 @@ nav {
 
     a {
         color: var(--accent);
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        text-shadow: 1px 1px 2px rgba(black, 0.5);
         text-decoration: none;
         font-size: 1.05em;
         font-weight: 500;
@@ -119,9 +121,9 @@ nav {
         i {
             margin-right: 6px;
             font-size: 0.95em;
-            -webkit-filter: drop-shadow(0 0 2px rgba(254, 201, 13, 0.2));
-            -moz-filter: drop-shadow(0 0 2px rgba(254, 201, 13, 0.2));
-            filter: drop-shadow(0 0 2px rgba(254, 201, 13, 0.2));
+            -webkit-filter: drop-shadow(0 0 2px rgba(vars.$accent, 0.2));
+            -moz-filter: drop-shadow(0 0 2px rgba(vars.$accent, 0.2));
+            filter: drop-shadow(0 0 2px rgba(vars.$accent, 0.2));
         }
 
         &:hover, &:focus, &.active {
@@ -130,9 +132,9 @@ nav {
             background: linear-gradient(135deg, var(--accent) 0%, #e6b60c 100%);
             color: var(--primary-bg);
             text-decoration: none;
-            -webkit-box-shadow: 0 4px 15px rgba(254, 201, 13, 0.4);
-            -moz-box-shadow: 0 4px 15px rgba(254, 201, 13, 0.4);
-            box-shadow: 0 4px 15px rgba(254, 201, 13, 0.4);
+            -webkit-box-shadow: 0 4px 15px rgba(vars.$accent, 0.2);
+            -moz-box-shadow: 0 4px 15px rgba(vars.$accent, 0.2);
+            box-shadow: 0 4px 15px rgba(vars.$accent, 0.2);
         }
     }
 }
