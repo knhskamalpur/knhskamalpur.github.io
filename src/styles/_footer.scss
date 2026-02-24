@@ -26,6 +26,24 @@ footer {
         pointer-events: none;
     }
 
+    &::after {
+        content: '';
+        position: absolute;
+        top: 20%;
+        right: -5%;
+        width: 500px;
+        height: 500px;
+        background-image: url('/assets/images/knhs.webp');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        opacity: 0.04;
+        transform: perspective(1000px) rotateX(30deg) rotateY(-35deg) rotateZ(15deg);
+        pointer-events: none;
+        filter: grayscale(100%) brightness(2);
+        z-index: 0;
+    }
+
     .footer-content {
         display: -webkit-box;
         display: -ms-flexbox;
@@ -67,6 +85,12 @@ footer {
         -o-transition: -o-transform 0.3s ease, -o-box-shadow 0.3s ease;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
 
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+            border-color: rgba(254, 201, 13, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
 
         h4 {
             color: var(--accent);
