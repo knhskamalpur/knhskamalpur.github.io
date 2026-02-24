@@ -2,11 +2,11 @@
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import '../styles/styles.scss'
-const defaultKeywords = 'Kamalpur Netaji High School, KNHS, School, Education, West Bengal, Bankura, Chhatna, H.S. School';
+const defaultKeywords = 'Kamalpur Netaji High School, KNHS Kamalpur, Kamalpur Netaji H.S., KNHS Official, Sudhir Kumar Rakshit, Chhatna, Bankura, UDISE Code 19130409604, WBCHSE Code 14041, West Bengal School Search, Rural Schools in Bankura, Co-educational Higher Secondary School, WBBSE Secondary School, WBCHSE Class 11 and 12, Bengali Medium School Bankura, Government Sponsored School West Bengal, Banglar Shiksha Portal, Computer Literacy Project, ICT Lab, Smart Classrooms, Annual Sports, Annual Function, Mid-Day-Meal, SSA, Education First West Bengal, Kamalpur Netaji High School Facebook, fb.com/knhsofficial, @knhsofficial';
 const {
   title = '',
   description = 'Official website for Kamalpur Netaji High School (H.S.) Estd 1956.',
-  keywords = defaultKeywords,
+  keywords = '',
   image = '/assets/images/knhs.webp'
 } = Astro.props;
 
@@ -14,7 +14,7 @@ const siteName = 'Official Website of Kamalpur Netaji High School | KNHS';
 const fullTitle = title ? `${title} - ${siteName}` : siteName;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.url);
-const mergedKeywords = `${keywords}, ${defaultKeywords}`;
+const mergedKeywords = keywords.trim() !== '' ? `${keywords}, ${defaultKeywords}` : defaultKeywords;
 ---
 <!doctype html>
 <html lang="en">
