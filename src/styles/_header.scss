@@ -5,7 +5,7 @@ header {
     background: -moz-linear-gradient(315deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
     background: -o-linear-gradient(315deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
     background: linear-gradient(135deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
-    padding: 0;
+    padding: 15px 0;
     -webkit-box-shadow: 0 4px 20px var(--shadow-dark);
     -moz-box-shadow: 0 4px 20px var(--shadow-dark);
     box-shadow: 0 4px 20px var(--shadow-dark);
@@ -14,14 +14,13 @@ header {
     text-align: center; 
 
     &::after {
-        content: 'EDUCATION to EXPERINCE • EXPRIENCE to EXCELLENCE';
+        content: 'EDUCATION to EXPERIENCE • EXPERIENCE to EXCELLENCE';
         position: absolute;
-        bottom: -8px;
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-        -moz-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        transform: translateX(-50%);
+        bottom: 0;
+        -webkit-transform: translate(-50%, 50%);
+        -moz-transform: translate(-50%, 50%);
+        -ms-transform: translate(-50%, 50%);
+        transform: translate(-50%, 50%);
         font-family: var(--font-family);
         font-size: 0.6rem;
         letter-spacing: 1.5px;
