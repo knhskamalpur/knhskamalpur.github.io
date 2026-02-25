@@ -60,8 +60,8 @@ const isActive = (path) => {
   // Close nav when clicking outside
   document.addEventListener('click', (event) => {
     if (nav?.classList.contains('is-open') && 
-        !nav.contains(event.target) && 
-        !toggle?.contains(event.target)) {
+        !nav.contains(event.target as Node) && 
+        !toggle?.contains(event.target as Node)) {
       nav.classList.remove('is-open');
       toggle?.classList.remove('is-active');
       if (icon) icon.className = 'fa fa-bars';
