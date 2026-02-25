@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!isDeleting && charIndex === currentText.length) {
             isDeleting = true;
-            typeSpeed = 5000;
+            typeSpeed = 7000;
         } else if (isDeleting && charIndex === 0) {
             isDeleting = false;
             textIndex = (textIndex + 1) % texts.length;
@@ -36,6 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(type, typeSpeed);
     }
 
-    setTimeout(type, 5000);
+    setTimeout(type, 7000);
 });
 

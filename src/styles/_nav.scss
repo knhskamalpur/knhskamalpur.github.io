@@ -16,7 +16,7 @@ nav {
     display: inline-block;
     vertical-align: middle;
     position: relative;
-    border: 1.5px solid rgba(vars.$accent, 0.3);
+    border: 1px solid rgba(vars.$accent, 0.25);
 
     &::before {
         content: 'EDUCATION to EXPERINCE • EXPRIENCE to EXCELLENCE';
@@ -88,8 +88,8 @@ nav {
                 top: 25%;
                 height: 50%;
                 width: 1px;
-                background: linear-gradient(to bottom, transparent, var(--glass-border), transparent);
-                opacity: 0.5;
+                background: linear-gradient(to bottom, transparent, rgba(vars.$accent, 0.35), transparent);
+                opacity: 1;
 
                 @media (max-width: 768px) {
                     display: none;
@@ -127,14 +127,12 @@ nav {
         }
 
         &:hover, &:focus, &.active {
-            background: -webkit-linear-gradient(135deg, var(--accent) 0%, #e6b60c 100%);
-            background: -moz-linear-gradient(135deg, var(--accent) 0%, #e6b60c 100%);
-            background: linear-gradient(135deg, var(--accent) 0%, #e6b60c 100%);
-            color: var(--primary-bg);
+            background: rgba(vars.$accent, 0.25);
+            color: var(--accent);
             text-decoration: none;
-            -webkit-box-shadow: 0 4px 15px rgba(vars.$accent, 0.2);
-            -moz-box-shadow: 0 4px 15px rgba(vars.$accent, 0.2);
-            box-shadow: 0 4px 15px rgba(vars.$accent, 0.2);
+            -webkit-box-shadow: 0 0 10px rgba(vars.$accent, 0.1);
+            -moz-box-shadow: 0 0 10px rgba(vars.$accent, 0.1);
+            box-shadow: 0 0 10px rgba(vars.$accent, 0.1);
         }
     }
 }
