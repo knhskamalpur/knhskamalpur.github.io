@@ -18,17 +18,33 @@ nav {
     position: relative;
 
     @media (max-width: 768px) {
-        width: 95%;
-        -webkit-border-radius: calc(var(--radius) * 3.125);
-        -moz-border-radius: calc(var(--radius) * 3.125);
-        border-radius: calc(var(--radius) * 3.125);
-        padding: 8px;
-        margin-top: 0px;
+        display: none; // Hidden by default on mobile
+        width: 90%;
+        margin: 15px auto;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: calc(100% + 5px);
+        z-index: 100;
+        background: rgba(vars.$primary-bg, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid var(--glass-border);
+        -webkit-border-radius: calc(var(--radius) * 2.5);
+        -moz-border-radius: calc(var(--radius) * 2.5);
+        border-radius: calc(var(--radius) * 2.5);
+        padding: 15px;
+        -webkit-box-shadow: 0 15px 35px rgba(black, 0.3);
+        -moz-box-shadow: 0 15px 35px rgba(black, 0.3);
+        box-shadow: 0 15px 35px rgba(black, 0.3);
+
+        &.is-open {
+            display: block; // Changed from inline-block for full width context
+            animation: navFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
 
         &::before {
-            top: -10px;
-            font-size: 0.5rem;
-            padding: 1.5px 7px;
+            display: none;
         }
     }
 
@@ -47,7 +63,21 @@ nav {
         flex-wrap: wrap;
 
         @media (max-width: 768px) {
-            gap: 5px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            padding: 0;
+            overflow: visible;
+
+            // Home item styling
+            li:first-child {
+                grid-column: span 2;
+                a {
+                    flex-direction: row;
+                    gap: 10px;
+                    i { margin-bottom: 0; }
+                }
+            }
         }
 
         li:not(:last-child) {
@@ -85,8 +115,18 @@ nav {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
         @media (max-width: 768px) {
-            padding: 8px 12px;
-            font-size: 0.9em;
+            padding: 12px 8px;
+            font-size: 0.85em;
+            white-space: normal;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+            border-radius: calc(var(--radius) * 1.5);
+            background: rgba(white, 0.03);
+            border: 1px solid rgba(white, 0.05);
         }
 
         i {
@@ -95,6 +135,12 @@ nav {
             -webkit-filter: drop-shadow(0 0 2px rgba(vars.$accent, 0.2));
             -moz-filter: drop-shadow(0 0 2px rgba(vars.$accent, 0.2));
             filter: drop-shadow(0 0 2px rgba(vars.$accent, 0.2));
+
+            @media (max-width: 768px) {
+                margin-right: 0;
+                margin-bottom: 4px;
+                font-size: 1.2em;
+            }
         }
 
         &:hover, &:focus, &.active {
@@ -105,6 +151,59 @@ nav {
             -moz-box-shadow: 0 0 10px rgba(vars.$accent, 0.1);
             box-shadow: 0 0 10px rgba(vars.$accent, 0.1);
         }
+    }
+}
+
+.mobile-nav-toggle {
+    display: none;
+
+    @media (max-width: 768px) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin: 0 auto;
+        width: 50px;
+        height: 50px;
+        background: rgba(white, 0.05);
+        border: 1px solid var(--glass-border);
+        color: rgba(white, 0.8);
+        border-radius: 50%;
+        cursor: pointer;
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        font-family: var(--font-family);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 32px rgba(black, 0.2);
+        position: relative;
+        z-index: 101;
+
+        i {
+            font-size: 1.3rem;
+            transition: transform 0.4s ease;
+        }
+
+        &.is-active {
+            background: rgba(vars.$accent, 0.25);
+            color: var(--accent);
+            border-color: rgba(vars.$accent, 0.4);
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}
+
+@keyframes navFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
     }
 }
 

@@ -23,7 +23,10 @@ const isActive = (path) => {
   </div>
 </header>
 <div class="nav-container">
-  <nav>
+  <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+    <i class="fa fa-bars"></i>
+  </button>
+  <nav id="main-nav">
     <ul>
       <li><a href="/" class={isActive("/") ? "active" : ""}><i class="fa fa-home"></i>Home</a></li>
       <li><a href="/staffs" class={isActive("/staffs") ? "active" : ""}><i class="fa fa-users"></i>Staffs</a></li>
@@ -35,3 +38,33 @@ const isActive = (path) => {
     </ul>
   </nav>
 </div>
+
+<script>
+  const toggle = document.querySelector('.mobile-nav-toggle');
+  const nav = document.querySelector('#main-nav');
+  const icon = toggle?.querySelector('i');
+
+  toggle?.addEventListener('click', () => {
+    nav?.classList.toggle('is-open');
+    toggle.classList.toggle('is-active');
+    
+    if (icon) {
+      if (nav?.classList.contains('is-open')) {
+        icon.className = 'fa fa-times';
+      } else {
+        icon.className = 'fa fa-bars';
+      }
+    }
+  });
+
+  // Close nav when clicking outside
+  document.addEventListener('click', (event) => {
+    if (nav?.classList.contains('is-open') && 
+        !nav.contains(event.target) && 
+        !toggle?.contains(event.target)) {
+      nav.classList.remove('is-open');
+      toggle?.classList.remove('is-active');
+      if (icon) icon.className = 'fa fa-bars';
+    }
+  });
+</script>
