@@ -4,13 +4,13 @@ header {
     background: -moz-linear-gradient(315deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
     background: -o-linear-gradient(315deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
     background: linear-gradient(135deg, var(--header-bg-start) 0%, var(--header-bg-end) 100%);
-    padding: 25px 0 35px;
+    padding: 25px 0;
     -webkit-box-shadow: 0 4px 20px var(--shadow-dark);
     -moz-box-shadow: 0 4px 20px var(--shadow-dark);
     box-shadow: 0 4px 20px var(--shadow-dark);
     position: relative;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    text-align: center; /* Ensures nav centers */
+    text-align: center; 
 
     .header-content {
         display: -webkit-box;
@@ -83,5 +83,12 @@ header {
         font-size: 0.9em;
         font-weight: normal;
     }
+}
+
+.nav-container {
+    text-align: center;
+    padding: 30px 0 10px;
+    position: relative;
+    z-index: 10;
 }
 
