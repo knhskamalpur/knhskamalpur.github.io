@@ -2,14 +2,19 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 
 const carouselItems = [
-    { img: "5th_september__L.jpg", title: "5th September" },
-    { img: "annual_function__L.jpg", title: "Annual Function" },
-    { img: "annual_sports__L.jpg", title: "Annual Sports" },
-    { img: "COMPUTER_LITERACY_PROJECT__L.jpg", title: "Computer Literacy Project" },
-    { img: "drawing__L.jpg", title: "Drawing" },
-    { img: "games__L.jpg", title: "Games" },
-    { img: "physical_edication__L.jpg", title: "Physical Education" },
-    { img: "wall_megazine__L.jpg", title: "Wall Magazine" }
+    { img: "various_events/5th_september__L.jpg", title: "5th September" },
+    { img: "various_events/annual_function__L.jpg", title: "Annual Function" },
+    { img: "various_events/annual_sports__L.jpg", title: "Annual Sports" },
+    { img: "various_events/drawing__L.jpg", title: "Drawing" },
+    { img: "various_events/games__L.jpg", title: "Games" },
+    { img: "various_events/physical_edication__L.jpg", title: "Physical Education" },
+    { img: "various_events/wall_megazine__L.jpg", title: "Wall Magazine" },
+
+    // Newly added gallery images
+    { img: "gallery/4te2SyLtyy_2026_02_26_00_35_49.jpg", title: "Gallery Photo" },
+    { img: "gallery/gHk6potBRG_2026_02_26_00_31_47.jpg", title: "Grand Reunion 2014" },
+    { img: "gallery/PmsH1ySg2g_2026_02_26_00_32_46.jpg", title: "Playground" },
+    { img: "gallery/Ff71JfD3u6_2026_02_26_00_25_47.jpg", title: "Gallery Photo" }
 ];
 
 const description = "Official website of Kamalpur Netaji High School (H.S.). Discover our history, academic excellence, extracurricular achievements, and school facilities since 1956.";
@@ -26,7 +31,7 @@ const keywords = "Kamalpur Netaji High School, KNHS, Bankura Schools, Chhatna Sc
         <div class="owl-carousel owl-theme">
             {carouselItems.map(item => (
                 <div class="item">
-                    <img src={`/assets/images/various_events/${item.img}`} alt={item.title}>
+                    <img src={`/assets/images/${item.img}`} alt={item.title}>
                     <div class="carousel-caption"><h3>{item.title}</h3></div>
                 </div>
             ))}
