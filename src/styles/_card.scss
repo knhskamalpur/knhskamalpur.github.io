@@ -1,0 +1,38 @@
+/* Shared card styles used by about-card and contact-info */
+.card {
+  background: #ffffff05;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 2rem;
+  -webkit-border-radius: var(--radius);
+  -moz-border-radius: var(--radius);
+  border-radius: var(--radius);
+  width: 100%;
+  color: white;
+  -webkit-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    transition: 0.5s;
+  }
+
+  &:hover::before {
+    left: 100%;
+    -webkit-transition: 0.8s;
+    -moz-transition: 0.8s;
+    transition: 0.8s;
+  }
+}

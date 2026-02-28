@@ -8,41 +8,10 @@ const keywords = "Contact KNHS, School Address, Bankura School Contact, Chhatna 
 <BaseLayout title="Contact Us" description={description} keywords={keywords}>
   <span slot="head">
     <style>
+      /* Use the shared .card styles from the main stylesheet by adding the class on the element.
+         Keep only contact-specific rules here. */
       .contact-info {
-        background: #ffffff00;
-        backdrop-filter: blur(3px);
-        -webkit-backdrop-filter: blur(3px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 2rem;
-        -webkit-border-radius: var(--radius);
-        -moz-border-radius: var(--radius);
-        border-radius: var(--radius);
-        width: 100%;
         text-align: left;
-        color: white;
-        -webkit-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-        -moz-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-        position: relative;
-        overflow: hidden;
-      }
-      .contact-info::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-        -webkit-transition: 0.5s;
-        -moz-transition: 0.5s;
-        transition: 0.5s;
-      }
-      .contact-info:hover::before {
-        left: 100%;
-        -webkit-transition: 0.8s;
-        -moz-transition: 0.8s;
-        transition: 0.8s;
       }
       .contact-info i {
         width: 30px;
@@ -133,7 +102,7 @@ const keywords = "Contact KNHS, School Address, Bankura School Contact, Chhatna 
   <section>
     <h2>Contact Us</h2>
     <p>We'd love to hear from you. Reach out to us using the details below.</p>
-    <div class="contact-info">
+    <div class="contact-info card">
       <ul>
         <li>
           <i class="fa fa-university" aria-hidden="true"></i>
