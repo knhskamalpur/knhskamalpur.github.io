@@ -10,12 +10,10 @@
   border-radius: var(--radius);
   width: 100%;
   color: white;
-  -webkit-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
   position: relative;
   overflow: hidden;
-
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px;
+  
   &::before {
     content: '';
     position: absolute;

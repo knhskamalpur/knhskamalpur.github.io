@@ -153,7 +153,6 @@ const keywords = "KNHS Staff, Teachers, Teaching Staff, School Administration, K
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: calc(var(--radius) * 2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             color: #fff;
             overflow: hidden;
@@ -161,6 +160,7 @@ const keywords = "KNHS Staff, Teachers, Teaching Staff, School Administration, K
             display: flex;
             flex-direction: column;
             text-decoration: none;
+            padding: 0 !important;
         }
 
         .staff-card:hover {
@@ -265,7 +265,7 @@ const keywords = "KNHS Staff, Teachers, Teaching Staff, School Administration, K
                 >
                     <div class="staff-grid">
                         {staffList.filter(staff => category === 'All' || (category === 'AT' && (staff.role === 'AT' || staff.role === 'AHM CUM TIC')) || staff.role === category).map(staff => (
-                            <div class="staff-card">
+                            <div class="staff-card card">
                                 <div class="staff-img-container">
                                     <img class="staff-img" src={staff.img} alt={`Photo of ${staff.name}`} loading="lazy" />
                                 </div>
