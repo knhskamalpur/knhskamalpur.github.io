@@ -1,0 +1,16 @@
+Generated: 2026-02-28
+Source: https://knhs.in
+
+https://knhs.in/
+https://knhs.in/about/
+https://knhs.in/contact/
+https://knhs.in/gallery/
+https://knhs.in/notice/
+https://knhs.in/staffs/
+https://knhs.in/various_events/
+https://knhs.in/apps/
+https://knhs.in/apps/chem/
+https://knhs.in/apps/chem/editor/
+https://knhs.in/apps/chem/periodic-table/
+https://knhs.in/apps/chem/viewer/
+https://knhs.in/apps/photoutils/
