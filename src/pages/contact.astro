@@ -101,17 +101,18 @@ const keywords = "Contact KNHS, School Address, Bankura School Contact, Chhatna 
       }
       .map-box iframe {
         width: 100%;
-        height: clamp(300px, 60vh, 700px) !important;
+        --map-height: clamp(300px, 60vh, 700px);
+        height: var(--map-height) !important;
         display: block;
         border: 0;
         border-radius: calc(var(--radius) - 6px);
         box-shadow: 0 6px 30px rgba(0,0,0,0.5);
         filter: saturate(0.98) contrast(0.96) brightness(0.98);
-        transition: filter 0.25s ease, transform 0.25s ease;
+        transition: filter 0.25s ease, height 0.28s ease;
       }
-      .map-box iframe:hover {
-        filter: saturate(1.05) contrast(1) brightness(1);
-        transform: scale(1.01);
+      .map-box:hover iframe {
+        --map-height: clamp(360px, 66vh, 780px) !important;
+        filter: saturate(1.02) contrast(1) brightness(1);
       }
 
       @media (max-width: 720px) {
@@ -119,7 +120,11 @@ const keywords = "Contact KNHS, School Address, Bankura School Contact, Chhatna 
           padding: 8px;
         }
         .map-box iframe {
-          height: clamp(220px, 44vh, 520px) !important;
+          --map-height: clamp(220px, 44vh, 520px);
+          height: var(--map-height) !important;
+        }
+        .map-box:hover iframe {
+          --map-height: clamp(260px, 50vh, 580px) !important;
         }
       }
     </style>
