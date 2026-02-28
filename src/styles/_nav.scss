@@ -41,6 +41,7 @@ nav {
         &.is-open {
             display: block; // Changed from inline-block for full width context
             animation: navFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 1px 1px 40px rgba(black, 0.7), 0 15px 35px rgba(black, 0.3);
         }
 
         &::before {
