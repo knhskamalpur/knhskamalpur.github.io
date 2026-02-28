@@ -116,9 +116,11 @@ header {
 
 .nav-container {
     text-align: center;
-    padding: 21px 0 10px;
+    /* Add horizontal padding so the nav doesn't touch viewport edges on narrow screens */
+    padding: 21px 16px 10px;
     position: relative;
     z-index: 10;
+    box-sizing: border-box;
 }
 
 /* Remove mobile button default tap highlight and browser focus box,
