@@ -1,0 +1,227 @@
+---
+import PlainLayout from '../layouts/PlainLayout.astro'
+
+const description = "View a beautiful moment from Kamalpur Netaji High School gallery";
+const keywords = "Photo, School Image, Gallery, KNHS";
+---
+
+<PlainLayout title="Image View" description={description} keywords={keywords}>
+  <span slot="head">
+    <style>
+      main { max-width: 95vw; margin: 0 auto; }
+
+      .view-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 200px);
+        padding: 30px 20px;
+      }
+
+      .view-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 900px;
+        margin-bottom: 20px;
+      }
+
+      .back-btn {
+        background-color: #012f63;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+      }
+
+      .back-btn:hover {
+        background-color: #fec90d;
+        color: #012f63;
+        transform: translateX(-5px);
+      }
+
+      .share-info {
+        background-color: rgba(254, 201, 13, 0.1);
+        border: 2px solid #fec90d;
+        padding: 15px 20px;
+        border-radius: 6px;
+        color: white;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .image-wrapper {
+        background-color: rgba(1, 47, 99, 0.3);
+        border: 2px solid #fec90d;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 900px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .image-wrapper img {
+        width: 100%;
+        height: auto;
+        border-radius: 6px;
+        display: block;
+      }
+
+      .image-info {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: rgba(1, 47, 99, 0.2);
+        border-radius: 6px;
+        border-left: 4px solid #fec90d;
+      }
+
+      .image-info p {
+        margin: 8px 0;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+      }
+
+      .error-message {
+        color: #ff6b6b;
+        background-color: rgba(255, 107, 107, 0.1);
+        border: 2px solid #ff6b6b;
+        padding: 20px;
+        border-radius: 6px;
+        text-align: center;
+        max-width: 500px;
+      }
+
+      @media (max-width: 768px) {
+        .view-header {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .back-btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .share-info {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </span>
+
+  <div class="view-container">
+    <div class="view-header" style="display: none;">
+      <a href="/gallery" class="back-btn">
+        ← Back to Gallery
+      </a>
+      <div class="share-info">
+        📸 Shared Image View
+      </div>
+    </div>
+
+    <div class="image-wrapper" style="display: none;">
+      <img id="sharedImage" src="" alt="Shared gallery image">
+      <div class="image-info">
+        <p id="imageName"><strong>Image Name:</strong> </p>
+        <p><strong>Source:</strong> Kamalpur Netaji High School Gallery</p>
+        <p style="font-size: 12px; color: rgba(255, 255, 255, 0.6);">Share this page link to share this image without exposing the direct image URL</p>
+      </div>
+    </div>
+
+    <div class="error-message" id="errorMessage">
+      <h2>Loading image...</h2>
+      <p>Please wait.</p>
+    </div>
+  </div>
+
+  <script is:inline>
+    // Initialize image view - client-side only
+    function initializeImageView() {
+      const params = new URLSearchParams(window.location.search);
+      const imageParam = params.get('image');
+      
+      console.log('Image param:', imageParam);
+
+      if (!imageParam) {
+        document.querySelector('#errorMessage').innerHTML = `
+          <h2>Oops! No image specified</h2>
+          <p>This page requires a valid image parameter in the URL.</p>
+          <p style="font-size: 12px; margin-top: 10px;">Example: /view?image=702762.jpg or /view?image=gallery/702762.jpg</p>
+          <a href="/gallery" class="back-btn">Go back to Gallery</a>
+        `;
+        return;
+      }
+
+      let imagePath = decodeURIComponent(imageParam);
+      console.log('Decoded image path:', imagePath);
+
+      // If it's just a filename, add gallery prefix
+      if (!imagePath.includes('/')) {
+        imagePath = `gallery/${imagePath}`;
+      }
+
+      // Security check
+      if (imagePath.includes('..') || imagePath.startsWith('/')) {
+        document.querySelector('#errorMessage').innerHTML = `
+          <h2>Invalid image path</h2>
+          <p>The image path contains invalid characters.</p>
+          <a href="/gallery" class="back-btn">Go back to Gallery</a>
+        `;
+        return;
+      }
+
+      const fullImagePath = `/assets/images/${imagePath}`;
+      console.log('Full image path:', fullImagePath);
+
+      // Set the image source
+      const imgElement = document.getElementById('sharedImage');
+      imgElement.src = fullImagePath;
+
+      // Set the image name
+      const nameElement = document.getElementById('imageName');
+      nameElement.innerHTML = `<strong>Image Name:</strong> ${imageParam}`;
+
+      // Show image wrapper and header, hide error
+      document.querySelector('.image-wrapper').style.display = 'block';
+      document.querySelector('.view-header').style.display = 'flex';
+      document.querySelector('#errorMessage').style.display = 'none';
+
+      // Log when image loads
+      imgElement.onload = function() {
+        console.log('Image loaded successfully:', fullImagePath);
+      };
+
+      imgElement.onerror = function() {
+        console.error('Failed to load image:', fullImagePath);
+        document.querySelector('#errorMessage').innerHTML = `
+          <h2>Image not found</h2>
+          <p>Could not load the image: <code>${imagePath}</code></p>
+          <p style="font-size: 12px; margin-top: 10px;">The image file may not exist or the path may be incorrect.</p>
+          <a href="/gallery" class="back-btn">Go back to Gallery</a>
+        `;
+        document.querySelector('.image-wrapper').style.display = 'none';
+        document.querySelector('.view-header').style.display = 'none';
+        document.querySelector('#errorMessage').style.display = 'block';
+      };
+    }
+
+    // Run when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeImageView);
+    } else {
+      initializeImageView();
+    }
+
+    // Also handle Astro view transitions
+    document.addEventListener('astro:after-swap', initializeImageView);
+  </script>
+</PlainLayout>
