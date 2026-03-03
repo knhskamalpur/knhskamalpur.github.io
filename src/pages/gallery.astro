@@ -40,6 +40,74 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
   <span slot="head">
     <style>
       main { max-width: 1200px; }
+
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        position: relative;
+        max-width: 90vw;
+        max-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 4px;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        background-color: #fec90d;
+        color: #012f63;
+        border: none;
+        border-radius: 50%;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(254, 201, 13, 0.4);
+      }
+
+      .modal-close:hover {
+        background-color: #ffd633;
+        transform: rotate(90deg) scale(1.1);
+        box-shadow: 0 6px 16px rgba(254, 201, 13, 0.6);
+      }
+
+      .modal-close:active {
+        transform: rotate(90deg) scale(0.95);
+      }
+
+      .gallery-image {
+        transition: transform 0.2s ease;
+      }
+
+      /* .gallery-image:hover {
+        transform: scale(1.05);
+      } */
     </style>
   </span>
 
@@ -49,11 +117,19 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
     <div class="gallery-grid">
       {images.map(img => (
         <div class="gallery-item">
-          <img src={`/assets/images/gallery/${img}`} alt="Gallery Image" loading="lazy">
+          <img src={`/assets/images/gallery/${img}`} alt="Gallery Image" loading="lazy" class="gallery-image" style="cursor: pointer;">
         </div>
       ))}
     </div>
   </section>
+
+  <!-- Lightbox Modal -->
+  <div id="imageModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <img id="modalImage" src="" alt="Enlarged view">
+    </div>
+  </div>
 
   <script is:inline>
     function shuffleGallery() {
@@ -65,10 +141,53 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
       }
     }
 
+    // Initialize lightbox functionality
+    function initLightbox() {
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      const modalClose = document.querySelector('.modal-close');
+      const galleryImages = document.querySelectorAll('.gallery-image');
+
+      // Open modal on image click
+      galleryImages.forEach(img => {
+        img.addEventListener('click', function() {
+          modal.style.display = 'flex';
+          modalImage.src = this.src;
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      // Close modal on close button click
+      modalClose.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      });
+
+      // Close modal on outside click
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+
+      // Close modal on ESC key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+    }
+
     // Run on initial load
     shuffleGallery();
+    initLightbox();
 
     // Support for Astro view transitions
-    document.addEventListener('astro:after-swap', shuffleGallery);
+    document.addEventListener('astro:after-swap', function() {
+      shuffleGallery();
+      initLightbox();
+    });
   </script>
 </BaseLayout>
