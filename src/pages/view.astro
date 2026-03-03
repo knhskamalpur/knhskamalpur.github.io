@@ -140,7 +140,7 @@ const keywords = "Photo, School Image, Gallery, KNHS";
     function initializeImageView() {
       const params = new URLSearchParams(window.location.search);
       const imageParam = params.get('image');
-      
+
       console.log('Image param:', imageParam);
 
       if (!imageParam) {
@@ -153,7 +153,21 @@ const keywords = "Photo, School Image, Gallery, KNHS";
         return;
       }
 
-      let imagePath = decodeURIComponent(imageParam);
+      // Attempt to interpret the parameter as base64-encoded path first.
+      let imagePath = imageParam;
+      try {
+        const maybeDecoded = atob(decodeURIComponent(imageParam));
+        // Basic sanity check: decoded should contain a slash or a filename extension
+        if (maybeDecoded && (maybeDecoded.includes('/') || /\.(jpg|jpeg|png|gif|webp)$/i.test(maybeDecoded))) {
+          imagePath = maybeDecoded;
+        } else {
+          imagePath = decodeURIComponent(imageParam);
+        }
+      } catch (err) {
+        // Not valid base64 or decode failed; treat as plain encoded path
+        imagePath = decodeURIComponent(imageParam);
+      }
+
       console.log('Decoded image path:', imagePath);
 
       // If it's just a filename, add gallery prefix

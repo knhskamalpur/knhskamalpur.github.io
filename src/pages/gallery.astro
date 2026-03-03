@@ -208,14 +208,24 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
     function shareImage(button) {
       const imageName = button.getAttribute('data-image');
       const imagePath = `gallery/${imageName}`;
-      const shareUrl = `${window.location.origin}/view?image=${encodeURIComponent(imagePath)}`;
-      
+
+      // Encode path as base64 for compact/safe sharing in the URL
+      let encoded;
+      try {
+        encoded = btoa(imagePath);
+      } catch (e) {
+        // Fallback for any unexpected encoding problems
+        encoded = encodeURIComponent(imagePath);
+      }
+
+      const shareUrl = `${window.location.origin}/view?image=${encodeURIComponent(encoded)}`;
+
       // Copy to clipboard
       navigator.clipboard.writeText(shareUrl).then(() => {
         const originalText = button.innerHTML;
         button.innerHTML = '✓ Copied!';
         button.style.backgroundColor = '#4caf50';
-        
+
         setTimeout(() => {
           button.innerHTML = originalText;
           button.style.backgroundColor = '';
