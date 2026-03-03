@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+
+const description = "Supabase client demo page — excluded from search engines.";
+const keywords = "Supabase, Demo, KNHS Apps";
+---
+
+<BaseLayout title="Supabase Demo" description={description} keywords={keywords}>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="googlebot" content="noindex" />
+    <style is:inline>
+      .demo-wrap{padding:20px;max-width:900px;margin:0 auto}
+      .demo-card{background:var(--glass-bg);border:1px solid var(--glass-border);padding:18px;border-radius:8px}
+      #status{margin-top:12px;color:var(--accent)}
+      #output{margin-top:12px;background:rgba(0,0,0,0.03);padding:12px;border-radius:6px;overflow:auto}
+      #initBtn{padding:10px 14px;border-radius:6px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+    </style>
+  </Fragment>
+
+  <section class="demo-wrap">
+    <h2>Supabase Client Demo</h2>
+    <p>This page demonstrates initializing the Supabase JavaScript client in the browser. It is excluded from search engines.</p>
+
+    <div class="demo-card">
+      <p><strong>Project URL</strong>: https://nacfsoeyxzulviayzdgs.supabase.co</p>
+      <p><strong>Publishable API Key</strong>: sb_publishable_ghW5D8RpnYZ03cv-06TG4A_mA7meDC7</p>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button id="initBtn">Initialize Supabase</button>
+        <input id="tableName" placeholder="public_table_name" value="demodata" style="padding:8px;border-radius:6px;border:1px solid var(--glass-border)" />
+        <button id="queryBtn">Query table (limit 10)</button>
+      </div>
+
+      <div id="status">Not initialized</div>
+      <pre id="output"></pre>
+    </div>
+  </section>
+
+  <Fragment slot="scripts">
+    <script is:inline type="module">
+      const PROJECT_URL = 'https://nacfsoeyxzulviayzdgs.supabase.co';
+      const PUBLIC_KEY = 'sb_publishable_ghW5D8RpnYZ03cv-06TG4A_mA7meDC7';
+      let supabase = null;
+
+      async function initSupabase() {
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+        status.textContent = 'Loading supabase client...';
+        output.textContent = '';
+        try {
+          const mod = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+          const { createClient } = mod;
+          supabase = createClient(PROJECT_URL, PUBLIC_KEY);
+          status.textContent = 'Client created.';
+          console.log('Supabase client initialized');
+        } catch (err) {
+          status.textContent = 'Error initializing: ' + (err?.message || String(err));
+          output.textContent = String(err);
+          console.error(err);
+        }
+      }
+
+      async function queryPublicTable() {
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+        const table = document.getElementById('tableName').value.trim();
+        if (!table) {
+          status.textContent = 'Please enter a table name.';
+          return;
+        }
+        if (!supabase) {
+          status.textContent = 'Supabase not initialized — initializing now...';
+          await initSupabase();
+        }
+        status.textContent = `Querying table: ${table}`;
+        output.textContent = '';
+        try {
+          const { data, error } = await supabase.from(table).select('name').limit(10);
+          if (error) {
+            status.textContent = 'Query error';
+            output.textContent = JSON.stringify(error, null, 2);
+            console.error(error);
+            return;
+          }
+          status.textContent = `Got ${Array.isArray(data) ? data.length : 0} rows`;
+          output.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          status.textContent = 'Unexpected error';
+          output.textContent = String(err);
+          console.error(err);
+        }
+      }
+
+      document.getElementById('initBtn').addEventListener('click', initSupabase);
+      document.getElementById('queryBtn').addEventListener('click', queryPublicTable);
+    </script>
+  </Fragment>
+</BaseLayout>

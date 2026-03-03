@@ -20,5 +20,8 @@ Allow: /
 User-agent: *
 Allow: /
 
+# Disallow the Supabase demo (excluded from search and sitemap)
+Disallow: /apps/supabase/
+
 # Sitemap location
 Sitemap: https://knhs.in/sitemap-index.xml
