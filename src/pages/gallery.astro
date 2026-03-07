@@ -288,6 +288,49 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
           modalShare.setAttribute('data-image', fileName);
           document.body.style.overflow = 'hidden';
         });
+
+        // Context menu listener for quick sharing
+        img.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          const fileName = this.src.split('/').pop();
+          
+          // Use the shareImage logic to copy URL
+          const dummyButton = document.createElement('button');
+          shareImage(dummyButton, fileName);
+          
+          // Toast notification
+          const toast = document.createElement('div');
+          toast.textContent = '📋 Share link copied!';
+          toast.style.cssText = 'position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#012f63; color:#fec90d; padding:12px 24px; border-radius:25px; z-index:10000; font-weight:bold; box-shadow:0 8px 16px rgba(0,0,0,0.3); animation: fadeUp 0.3s ease-out;';
+          
+          if (!document.getElementById('toast-style')) {
+            const style = document.createElement('style');
+            style.id = 'toast-style';
+            style.innerHTML = `@keyframes fadeUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }`;
+            document.head.appendChild(style);
+          }
+          
+          document.body.appendChild(toast);
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => toast.remove(), 500);
+          }, 2000);
+        });
+      });
+
+      // Also add to modal image
+      modalImage.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        const fileName = this.src.split('/').pop();
+        const dummyButton = document.createElement('button');
+        shareImage(dummyButton, fileName);
+        
+        const toast = document.createElement('div');
+        toast.textContent = '📋 Share link copied!';
+        toast.style.cssText = 'position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#012f63; color:#fec90d; padding:12px 24px; border-radius:25px; z-index:10000; font-weight:bold; box-shadow:0 8px 16px rgba(0,0,0,0.3); animation: fadeUp 0.3s ease-out;';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
       });
 
       // Handle modal share button
