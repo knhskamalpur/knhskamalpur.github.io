@@ -101,6 +101,35 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
         transform: rotate(90deg) scale(0.95);
       }
 
+      .modal-share {
+        position: absolute;
+        top: 15px;
+        right: 75px;
+        width: 50px;
+        height: 50px;
+        background-color: #fec90d;
+        color: #012f63;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(254, 201, 13, 0.4);
+      }
+
+      .modal-share:hover {
+        background-color: #ffd633;
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(254, 201, 13, 0.6);
+      }
+
+      .modal-share:active {
+        transform: scale(0.95);
+      }
+
       .gallery-item {
         position: relative;
         overflow: hidden;
@@ -175,7 +204,7 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
         <div class="gallery-item">
           <img src={`/assets/images/gallery/${img}`} alt="Gallery Image" loading="lazy" class="gallery-image" style="cursor: pointer;">
           <div class="share-overlay">
-            <button class="share-btn" data-image={img} onclick="shareImage(this)" aria-label="Share image">
+            <button class="share-btn" data-image={img} onclick="shareImage(this, this.getAttribute('data-image'))" aria-label="Share image">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11c.54.5 1.25.81 2.07.81 1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .24.04.47.09.7L8.07 9.81C7.54 9.31 6.83 9 6 9 4.34 9 3 10.34 3 12s1.34 3 3 3c.83 0 1.54-.31 2.07-.81l7.12 4.05c-.05.21-.09.43-.09.66 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-2.92-3-2.92z"/>
               </svg>
@@ -189,6 +218,11 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
   <!-- Lightbox Modal -->
   <div id="imageModal" class="modal" style="display: none;">
     <div class="modal-content">
+      <button class="modal-share" aria-label="Share image">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="24" height="24" fill="currentColor">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11c.54.5 1.25.81 2.07.81 1.66 0 3-1.34 3-3S19.66 2 18 2s-3 1.34-3 3c0 .24.04.47.09.7L8.07 9.81C7.54 9.31 6.83 9 6 9 4.34 9 3 10.34 3 12s1.34 3 3 3c.83 0 1.54-.31 2.07-.81l7.12 4.05c-.05.21-.09.43-.09.66 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-2.92-3-2.92z"/>
+          </svg>
+      </button>
       <span class="modal-close">&times;</span>
       <img id="modalImage" src="" alt="Enlarged view">
     </div>
@@ -205,8 +239,8 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
     }
 
     // Share image function
-    function shareImage(button) {
-      const imageName = button.getAttribute('data-image');
+    function shareImage(button, imageInput) {
+      const imageName = imageInput || button.getAttribute('data-image');
       const imagePath = `gallery/${imageName}`;
 
       // Encode path as base64 for compact/safe sharing in the URL
@@ -222,13 +256,15 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
 
       // Copy to clipboard
       navigator.clipboard.writeText(shareUrl).then(() => {
-        const originalText = button.innerHTML;
-        button.innerHTML = '✓ Copied!';
+        const originalContent = button.innerHTML;
+        const originalBg = button.style.backgroundColor;
+        
+        button.innerHTML = '✓';
         button.style.backgroundColor = '#4caf50';
 
         setTimeout(() => {
-          button.innerHTML = originalText;
-          button.style.backgroundColor = '';
+          button.innerHTML = originalContent;
+          button.style.backgroundColor = originalBg;
         }, 2000);
       }).catch(() => {
         alert('Failed to copy. Share URL: ' + shareUrl);
@@ -240,6 +276,7 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
       const modal = document.getElementById('imageModal');
       const modalImage = document.getElementById('modalImage');
       const modalClose = document.querySelector('.modal-close');
+      const modalShare = document.querySelector('.modal-share');
       const galleryImages = document.querySelectorAll('.gallery-image');
 
       // Open modal on image click
@@ -247,8 +284,15 @@ const keywords = "Photo Gallery, School Events, Student Life, Campus Photos, KNH
         img.addEventListener('click', function() {
           modal.style.display = 'flex';
           modalImage.src = this.src;
+          const fileName = this.src.split('/').pop();
+          modalShare.setAttribute('data-image', fileName);
           document.body.style.overflow = 'hidden';
         });
+      });
+
+      // Handle modal share button
+      modalShare.addEventListener('click', function() {
+        shareImage(this);
       });
 
       // Close modal on close button click
