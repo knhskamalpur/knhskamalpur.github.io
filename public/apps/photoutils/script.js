@@ -13,6 +13,7 @@ const savePresetBtn = document.getElementById('save-preset');
 const deletePresetBtn = document.getElementById('delete-preset');
 const swapDimsBtn = document.getElementById('swap-dims');
 const bwModeInput = document.getElementById('bw-mode');
+const filePrefixInput = document.getElementById('file-prefix');
 const viewportContainer = document.querySelector('.viewport-container');
 
 let stream = null;
@@ -223,7 +224,8 @@ async function capturePhoto() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `photo_${targetWidth}x${targetHeight}_${Math.round(blob.size/1024)}KB.knhs.jpg`;
+    const prefix = (filePrefixInput.value.trim() || 'photo').replace(/[^a-zA-Z0-9_\-]/g, '_');
+    a.download = `${prefix}_${targetWidth}x${targetHeight}_${Math.round(blob.size/1024)}KB.knhs.jpg`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
