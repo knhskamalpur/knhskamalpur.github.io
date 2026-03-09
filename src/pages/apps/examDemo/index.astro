@@ -1,0 +1,229 @@
+---
+// examDemo - Student Login
+// API Integration Point:
+//   POST /api/exam/student-login  { roll: string, dob: string }
+//   → { success: boolean, studentData: object } | { success: false, error: string }
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Student Login — Online Examination</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --exam-primary: #0d2e5e;
+      --exam-accent:  #e8a000;
+      --exam-surface: #f4f6fa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d2e5e 0%, #1a5099 60%, #e8a000 100%);
+      display: flex;
+      flex-direction: column;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .brand-bar {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-bar img { height: 44px; }
+    .brand-bar .title-block h6 { color: #fff; margin: 0; font-weight: 700; font-size: 0.95rem; }
+    .brand-bar .title-block small { color: rgba(255,255,255,0.7); font-size: 0.75rem; }
+    .login-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      width: 100%;
+      max-width: 420px;
+      overflow: hidden;
+    }
+    .login-card .card-header {
+      background: var(--exam-primary);
+      color: #fff;
+      padding: 22px 28px;
+      text-align: center;
+    }
+    .login-card .card-header h4 { margin: 0; font-weight: 700; }
+    .login-card .card-header p { margin: 6px 0 0; opacity: 0.75; font-size: 0.85rem; }
+    .login-card .card-body { padding: 28px; }
+    .form-label { font-weight: 600; color: #333; font-size: 0.875rem; }
+    .form-control {
+      border-radius: 8px;
+      border: 1.5px solid #dde2ec;
+      padding: 10px 14px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--exam-primary);
+      box-shadow: 0 0 0 3px rgba(13,46,94,0.12);
+    }
+    .btn-login {
+      background: var(--exam-primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      width: 100%;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-login:hover { background: #1a5099; transform: translateY(-1px); }
+    .btn-login:active { transform: none; }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
+    .divider { border-top: 1px solid #eee; margin: 20px 0; }
+    .admin-link { text-align: center; font-size: 0.85rem; color: #666; }
+    .admin-link a { color: var(--exam-primary); font-weight: 600; text-decoration: none; }
+    .admin-link a:hover { text-decoration: underline; }
+    .alert-area { min-height: 0; }
+    footer {
+      background: rgba(0,0,0,0.3);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 10px;
+      font-size: 0.8rem;
+    }
+    .spinner-border { width: 1.2rem; height: 1.2rem; border-width: 2px; }
+  </style>
+</head>
+<body>
+
+  <!-- Brand Bar -->
+  <div class="brand-bar">
+    <div class="title-block">
+      <h6>Online Examination Portal</h6>
+      <small>Kamalpur Netaji HIght School</small>
+    </div>
+  </div>
+
+  <!-- Login Form -->
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="card-header">
+        <h4><i class="fa fa-user-graduate me-2"></i>Student Login</h4>
+        <p>Enter your Roll Number and Date of Birth to continue</p>
+      </div>
+      <div class="card-body">
+        <div class="alert-area mb-3" id="alertArea"></div>
+
+        <form id="loginForm" novalidate>
+          <div class="mb-3">
+            <label for="rollNo" class="form-label">Roll Number</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white"><i class="fa fa-id-card text-muted"></i></span>
+              <input
+                type="text"
+                class="form-control"
+                id="rollNo"
+                name="roll"
+                placeholder="Enter your Roll Number"
+                autocomplete="off"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="dob" class="form-label">Date of Birth</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white"><i class="fa fa-calendar text-muted"></i></span>
+              <input
+                type="date"
+                class="form-control"
+                id="dob"
+                name="dob"
+                required
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login" id="loginBtn">
+            <span id="loginText">Login</span>
+            <span id="loginSpinner" class="d-none">
+              <span class="spinner-border me-2"></span>Verifying...
+            </span>
+          </button>
+        </form>
+
+        <div class="divider"></div>
+        <div class="admin-link">
+          Admin? <a href="/apps/examDemo/admin/">Go to Admin Panel</a>
+        </div>
+        <div class="admin-link mt-2">
+          <a href="/apps/examDemo/result">Download Report Card</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Copyright (c) KNHS</footer>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const roll = document.getElementById('rollNo').value.trim();
+      const dob  = document.getElementById('dob').value;
+      const alertArea = document.getElementById('alertArea');
+      const loginBtn  = document.getElementById('loginBtn');
+      const loginText    = document.getElementById('loginText');
+      const loginSpinner = document.getElementById('loginSpinner');
+
+      alertArea.innerHTML = '';
+
+      if (!roll || !dob) {
+        alertArea.innerHTML = `<div class="alert alert-danger py-2">Please fill in all fields.</div>`;
+        return;
+      }
+
+      // --- Loading state ---
+      loginBtn.disabled = true;
+      loginText.classList.add('d-none');
+      loginSpinner.classList.remove('d-none');
+
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res = await fetch('/api/exam/student-login', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ roll, dob })
+        // });
+        // const data = await res.json();
+        // if (data.success) {
+        //   window.location.href = `/apps/examDemo/dashboard?roll=${roll}`;
+        // } else {
+        //   alertArea.innerHTML = `<div class="alert alert-danger py-2">${data.error || 'Invalid credentials.'}</div>`;
+        // }
+        // ============================================================
+
+        // Placeholder — remove when API is integrated
+        alertArea.innerHTML = `<div class="alert alert-info py-2">API not connected yet. Roll: <strong>${roll}</strong></div>`;
+      } catch (err) {
+        alertArea.innerHTML = `<div class="alert alert-danger py-2">Network error. Please try again.</div>`;
+      } finally {
+        loginBtn.disabled = false;
+        loginText.classList.remove('d-none');
+        loginSpinner.classList.add('d-none');
+      }
+    });
+  </script>
+</body>
+</html>

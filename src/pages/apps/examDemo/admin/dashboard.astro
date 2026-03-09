@@ -1,0 +1,379 @@
+---
+// examDemo - Admin Dashboard (admin/home.php equivalent)
+// API Integration Points:
+//   GET  /api/exam/admin/stats
+//   → { registeredCount: number, submittedCount: number, examStatus: boolean, currentQuestionSet: string, questionSets: string[] }
+//
+//   GET  /api/exam/admin/question-sets
+//   → { sets: string[] }
+//
+//   POST /api/exam/admin/exam-control  { action: 'start'|'stop', questionSet?: string }
+//   → { success: boolean }
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin Dashboard — Exam Panel</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root { --exam-primary: #0d2e5e; --exam-accent: #e8a000; }
+    body { background: #edf0f7; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+
+    /* ── Admin Navbar ── */
+    .admin-nav {
+      background: var(--exam-primary);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; padding: 0 20px; height: 56px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .admin-nav .brand { color: #fff; font-weight: 800; font-size: 1.05rem; flex: 1; }
+    .admin-nav .badge-admin {
+      background: var(--exam-accent); color: #000;
+      border-radius: 12px; padding: 2px 10px;
+      font-size: 0.72rem; font-weight: 800; margin-right: 12px;
+    }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+      transition: all 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.15); color: #fff; }
+    .nav-links a .fa { margin-right: 5px; }
+    .btn-logout {
+      background: rgba(220,53,69,0.8); color: #fff; border: none;
+      border-radius: 6px; padding: 5px 12px; font-size: 0.82rem;
+      font-weight: 700; cursor: pointer; margin-left: 8px;
+    }
+    .btn-logout:hover { background: #dc3545; }
+    /* Toggle hamburger for mobile */
+    .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
+    @media(max-width:680px) {
+      .nav-links, .badge-admin { display: none !important; }
+      .nav-toggle { display: block; }
+    }
+
+    .spacer { height: 68px; }
+
+    /* ── Stat Cards ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 20px;
+    }
+    .stat-card {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      padding: 20px 22px; display: flex; align-items: center; gap: 16px;
+    }
+    .stat-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+    }
+    .stat-icon.blue  { background: #e8f0fe; color: var(--exam-primary); }
+    .stat-icon.green { background: #d4edda; color: #155724; }
+    .stat-icon.amber { background: #fff3cd; color: #856404; }
+    .stat-val { font-size: 2rem; font-weight: 800; color: #1a1a2e; }
+    .stat-lbl { font-size: 0.8rem; color: #666; margin-top: 2px; }
+
+    /* ── Exam Control Card ── */
+    .control-card {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      overflow: hidden; margin-bottom: 20px;
+    }
+    .control-card .cc-header {
+      background: var(--exam-primary); color: #fff;
+      padding: 14px 20px; font-weight: 700;
+    }
+    .control-card .cc-body { padding: 20px; }
+    .qs-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .qs-row label { font-weight: 700; color: #333; white-space: nowrap; }
+    .qs-select {
+      border: 1.5px solid #dde2ec; border-radius: 8px;
+      padding: 8px 12px; font-size: 0.9rem; flex: 1; min-width: 180px;
+    }
+    .qs-select:focus { outline: none; border-color: var(--exam-primary); }
+    .qs-select:disabled { background: #f4f6fa; color: #888; }
+
+    .exam-status-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 20px;
+      font-weight: 700; font-size: 0.9rem;
+    }
+    .exam-status-badge.live   { background: #d4edda; color: #155724; }
+    .exam-status-badge.closed { background: #f8d7da; color: #721c24; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .status-dot.live   { background: #28a745; animation: pulse 1.5s infinite; }
+    .status-dot.closed { background: #dc3545; }
+    @keyframes pulse { 0%,100%{transform:scale(1); opacity:1} 50%{transform:scale(1.3); opacity:0.7} }
+
+    .btn-start { background: #28a745; color: #fff; border: none; border-radius: 8px; padding: 9px 22px; font-weight: 700; cursor: pointer; }
+    .btn-stop  { background: #dc3545; color: #fff; border: none; border-radius: 8px; padding: 9px 22px; font-weight: 700; cursor: pointer; }
+    .btn-start:hover { background: #218838; }
+    .btn-stop:hover  { background: #c82333; }
+    .btn-start:disabled, .btn-stop:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Recent Activity ── */
+    .activity-card {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+    .activity-card .ac-header {
+      background: #f8f9fb; border-bottom: 1px solid #eee;
+      padding: 14px 20px; font-weight: 700; color: #333;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .activity-card .ac-header .btn-refresh {
+      background: none; border: 1px solid #dde2ec; border-radius: 6px;
+      padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: #555;
+    }
+    .progress-bar-custom {
+      background: #e8eaf0; border-radius: 20px; height: 8px; overflow: hidden;
+    }
+    .progress-fill { height: 100%; border-radius: 20px; background: var(--exam-primary); transition: width 0.5s; }
+    .progress-fill.green { background: #28a745; }
+
+    footer { text-align: center; padding: 20px; color: #888; font-size: 0.8rem; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Admin Navbar ── -->
+  <nav class="admin-nav">
+    <div class="brand"><i class="fa fa-graduation-cap me-2"></i>aPanel</div>
+    <span class="badge-admin">ADMIN</span>
+    <div class="nav-links" id="navLinks">
+      <a href="/apps/examDemo/admin/dashboard" class="active"><i class="fa fa-tachometer-alt"></i>Dashboard</a>
+      <a href="/apps/examDemo/admin/registration"><i class="fa fa-user-plus"></i>Registration</a>
+      <a href="/apps/examDemo/admin/questions"><i class="fa fa-question-circle"></i>Questions</a>
+      <a href="/apps/examDemo/admin/candidates"><i class="fa fa-users"></i>Candidates</a>
+    </div>
+    <button class="btn-logout" onclick="adminLogout()"><i class="fa fa-sign-out-alt me-1"></i>Logout</button>
+    <button class="nav-toggle" onclick="toggleNav()"><i class="fa fa-bars"></i></button>
+  </nav>
+  <div class="spacer"></div>
+
+  <div class="container-fluid px-3 py-2">
+
+    <!-- Alert area -->
+    <div id="alertArea" class="mb-3"></div>
+
+    <!-- ── Stats ── -->
+    <div class="stat-grid" id="statGrid">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fa fa-users"></i></div>
+        <div>
+          <div class="stat-val" id="statRegistered">—</div>
+          <div class="stat-lbl">Registered Candidates</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fa fa-check-circle"></i></div>
+        <div>
+          <div class="stat-val" id="statSubmitted">—</div>
+          <div class="stat-lbl">Submitted Answer Sheets</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber"><i class="fa fa-clock"></i></div>
+        <div>
+          <div class="stat-val" id="statPending">—</div>
+          <div class="stat-lbl">Yet to Submit</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Exam Control ── -->
+    <div class="control-card">
+      <div class="cc-header"><i class="fa fa-power-off me-2"></i>Exam Control</div>
+      <div class="cc-body">
+        <div class="qs-row mb-3">
+          <label><i class="fa fa-file-alt me-2"></i>Question Set:</label>
+          <select class="qs-select" id="qsSelect">
+            <option value="">— Loading... —</option>
+          </select>
+          <div id="examStatusBadge" class="exam-status-badge closed">
+            <span class="status-dot closed"></span> Exam Closed
+          </div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn-start" id="btnStart" onclick="startExam()">
+            <i class="fa fa-play me-2"></i>Start Exam
+          </button>
+          <button class="btn-stop d-none" id="btnStop" onclick="stopExam()">
+            <i class="fa fa-stop me-2"></i>Stop Exam
+          </button>
+        </div>
+        <p class="text-muted mt-3 mb-0" style="font-size:0.82rem;">
+          <i class="fa fa-info-circle me-1"></i>
+          Starting the exam will randomise and assign the selected question set to all students who login.
+          Stopping it will prevent new logins.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Progress ── -->
+    <div class="activity-card">
+      <div class="ac-header">
+        <span><i class="fa fa-chart-bar me-2"></i>Submission Progress</span>
+        <button class="btn-refresh" onclick="loadStats()"><i class="fa fa-sync me-1"></i>Refresh</button>
+      </div>
+      <div class="p-4">
+        <div class="d-flex justify-content-between mb-2">
+          <span style="font-size:0.85rem;color:#555;">Submissions</span>
+          <span style="font-size:0.85rem;font-weight:700;" id="progressLabel">0 / 0</span>
+        </div>
+        <div class="progress-bar-custom">
+          <div class="progress-fill green" id="progressFill" style="width:0%;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>Copyright (c) KNHS — Admin Panel</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    async function loadStats() {
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch('/api/exam/admin/stats', { headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') } });
+        // const data = await res.json();
+        // applyStats(data);
+        // ============================================================
+
+        // Stub — remove when API is integrated
+        applyStats({ registeredCount: 12, submittedCount: 7, examStatus: false, currentQuestionSet: '', questionSets: ['set-1', 'set-2', 'mock-test-01'] });
+      } catch (err) {
+        showAlert('danger', 'Failed to load stats. Please refresh.');
+      }
+    }
+
+    function applyStats(data) {
+      const reg  = data.registeredCount || 0;
+      const sub  = data.submittedCount  || 0;
+      const pend = Math.max(0, reg - sub);
+
+      document.getElementById('statRegistered').textContent = reg;
+      document.getElementById('statSubmitted').textContent  = sub;
+      document.getElementById('statPending').textContent    = pend;
+      document.getElementById('progressLabel').textContent  = `${sub} / ${reg}`;
+      const pct = reg > 0 ? (sub / reg * 100).toFixed(0) : 0;
+      document.getElementById('progressFill').style.width  = pct + '%';
+
+      // Populate Question Set dropdown
+      const sel = document.getElementById('qsSelect');
+      sel.innerHTML = '<option value="">— Select Question Set —</option>';
+      (data.questionSets || []).forEach(qs => {
+        const opt = document.createElement('option');
+        opt.value = qs;
+        opt.textContent = qs;
+        if (qs === data.currentQuestionSet) opt.selected = true;
+        sel.appendChild(opt);
+      });
+
+      // Exam status
+      if (data.examStatus) {
+        sel.disabled = true;
+        document.getElementById('btnStart').classList.add('d-none');
+        document.getElementById('btnStop').classList.remove('d-none');
+        const badge = document.getElementById('examStatusBadge');
+        badge.className = 'exam-status-badge live';
+        badge.innerHTML = '<span class="status-dot live"></span> Exam Live';
+      } else {
+        sel.disabled = false;
+        document.getElementById('btnStart').classList.remove('d-none');
+        document.getElementById('btnStop').classList.add('d-none');
+        const badge = document.getElementById('examStatusBadge');
+        badge.className = 'exam-status-badge closed';
+        badge.innerHTML = '<span class="status-dot closed"></span> Exam Closed';
+      }
+    }
+
+    async function startExam() {
+      const qs  = document.getElementById('qsSelect').value;
+      const btn = document.getElementById('btnStart');
+      if (!qs) { showAlert('warning', 'Please select a question set first.'); return; }
+
+      if (!confirm(`Start exam with question set "${qs}"? Students will be able to login and take the exam.`)) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Starting…';
+
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch('/api/exam/admin/exam-control', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') }, body: JSON.stringify({ action: 'start', questionSet: qs }) });
+        // const data = await res.json();
+        // if (data.success) loadStats();
+        // else showAlert('danger', data.error || 'Failed to start exam.');
+        // ============================================================
+
+        showAlert('info', `[Stub] Start exam with: ${qs}`);
+      } catch (err) {
+        showAlert('danger', 'Network error.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-play me-2"></i>Start Exam';
+      }
+    }
+
+    async function stopExam() {
+      if (!confirm('Stop the exam? Students will no longer be able to login.')) return;
+      const btn = document.getElementById('btnStop');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Stopping…';
+
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch('/api/exam/admin/exam-control', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') }, body: JSON.stringify({ action: 'stop' }) });
+        // const data = await res.json();
+        // if (data.success) loadStats();
+        // else showAlert('danger', data.error || 'Failed to stop exam.');
+        // ============================================================
+
+        showAlert('info', '[Stub] Stop exam called.');
+      } catch (err) {
+        showAlert('danger', 'Network error.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-stop me-2"></i>Stop Exam';
+      }
+    }
+
+    function adminLogout() {
+      // ============================================================
+      // API INTEGRATION POINT
+      // sessionStorage.removeItem('adminToken');
+      // ============================================================
+      window.location.href = '/apps/examDemo/admin/';
+    }
+
+    function showAlert(type, msg) {
+      document.getElementById('alertArea').innerHTML =
+        `<div class="alert alert-${type} alert-dismissible fade show py-2" role="alert">
+          ${msg}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>`;
+    }
+
+    function toggleNav() {
+      const nl = document.getElementById('navLinks');
+      nl.style.display = nl.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Init
+    loadStats();
+  </script>
+</body>
+</html>

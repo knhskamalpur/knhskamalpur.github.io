@@ -1,0 +1,579 @@
+---
+// examDemo - Admin Question Paper Management (admin/qustion.php equivalent)
+// API Integration Points:
+//   GET  /api/exam/admin/question-sets
+//   → { sets: Array<{ name: string, totalQ: number }> }
+//
+//   POST /api/exam/admin/create-question-set  { name: string }
+//   → { success: boolean }
+//
+//   GET  /api/exam/admin/questions?set={name}&qn={qn}
+//   → { question: { qsec, q_txt, q_img?, opt_a_txt, opt_a_img?, opt_b_txt, opt_b_img?, opt_c_txt, opt_c_img?, opt_d_txt, opt_d_img?, correct_ans }, totalQ: number, hasPrev: boolean, hasNext: boolean }
+//
+//   POST /api/exam/admin/save-question  { set: string, qn: number, ...questionFields }
+//   → { success: boolean, nextQn: number }
+//
+//   DELETE /api/exam/admin/delete-question?set={name}&qn={qn}
+//   → { success: boolean }
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Question Papers — Admin Panel</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root { --exam-primary: #0d2e5e; --exam-accent: #e8a000; }
+    body { background: #edf0f7; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+
+    /* Navbar (shared) */
+    .admin-nav { background: var(--exam-primary); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; padding: 0 20px; height: 56px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .admin-nav .brand { color: #fff; font-weight: 800; font-size: 1.05rem; flex: 1; }
+    .admin-nav .badge-admin { background: var(--exam-accent); color: #000; border-radius: 12px; padding: 2px 10px; font-size: 0.72rem; font-weight: 800; margin-right: 12px; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; }
+    .nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.15); color: #fff; }
+    .btn-logout { background: rgba(220,53,69,0.8); color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.82rem; font-weight: 700; cursor: pointer; margin-left: 8px; }
+    @media(max-width:680px) { .nav-links, .badge-admin { display: none !important; } }
+    .spacer { height: 68px; }
+
+    /* Two-pane layout */
+    .qs-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media(max-width:720px) { .qs-layout { grid-template-columns: 1fr; } }
+
+    /* Sidebar — question sets list */
+    .sets-panel {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+    .sets-panel .sp-header {
+      background: var(--exam-primary); color: #fff;
+      padding: 12px 16px; font-weight: 700;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .btn-new-set {
+      background: var(--exam-accent); color: #000;
+      border: none; border-radius: 6px; padding: 4px 10px;
+      font-size: 0.78rem; font-weight: 800; cursor: pointer;
+    }
+    .set-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid #f0f0f0;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .set-item:hover { background: #f4f6fa; }
+    .set-item.active { background: #e8f0fe; border-left: 3px solid var(--exam-primary); }
+    .set-item .set-name { font-weight: 700; font-size: 0.9rem; color: #1a1a2e; }
+    .set-item .set-count { font-size: 0.75rem; color: #888; margin-top: 2px; }
+    .no-sets { padding: 20px; text-align: center; color: #aaa; font-size: 0.85rem; }
+
+    /* Main — question editor */
+    .q-editor {
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+    .qe-header {
+      background: var(--exam-primary); color: #fff;
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    }
+    .qe-header h5 { margin: 0; font-weight: 700; }
+    .q-nav-btns { display: flex; gap: 6px; }
+    .q-nav-btns button {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+      color: #fff; border-radius: 6px; padding: 5px 12px; font-size: 0.82rem; cursor: pointer;
+    }
+    .q-nav-btns button:hover { background: rgba(255,255,255,0.25); }
+    .q-nav-btns button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-del-q { background: rgba(220,53,69,0.7) !important; border-color: rgba(220,53,69,0.8) !important; }
+    .btn-del-q:hover { background: rgba(220,53,69,1) !important; }
+
+    .qe-body { padding: 24px; }
+    .form-label { font-weight: 600; font-size: 0.875rem; color: #333; }
+    .form-control { border-radius: 8px; border: 1.5px solid #dde2ec; padding: 10px 14px; }
+    .form-control:focus { border-color: var(--exam-primary); box-shadow: 0 0 0 3px rgba(13,46,94,0.12); }
+    textarea.form-control { resize: vertical; min-height: 80px; }
+
+    .option-block {
+      background: #f8f9fb; border: 1.5px solid #e8eaf0;
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+    }
+    .option-block .opt-label {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 800; color: var(--exam-primary); font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+    .opt-key-badge {
+      background: var(--exam-primary); color: #fff;
+      width: 24px; height: 24px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 800;
+    }
+    .or-divider { text-align: center; color: #aaa; font-size: 0.75rem; font-weight: 600; margin: 6px 0; }
+    .correct-ans-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .correct-ans-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: #333; }
+    .correct-ans-row input[type=radio] { accent-color: #28a745; width: 16px; height: 16px; }
+
+    .qe-footer {
+      padding: 14px 20px; background: #f8f9fb; border-top: 1px solid #eee;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+    }
+    .btn-save-q {
+      background: var(--exam-primary); color: #fff; border: none;
+      border-radius: 8px; padding: 10px 24px; font-weight: 700; cursor: pointer;
+    }
+    .btn-save-q:hover { background: #1a5099; }
+    .btn-save-q:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-save-next {
+      background: #28a745; color: #fff; border: none;
+      border-radius: 8px; padding: 10px 20px; font-weight: 700; cursor: pointer;
+    }
+    .btn-save-next:hover { background: #218838; }
+
+    /* New set modal */
+    .modal-header-blue { background: var(--exam-primary); color: #fff; }
+    .modal-header-blue .btn-close { filter: invert(1); }
+
+    /* Placeholder state */
+    .placeholder-state { padding: 40px; text-align: center; color: #aaa; }
+    .placeholder-state .fa { font-size: 3rem; margin-bottom: 16px; color: #dde2ec; }
+
+    footer { text-align: center; padding: 20px; color: #888; font-size: 0.8rem; margin-top: 20px; }
+    .spinner-border { width: 1.1rem; height: 1.1rem; border-width: 2px; }
+  </style>
+</head>
+<body>
+
+  <!-- Admin Navbar -->
+  <nav class="admin-nav">
+    <div class="brand"><i class="fa fa-graduation-cap me-2"></i>aPanel</div>
+    <span class="badge-admin">ADMIN</span>
+    <div class="nav-links">
+      <a href="/apps/examDemo/admin/dashboard"><i class="fa fa-tachometer-alt"></i>Dashboard</a>
+      <a href="/apps/examDemo/admin/registration"><i class="fa fa-user-plus"></i>Registration</a>
+      <a href="/apps/examDemo/admin/questions" class="active"><i class="fa fa-question-circle"></i>Questions</a>
+      <a href="/apps/examDemo/admin/candidates"><i class="fa fa-users"></i>Candidates</a>
+    </div>
+    <button class="btn-logout" onclick="window.location.href='/apps/examDemo/admin/'">
+      <i class="fa fa-sign-out-alt me-1"></i>Logout
+    </button>
+  </nav>
+  <div class="spacer"></div>
+
+  <div class="container-fluid px-3 py-2">
+    <div id="alertArea" class="mb-3"></div>
+
+    <div class="qs-layout">
+
+      <!-- ── Sidebar: Sets List ── -->
+      <div class="sets-panel">
+        <div class="sp-header">
+          <span><i class="fa fa-layer-group me-2"></i>Question Sets</span>
+          <button class="btn-new-set" data-bs-toggle="modal" data-bs-target="#newSetModal">
+            <i class="fa fa-plus me-1"></i>New
+          </button>
+        </div>
+        <div id="setsList">
+          <div class="no-sets"><i class="fa fa-spinner fa-spin"></i> Loading…</div>
+        </div>
+      </div>
+
+      <!-- ── Main: Question Editor ── -->
+      <div class="q-editor" id="qEditor">
+        <div class="placeholder-state" id="editorPlaceholder">
+          <i class="fa fa-file-alt"></i>
+          <p>Select a question set from the left,<br>or create a new one to start adding questions.</p>
+        </div>
+        <div class="d-none" id="editorContent">
+          <div class="qe-header">
+            <h5 id="editorTitle">Set Name — Q 1</h5>
+            <div class="q-nav-btns">
+              <button id="btnPrevQ" onclick="navigateQuestion(-1)" disabled><i class="fa fa-chevron-left me-1"></i>Prev</button>
+              <button id="btnNextQ" onclick="navigateQuestion(1)">Next<i class="fa fa-chevron-right ms-1"></i></button>
+              <button class="btn-del-q" id="btnDelQ" onclick="deleteQuestion()"><i class="fa fa-trash me-1"></i>Delete</button>
+            </div>
+          </div>
+
+          <div class="qe-body">
+            <form id="qForm" novalidate>
+              <!-- Section + Q Number -->
+              <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                  <label class="form-label" for="qSection">Section / Subject <span style="color:#dc3545;">*</span></label>
+                  <input type="text" class="form-control" id="qSection"
+                    placeholder="e.g. General Knowledge, Computer Basics" required />
+                </div>
+              </div>
+
+              <!-- Question Text / Image -->
+              <div class="mb-3">
+                <label class="form-label">Question</label>
+                <textarea class="form-control" id="qText" placeholder="Type the question text here…"></textarea>
+                <div class="or-divider">— OR attach image —</div>
+                <div class="d-flex align-items-center gap-3 mt-1">
+                  <input type="file" class="form-control" id="qImg" accept="image/*" style="max-width:320px;" />
+                  <img src="" id="qImgPreview" style="max-height:60px;border-radius:6px;display:none;" alt="Q preview" />
+                </div>
+              </div>
+
+              <!-- Options A – D -->
+              <p class="form-label mt-4 mb-2">Answer Options <span style="color:#dc3545;">*</span></p>
+              <div id="optionsBlock">
+                <!-- A -->
+                <div class="option-block">
+                  <div class="opt-label"><span class="opt-key-badge">A</span> Option A</div>
+                  <input type="text" class="form-control mb-2" id="optATxt" placeholder="Option A text" />
+                  <div class="or-divider">— or image —</div>
+                  <div class="d-flex align-items-center gap-3 mt-1">
+                    <input type="file" class="form-control" id="optAImg" accept="image/*" style="max-width:240px;" />
+                    <img src="" id="optAImgPreview" style="max-height:48px;border-radius:4px;display:none;" alt="" />
+                  </div>
+                </div>
+                <!-- B -->
+                <div class="option-block">
+                  <div class="opt-label"><span class="opt-key-badge">B</span> Option B</div>
+                  <input type="text" class="form-control mb-2" id="optBTxt" placeholder="Option B text" />
+                  <div class="or-divider">— or image —</div>
+                  <div class="d-flex align-items-center gap-3 mt-1">
+                    <input type="file" class="form-control" id="optBImg" accept="image/*" style="max-width:240px;" />
+                    <img src="" id="optBImgPreview" style="max-height:48px;border-radius:4px;display:none;" alt="" />
+                  </div>
+                </div>
+                <!-- C -->
+                <div class="option-block">
+                  <div class="opt-label"><span class="opt-key-badge">C</span> Option C</div>
+                  <input type="text" class="form-control mb-2" id="optCTxt" placeholder="Option C text" />
+                  <div class="or-divider">— or image —</div>
+                  <div class="d-flex align-items-center gap-3 mt-1">
+                    <input type="file" class="form-control" id="optCImg" accept="image/*" style="max-width:240px;" />
+                    <img src="" id="optCImgPreview" style="max-height:48px;border-radius:4px;display:none;" alt="" />
+                  </div>
+                </div>
+                <!-- D -->
+                <div class="option-block">
+                  <div class="opt-label"><span class="opt-key-badge">D</span> Option D</div>
+                  <input type="text" class="form-control mb-2" id="optDTxt" placeholder="Option D text" />
+                  <div class="or-divider">— or image —</div>
+                  <div class="d-flex align-items-center gap-3 mt-1">
+                    <input type="file" class="form-control" id="optDImg" accept="image/*" style="max-width:240px;" />
+                    <img src="" id="optDImgPreview" style="max-height:48px;border-radius:4px;display:none;" alt="" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Correct Answer -->
+              <div class="mt-3 p-3 rounded" style="background:#e8f5e9; border:1.5px solid #c8e6c9;">
+                <label class="form-label mb-2">Correct Answer <span style="color:#dc3545;">*</span></label>
+                <div class="correct-ans-row">
+                  <label><input type="radio" name="correctAns" value="a" id="caA" />Option A</label>
+                  <label><input type="radio" name="correctAns" value="b" id="caB" />Option B</label>
+                  <label><input type="radio" name="correctAns" value="c" id="caC" />Option C</label>
+                  <label><input type="radio" name="correctAns" value="d" id="caD" />Option D</label>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="qe-footer">
+            <span id="footerInfo" class="text-muted" style="font-size:0.85rem;">—</span>
+            <div class="d-flex gap-2">
+              <button class="btn-save-q" id="btnSaveQ" onclick="saveQuestion(false)">
+                <span id="saveText"><i class="fa fa-save me-2"></i>Save</span>
+                <span id="saveSpin" class="d-none"><span class="spinner-border me-2"></span>Saving…</span>
+              </button>
+              <button class="btn-save-next" id="btnSaveNext" onclick="saveQuestion(true)">
+                Save &amp; Next <i class="fa fa-arrow-right ms-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── New Set Modal ── -->
+  <div class="modal fade" id="newSetModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header modal-header-blue">
+          <h5 class="modal-title"><i class="fa fa-plus-circle me-2"></i>Create New Question Set</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="newSetAlert" class="mb-3"></div>
+          <label class="form-label" for="newSetName">Question Set Name</label>
+          <input type="text" class="form-control" id="newSetName"
+            placeholder="e.g. set-1, mock-test-01 (A-Z, a-z, 0-9, -, _ only)"
+            pattern="[A-Za-z0-9\-_]+" />
+          <small class="text-muted mt-1 d-block">No spaces allowed. Use letters, numbers, hyphens, underscores.</small>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btnCreateSet" onclick="createSet()">
+            <span id="createSetText">Create</span>
+            <span id="createSetSpin" class="d-none"><span class="spinner-border spinner-border-sm me-2"></span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Copyright (c) KNHS — Admin Panel</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let currentSet = null;
+    let currentQn  = 1;
+    let totalQ     = 0;
+
+    // ── Image Previews ──────────────────────────────────────────────────────
+    function setupPreview(inputId, previewId) {
+      document.getElementById(inputId).addEventListener('change', function() {
+        const prev = document.getElementById(previewId);
+        if (this.files && this.files[0]) {
+          prev.src = URL.createObjectURL(this.files[0]);
+          prev.style.display = 'block';
+        } else {
+          prev.style.display = 'none';
+        }
+      });
+    }
+    ['q', 'optA', 'optB', 'optC', 'optD'].forEach(p =>
+      setupPreview(p + 'Img', p + 'ImgPreview')
+    );
+
+    // ── Load Sets ──────────────────────────────────────────────────────────
+    async function loadSets() {
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch('/api/exam/admin/question-sets', { headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') } });
+        // const data = await res.json();
+        // renderSetsList(data.sets);
+        // ============================================================
+
+        // Stub
+        renderSetsList([{ name: 'set-1', totalQ: 5 }, { name: 'mock-test-01', totalQ: 10 }]);
+      } catch (err) {
+        document.getElementById('setsList').innerHTML = '<div class="no-sets">Failed to load sets.</div>';
+      }
+    }
+
+    function renderSetsList(sets) {
+      const container = document.getElementById('setsList');
+      if (!sets.length) {
+        container.innerHTML = '<div class="no-sets">No question sets yet.<br>Click <b>New</b> to create one.</div>';
+        return;
+      }
+      container.innerHTML = sets.map(s =>
+        `<div class="set-item ${s.name === currentSet ? 'active' : ''}" onclick="selectSet('${s.name}')">
+          <div>
+            <div class="set-name"><i class="fa fa-file-alt me-2 text-muted"></i>${s.name}</div>
+            <div class="set-count">${s.totalQ} questions</div>
+          </div>
+          <i class="fa fa-chevron-right text-muted" style="font-size:0.8rem;"></i>
+        </div>`
+      ).join('');
+    }
+
+    function selectSet(name) {
+      currentSet = name;
+      currentQn  = 1;
+      document.getElementById('editorPlaceholder').classList.add('d-none');
+      document.getElementById('editorContent').classList.remove('d-none');
+      loadQuestion(name, 1);
+      loadSets(); // refresh active state
+    }
+
+    // ── Load Question ──────────────────────────────────────────────────────
+    async function loadQuestion(setName, qn) {
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch(`/api/exam/admin/questions?set=${setName}&qn=${qn}`, { headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') } });
+        // const data = await res.json();
+        // populateForm(data);
+        // ============================================================
+
+        // Stub — empty form
+        populateForm({ question: null, totalQ: 0, hasNext: false, hasPrev: false });
+      } catch (err) {
+        showAlert('danger', 'Failed to load question.');
+      }
+    }
+
+    function populateForm(data) {
+      totalQ = data.totalQ || 0;
+      const q = data.question || {};
+
+      document.getElementById('editorTitle').textContent = `${currentSet} — Q ${currentQn}`;
+      document.getElementById('footerInfo').textContent  = `Question ${currentQn} of ${totalQ || '?'}`;
+      document.getElementById('btnPrevQ').disabled = !data.hasPrev;
+      document.getElementById('btnNextQ').disabled = !data.hasNext;
+
+      document.getElementById('qSection').value = q.qsec      || '';
+      document.getElementById('qText').value    = q.q_txt     || '';
+      document.getElementById('optATxt').value  = q.opt_a_txt || '';
+      document.getElementById('optBTxt').value  = q.opt_b_txt || '';
+      document.getElementById('optCTxt').value  = q.opt_c_txt || '';
+      document.getElementById('optDTxt').value  = q.opt_d_txt || '';
+
+      // Correct answer
+      document.querySelectorAll('input[name=correctAns]').forEach(r => r.checked = false);
+      if (q.correct_ans) {
+        const ra = document.getElementById('ca' + q.correct_ans.toUpperCase());
+        if (ra) ra.checked = true;
+      }
+
+      // Clear image previews
+      ['q', 'optA', 'optB', 'optC', 'optD'].forEach(p => {
+        (document.getElementById(p + 'Img')).value = '';
+        const prev = document.getElementById(p + 'ImgPreview');
+        if (q['opt_' + p.toLowerCase() + '_img'] || (p === 'q' && q.q_img)) {
+          prev.src = p === 'q' ? q.q_img : q['opt_' + p.toLowerCase() + '_img'];
+          prev.style.display = 'block';
+        } else {
+          prev.style.display = 'none';
+        }
+      });
+    }
+
+    function navigateQuestion(dir) {
+      const next = currentQn + dir;
+      if (next < 1) return;
+      currentQn = next;
+      loadQuestion(currentSet, currentQn);
+    }
+
+    // ── Save Question ──────────────────────────────────────────────────────
+    async function saveQuestion(andNext) {
+      const section    = document.getElementById('qSection').value.trim();
+      const correctAns = document.querySelector('input[name=correctAns]:checked')?.value;
+      if (!section) { showAlert('warning', 'Section/Subject name is required.'); return; }
+      if (!correctAns) { showAlert('warning', 'Please mark the correct answer.'); return; }
+
+      const btn       = document.getElementById('btnSaveQ');
+      const saveText  = document.getElementById('saveText');
+      const saveSpin  = document.getElementById('saveSpin');
+      btn.disabled = true;
+      document.getElementById('btnSaveNext').disabled = true;
+      saveText.classList.add('d-none');
+      saveSpin.classList.remove('d-none');
+
+      const formData = new FormData();
+      formData.append('set',         currentSet);
+      formData.append('qn',          currentQn);
+      formData.append('qsec',        section);
+      formData.append('q_txt',       document.getElementById('qText').value);
+      formData.append('opt_a_txt',   document.getElementById('optATxt').value);
+      formData.append('opt_b_txt',   document.getElementById('optBTxt').value);
+      formData.append('opt_c_txt',   document.getElementById('optCTxt').value);
+      formData.append('opt_d_txt',   document.getElementById('optDTxt').value);
+      formData.append('correct_ans', correctAns);
+      ['q', 'optA', 'optB', 'optC', 'optD'].forEach(p => {
+        const file = document.getElementById(p + 'Img').files[0];
+        if (file) formData.append(p + '_img', file);
+      });
+
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch('/api/exam/admin/save-question', { method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') }, body: formData });
+        // const data = await res.json();
+        // if (data.success) {
+        //   totalQ = Math.max(totalQ, currentQn);
+        //   if (andNext) { currentQn = data.nextQn; loadQuestion(currentSet, currentQn); }
+        //   else showAlert('success', `Question ${currentQn} saved.`);
+        //   loadSets();
+        // } else { showAlert('danger', data.error || 'Save failed.'); }
+        // ============================================================
+
+        showAlert('info', `[Stub] Q${currentQn} in set "${currentSet}" logged to console.`);
+        console.log('Save question:', Object.fromEntries(formData));
+        if (andNext) { currentQn++; loadQuestion(currentSet, currentQn); }
+      } catch (err) {
+        showAlert('danger', 'Network error.');
+      } finally {
+        btn.disabled = false;
+        document.getElementById('btnSaveNext').disabled = false;
+        saveText.classList.remove('d-none');
+        saveSpin.classList.add('d-none');
+      }
+    }
+
+    async function deleteQuestion() {
+      if (!confirm(`Delete Question ${currentQn} from "${currentSet}"?`)) return;
+
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch(`/api/exam/admin/delete-question?set=${currentSet}&qn=${currentQn}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') } });
+        // const data = await res.json();
+        // if (data.success) { loadQuestion(currentSet, currentQn); loadSets(); }
+        // ============================================================
+
+        showAlert('info', `[Stub] Delete Q${currentQn} from "${currentSet}".`);
+      } catch (err) { showAlert('danger', 'Network error.'); }
+    }
+
+    // ── Create Set ────────────────────────────────────────────────────────
+    async function createSet() {
+      const name   = document.getElementById('newSetName').value.trim();
+      const alertEl = document.getElementById('newSetAlert');
+      alertEl.innerHTML = '';
+
+      if (!name) { alertEl.innerHTML = '<div class="alert alert-danger py-1">Set name is required.</div>'; return; }
+      if (!/^[A-Za-z0-9\-_]+$/.test(name)) {
+        alertEl.innerHTML = '<div class="alert alert-danger py-1">Only letters, numbers, hyphens and underscores allowed.</div>';
+        return;
+      }
+
+      const btn = document.getElementById('btnCreateSet');
+      btn.disabled = true;
+      document.getElementById('createSetText').textContent = '';
+      document.getElementById('createSetSpin').classList.remove('d-none');
+
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch('/api/exam/admin/create-question-set', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sessionStorage.getItem('adminToken') }, body: JSON.stringify({ name }) });
+        // const data = await res.json();
+        // if (data.success) { bootstrap.Modal.getInstance(document.getElementById('newSetModal')).hide(); loadSets(); selectSet(name); }
+        // else { alertEl.innerHTML = `<div class="alert alert-danger py-1">${data.error || 'Error.'}</div>`; }
+        // ============================================================
+
+        bootstrap.Modal.getInstance(document.getElementById('newSetModal')).hide();
+        showAlert('info', `[Stub] Create set: "${name}".`);
+        document.getElementById('newSetName').value = '';
+      } catch (err) {
+        alertEl.innerHTML = '<div class="alert alert-danger py-1">Network error.</div>';
+      } finally {
+        btn.disabled = false;
+        document.getElementById('createSetText').textContent = 'Create';
+        document.getElementById('createSetSpin').classList.add('d-none');
+      }
+    }
+
+    function showAlert(type, msg) {
+      document.getElementById('alertArea').innerHTML =
+        `<div class="alert alert-${type} alert-dismissible fade show py-2">
+          ${msg}
+          <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+        </div>`;
+    }
+
+    loadSets();
+  </script>
+</body>
+</html>

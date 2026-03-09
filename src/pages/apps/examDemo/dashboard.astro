@@ -1,0 +1,309 @@
+---
+// examDemo - Student Pre-Exam Dashboard (dash.php equivalent)
+// API Integration Points:
+//   GET /api/exam/student-info?roll={roll}
+//   → { student: { candidate-name, c-o, roll-no, registration-no, dob, exam-date, batch }, examReady: boolean }
+//
+//   POST /api/exam/init-paper  { roll: string }
+//   → { success: boolean }  — shuffles & assigns question paper, then redirects to exam
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Exam Dashboard — Online Examination</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --exam-primary: #0d2e5e;
+      --exam-accent: #e8a000;
+    }
+    body { background: #f0f3f9; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+
+    /* ── Top Navbar ── */
+    .exam-navbar {
+      background: var(--exam-primary);
+      color: #fff;
+      padding: 0 20px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .exam-navbar .brand { font-weight: 800; font-size: 1.1rem; flex: 1; }
+    .badge-info-pill {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      color: #fff;
+    }
+    .spacer { height: 72px; }
+
+    /* ── Info Card ── */
+    .info-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .info-card .ic-header {
+      background: var(--exam-primary);
+      color: #fff;
+      padding: 18px 24px;
+    }
+    .info-card .ic-header h5 { margin: 0; font-weight: 700; }
+    .info-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .label { color: #666; font-size: 0.875rem; font-weight: 600; width: 160px; flex-shrink: 0; }
+    .info-row .value { font-weight: 700; color: #1a1a2e; font-size: 1rem; }
+    .info-row .badge-roll {
+      background: var(--exam-accent);
+      color: #000;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    /* ── Action Buttons ── */
+    .action-bar {
+      background: #f8f9fb;
+      border-top: 1px solid #eee;
+      padding: 18px 24px;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    .btn-trial {
+      background: #f0a500;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-trial:hover { background: #e09400; }
+    .btn-go-exam {
+      background: var(--exam-primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 26px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-go-exam:hover { background: #1a5099; }
+    .btn-go-exam:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── Loading skeleton ── */
+    .skeleton { background: #e0e6f0; border-radius: 4px; animation: pulse 1.2s infinite; height: 1rem; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    /* ── Notice Banner ── */
+    .notice-exam-ready  { background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 12px 18px; color: #155724; font-weight: 600; }
+    .notice-exam-closed { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 12px 18px; color: #856404; font-weight: 600; }
+
+    footer { text-align: center; padding: 18px; color: #888; font-size: 0.8rem; margin-top: 40px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="exam-navbar">
+    <div class="brand"><i class="fa fa-graduation-cap me-2"></i>Online Exam</div>
+    <span class="badge-info-pill d-none d-sm-inline" id="navName">—</span>
+    <span class="badge-info-pill" id="navRoll">Roll: —</span>
+  </nav>
+  <div class="spacer"></div>
+
+  <!-- Loading -->
+  <div class="container py-4" id="loadingBlock">
+    <div class="info-card p-4">
+      <div class="skeleton mb-3" style="width:60%; height:1.5rem;"></div>
+      <div class="skeleton mb-2" style="width:100%;"></div>
+      <div class="skeleton mb-2" style="width:80%;"></div>
+      <div class="skeleton" style="width:90%;"></div>
+    </div>
+  </div>
+
+  <!-- Info Card -->
+  <div class="container py-4 d-none" id="dashBoard">
+
+    <p class="text-center text-muted mb-3" style="font-size:0.85rem;">
+      Please verify your details before starting the exam.
+    </p>
+
+    <div class="info-card">
+      <div class="ic-header">
+        <h5><i class="fa fa-id-badge me-2"></i>Candidate Information</h5>
+      </div>
+
+      <div class="info-row">
+        <span class="label">Candidate Name</span>
+        <span class="value" id="sName">—</span>
+      </div>
+      <div class="info-row">
+        <span class="label">C/O (Guardian)</span>
+        <span class="value" id="sCo">—</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Date of Birth</span>
+        <span class="value" id="sDob">—</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Registration No.</span>
+        <span class="value" id="sRegNo">—</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Roll Number</span>
+        <span class="value"><span class="badge-roll" id="sRoll">—</span></span>
+      </div>
+      <div class="info-row">
+        <span class="label">Exam Date &amp; Time</span>
+        <span class="value" id="sExamDate">—</span>
+      </div>
+
+      <div class="info-row">
+        <span class="label">Exam Status</span>
+        <span class="value" id="sExamStatus">—</span>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-trial" id="btnTrial" onclick="goTrial()">
+          <i class="fa fa-vial me-1"></i> Trial Exam
+        </button>
+        <button class="btn-go-exam" id="btnGoExam" onclick="goExam()">
+          <i class="fa fa-play me-1"></i> Go To Exam
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>Copyright (c) KNHS · <a href="/apps/examDemo/">Back to Login</a></footer>
+
+  <script>
+    const params   = new URLSearchParams(window.location.search);
+    const rollNo   = params.get('roll') || '';
+
+    if (!rollNo) window.location.href = '/apps/examDemo/';
+
+    // ── Helpers ──────────────────────────────────────────────────
+    function setNavInfo(name, roll) {
+      document.getElementById('navName').textContent = name;
+      document.getElementById('navRoll').textContent = 'Roll: ' + roll;
+    }
+
+    function populateDashboard(student, examReady) {
+      document.getElementById('sName').textContent    = student['candidate-name'] || '—';
+      document.getElementById('sCo').textContent      = student['c-o'] || '—';
+      document.getElementById('sDob').textContent     = student['dob'] || '—';
+      document.getElementById('sRegNo').textContent   = student['registration-no'] || '—';
+      document.getElementById('sRoll').textContent    = student['roll-no'] || rollNo;
+      document.getElementById('sExamDate').textContent =
+        (student['exam-date'] || '—') + '  ' + (student['batch'] || '');
+
+      setNavInfo(student['candidate-name'] || '', student['roll-no'] || rollNo);
+
+      const statusEl = document.getElementById('sExamStatus');
+      if (examReady) {
+        statusEl.innerHTML = '<span class="notice-exam-ready"><i class="fa fa-check-circle me-2"></i>Exam is Live</span>';
+        document.getElementById('btnGoExam').disabled = false;
+      } else {
+        statusEl.innerHTML = '<span class="notice-exam-closed"><i class="fa fa-clock me-2"></i>Exam not started yet</span>';
+        document.getElementById('btnGoExam').disabled = true;
+      }
+
+      document.getElementById('loadingBlock').classList.add('d-none');
+      document.getElementById('dashBoard').classList.remove('d-none');
+    }
+
+    async function loadStudentInfo() {
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch(`/api/exam/student-info?roll=${rollNo}`);
+        // const data = await res.json();
+        // if (!data.student) { window.location.href = '/apps/examDemo/'; return; }
+        // populateDashboard(data.student, data.examReady);
+        // ============================================================
+
+        // Placeholder stub — remove when API is integrated
+        const stubStudent = {
+          'candidate-name': 'Demo Student',
+          'c-o': 'Demo Guardian',
+          dob: '2000-01-01',
+          'registration-no': 'REG-0000',
+          'roll-no': rollNo,
+          'exam-date': '2026-03-09',
+          batch: '10:00 AM'
+        };
+        populateDashboard(stubStudent, false);
+      } catch (err) {
+        document.getElementById('loadingBlock').innerHTML =
+          '<div class="alert alert-danger m-4">Failed to load student info. <a href="/apps/examDemo/">Re-login</a></div>';
+      }
+    }
+
+    async function goExam() {
+      const btn = document.getElementById('btnGoExam');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Starting...';
+
+      try {
+        // ============================================================
+        // API INTEGRATION POINT — init paper (shuffles questions)
+        // const res  = await fetch('/api/exam/init-paper', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ roll: rollNo })
+        // });
+        // const data = await res.json();
+        // if (data.success) {
+        //   window.location.href = `/apps/examDemo/exam?roll=${rollNo}`;
+        // } else {
+        //   alert('Exam not started yet or error occurred.');
+        // }
+        // ============================================================
+
+        alert('API not connected yet.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-play me-1"></i> Go To Exam';
+      } catch (err) {
+        alert('Network error. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-play me-1"></i> Go To Exam';
+      }
+    }
+
+    function goTrial() {
+      // ============================================================
+      // API INTEGRATION POINT
+      // window.location.href = `/apps/examDemo/exam?roll=${rollNo}&mode=trial`;
+      // ============================================================
+      alert('Trial Exam — API not connected yet.');
+    }
+
+    // Init
+    loadStudentInfo();
+  </script>
+</body>
+</html>

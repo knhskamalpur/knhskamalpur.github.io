@@ -1,0 +1,605 @@
+---
+// examDemo - Exam Interface (home.php equivalent)
+// API Integration Points:
+//   GET  /api/exam/paper?roll={roll}
+//   → { student: {...}, paper: { nos, section: { [id]: { name, noq, qustion: {...} } } }, timeRemaining: number }
+//
+//   POST /api/exam/save-answer   { roll, questionId, answer, timeRemaining }
+//   → { success: boolean }
+//
+//   POST /api/exam/submit        { roll, answers: [...], timeRemaining }
+//   → { success: boolean }
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Examination — Online Exam</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --exam-primary: #0d2e5e;
+      --exam-accent:  #e8a000;
+      --q-unanswered: #f0f3f9;
+      --q-answered:   #28a745;
+      --q-flagged:    #fd7e14;
+      --q-current:    #0d2e5e;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      background: #edf0f7;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: var(--zoom-size, 1rem);
+      user-select: none;
+    }
+
+    /* ── Navbar ── */
+    .exam-nav {
+      background: var(--exam-primary);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 16px; height: 54px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .exam-nav .brand { color: #fff; font-weight: 800; font-size: 1rem; }
+    .nav-pills-row { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; justify-content: flex-end; }
+    .np {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px; color: #fff;
+      padding: 2px 10px; font-size: 0.75rem; white-space: nowrap;
+    }
+    .np.timer { background: rgba(220,53,69,0.8); font-weight: 700; font-family: monospace; font-size: 0.85rem; letter-spacing: 1px; }
+    .np.timer.warn { animation: blink 1s infinite; }
+    @keyframes blink { 50%{opacity:0.5} }
+    .btn-submit-nav {
+      background: #dc3545; color: #fff; border: none;
+      border-radius: 20px; padding: 4px 14px;
+      font-size: 0.8rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-submit-nav:hover { background: #c82333; }
+
+    /* ── Body layout ── */
+    .spacer { height: 62px; }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 10px;
+      padding: 10px 12px;
+      min-height: calc(100vh - 62px);
+    }
+    @media(max-width:768px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .num-panel { order: -1; }
+    }
+
+    /* ── Question Panel ── */
+    .q-panel {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      display: flex; flex-direction: column;
+      min-height: 84vh;
+    }
+    .q-panel-header {
+      background: #f8f9fb;
+      border-bottom: 1px solid #e8eaf0;
+      padding: 12px 18px;
+      display: flex; align-items: center; gap: 10px;
+      border-radius: 12px 12px 0 0;
+    }
+    .q-panel-header .sec-badge {
+      background: var(--exam-primary); color: #fff;
+      border-radius: 6px; padding: 2px 10px;
+      font-size: 0.78rem; font-weight: 700;
+    }
+    .q-counter { color: #555; font-size: 0.85rem; flex: 1; text-align: right; }
+    .zoom-btns { display: flex; gap: 4px; }
+    .zoom-btns button {
+      background: #e8eaf0; border: none; border-radius: 4px;
+      padding: 2px 8px; font-size: 0.75rem; cursor: pointer;
+    }
+    .zoom-btns button:hover { background: #d0d4df; }
+
+    .q-body {
+      flex: 1;
+      padding: 24px 24px 16px;
+      overflow-y: auto;
+      max-height: 62vh;
+    }
+    .q-text { font-size: 1.05em; font-weight: 600; color: #1a1a2e; margin-bottom: 20px; line-height: 1.6; }
+    .q-img { max-width: 100%; border-radius: 8px; margin-bottom: 16px; }
+    .option-label {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #f8f9fb; border: 2px solid #e8eaf0;
+      border-radius: 8px; padding: 12px 16px;
+      margin-bottom: 10px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .option-label:hover { border-color: #aab4cc; background: #eef1f8; }
+    .option-label.selected { border-color: var(--exam-primary); background: #e8f0fe; }
+    .option-label input[type=radio] { display: none; }
+    .opt-key {
+      background: #e8eaf0; border-radius: 6px;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.85rem; flex-shrink: 0;
+      color: #333;
+    }
+    .option-label.selected .opt-key { background: var(--exam-primary); color: #fff; }
+    .opt-text { padding-top: 4px; line-height: 1.5; }
+
+    /* ── Question Footer ── */
+    .q-footer {
+      padding: 12px 18px;
+      border-top: 1px solid #e8eaf0;
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      background: #f8f9fb;
+      border-radius: 0 0 12px 12px;
+    }
+    .q-footer button {
+      border-radius: 6px; border: none; padding: 8px 16px;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .q-footer button:hover { opacity: 0.85; }
+    .q-footer button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-prev     { background: #6c757d; color: #fff; }
+    .btn-review   { background: var(--q-flagged); color: #fff; }
+    .btn-clear    { background: #e9ecef; color: #333; }
+    .btn-next     { background: #28a745; color: #fff; margin-left: auto; }
+
+    /* ── Number Panel ── */
+    .num-panel {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .num-panel-header {
+      background: var(--exam-primary); color: #fff;
+      padding: 12px 16px; border-radius: 12px 12px 0 0;
+      font-weight: 700; font-size: 0.9rem;
+    }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; border-bottom: 1px solid #eee; }
+    .leg-item { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: #555; }
+    .leg-dot { width: 12px; height: 12px; border-radius: 3px; }
+    .num-grid { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px; max-height: 70vh; overflow-y: auto; }
+    .q-num-btn {
+      width: 34px; height: 34px;
+      border-radius: 6px; border: 1.5px solid #ccd;
+      background: var(--q-unanswered); cursor: pointer;
+      font-size: 0.78rem; font-weight: 700; color: #333;
+      transition: all 0.15s;
+    }
+    .q-num-btn.answered  { background: var(--q-answered);  color: #fff; border-color: #1e7e34; }
+    .q-num-btn.flagged   { background: var(--q-flagged);   color: #fff; border-color: #e06000; }
+    .q-num-btn.current   { background: var(--q-current);   color: #fff; border-color: #0a1e42; box-shadow: 0 0 0 3px rgba(13,46,94,0.3); }
+
+    /* ── Section divider in num panel ── */
+    .sec-divider {
+      width: 100%; font-size: 0.72rem; font-weight: 700;
+      color: #888; text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid #eee; padding-bottom: 4px; margin-top: 6px;
+    }
+
+    /* ── Submit Modal ── */
+    .modal-header-submit { background: #dc3545; color: #fff; }
+    .stat-box { background: #f8f9fb; border-radius: 8px; padding: 12px; text-align: center; }
+    .stat-box .num { font-size: 1.8rem; font-weight: 800; }
+    .stat-box .lbl { font-size: 0.75rem; color: #666; }
+    .stat-answered .num { color: #28a745; }
+    .stat-unanswered .num { color: #6c757d; }
+    .stat-flagged .num { color: var(--q-flagged); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Top Navbar ── -->
+  <nav class="exam-nav">
+    <div class="brand"><i class="fa fa-graduation-cap me-2"></i>Online Exam</div>
+    <div class="nav-pills-row">
+      <span class="np d-none d-md-inline" id="navName">—</span>
+      <span class="np d-none d-sm-inline" id="navRoll">Roll: —</span>
+      <span class="np timer" id="timerDisplay">00:00:00</span>
+      <button class="btn-submit-nav" onclick="openSubmitModal()">
+        <i class="fa fa-paper-plane me-1"></i>SUBMIT
+      </button>
+    </div>
+  </nav>
+  <div class="spacer"></div>
+
+  <!-- ── Main Grid ── -->
+  <div class="main-grid" id="loadingMain">
+    <div class="q-panel d-flex align-items-center justify-content-center">
+      <div class="text-center text-muted">
+        <div class="spinner-border mb-3" style="color:#0d2e5e;"></div>
+        <p>Loading your question paper…</p>
+      </div>
+    </div>
+    <div class="num-panel"></div>
+  </div>
+
+  <div class="main-grid d-none" id="examMain">
+    <!-- Question Panel -->
+    <div class="q-panel">
+      <div class="q-panel-header">
+        <span class="sec-badge" id="secBadge">Section</span>
+        <span class="q-counter" id="qCounter">Q 1 of 0</span>
+        <div class="zoom-btns">
+          <button onclick="changeZoom(0.1)" title="Zoom In">A+</button>
+          <button onclick="changeZoom(0)"   title="Reset">Reset</button>
+          <button onclick="changeZoom(-0.1)" title="Zoom Out">A-</button>
+        </div>
+      </div>
+      <div class="q-body" id="qBody">
+        <!-- question content injected by JS -->
+      </div>
+      <div class="q-footer">
+        <button class="btn-prev"   id="btnPrev"   onclick="navigate(-1)"><i class="fa fa-arrow-left me-1"></i>Previous</button>
+        <button class="btn-review" id="btnReview" onclick="markReview()"><i class="fa fa-flag me-1"></i>Mark for Review</button>
+        <button class="btn-clear"  id="btnClear"  onclick="clearResponse()"><i class="fa fa-times me-1"></i>Clear Response</button>
+        <button class="btn-next"   id="btnNext"   onclick="navigate(1)">Next<i class="fa fa-arrow-right ms-1"></i></button>
+      </div>
+    </div>
+
+    <!-- Number Panel -->
+    <div class="num-panel">
+      <div class="num-panel-header"><i class="fa fa-th me-2"></i>Question No. Box</div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#28a745;"></div> Answered</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#fd7e14;"></div> Review</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f0f3f9; border:1px solid #ccd;"></div> Not visited</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#0d2e5e;"></div> Current</div>
+      </div>
+      <div class="num-grid" id="numGrid">
+        <!-- injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Submit Confirmation Modal ── -->
+  <div class="modal fade" id="submitModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header modal-header-submit">
+          <h5 class="modal-title"><i class="fa fa-exclamation-triangle me-2"></i>Submit Exam</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-3">Are you sure you want to submit? You cannot change your answers after submission.</p>
+          <div class="row g-2">
+            <div class="col-4">
+              <div class="stat-box stat-answered">
+                <div class="num" id="statAnswered">0</div>
+                <div class="lbl">Answered</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="stat-box stat-flagged">
+                <div class="num" id="statFlagged">0</div>
+                <div class="lbl">For Review</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="stat-box stat-unanswered">
+                <div class="num" id="statUnanswered">0</div>
+                <div class="lbl">Not Answered</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Go Back</button>
+          <button type="button" class="btn btn-danger" id="confirmSubmitBtn" onclick="submitExam()">
+            <i class="fa fa-check me-1"></i>Submit Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ── State ────────────────────────────────────────────────────────────────
+    const params  = new URLSearchParams(window.location.search);
+    const rollNo  = params.get('roll') || '';
+    const isTrial = params.get('mode') === 'trial';
+    if (!rollNo) window.location.href = '/apps/examDemo/';
+
+    let paperData    = null;   // full paper object from API
+    let flatQuestions = [];    // flat ordered list: { sectionName, sectionIdx, qIdx, qData }
+    let currentIdx   = 0;
+    let answers      = {};     // { questionId: 'a'|'b'|'c'|'d'|null }
+    let flags        = {};     // { questionId: true|false }
+    let timeRemaining = 0;     // seconds
+    let timerInterval = null;
+    let zoomBase     = 1.0;
+
+    // ── Load Paper ────────────────────────────────────────────────────────────
+    async function loadPaper() {
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch(`/api/exam/paper?roll=${rollNo}${isTrial ? '&mode=trial' : ''}`);
+        // const data = await res.json();
+        // if (!data.paper) { alert('Failed to load paper.'); return; }
+        // initExam(data);
+        // ============================================================
+
+        // Stub data — remove when API is integrated
+        const stubData = {
+          student: { 'candidate-name': 'Demo Student', 'c-o': 'Demo Guardian', 'roll-no': rollNo },
+          timeRemaining: 3600,
+          paper: {
+            nos: 2,
+            section: {
+              1: {
+                name: 'General Knowledge',
+                noq: 3,
+                qustion: {
+                  1: { id: 1, q_txt: 'What is the capital of India?', q_img: '', opt_a_txt: 'Mumbai', opt_b_txt: 'New Delhi', opt_c_txt: 'Kolkata', opt_d_txt: 'Chennai' },
+                  2: { id: 2, q_txt: 'Which planet is known as the Red Planet?', q_img: '', opt_a_txt: 'Venus', opt_b_txt: 'Jupiter', opt_c_txt: 'Mars', opt_d_txt: 'Saturn' },
+                  3: { id: 3, q_txt: 'How many days are in a leap year?', q_img: '', opt_a_txt: '365', opt_b_txt: '366', opt_c_txt: '367', opt_d_txt: '364' },
+                }
+              },
+              2: {
+                name: 'Computer Basics',
+                noq: 2,
+                qustion: {
+                  1: { id: 4, q_txt: 'What does CPU stand for?', q_img: '', opt_a_txt: 'Central Processing Unit', opt_b_txt: 'Computer Personal Unit', opt_c_txt: 'Core Processing Utility', opt_d_txt: 'Central Program Unit' },
+                  2: { id: 5, q_txt: 'Which of the following is an input device?', q_img: '', opt_a_txt: 'Monitor', opt_b_txt: 'Printer', opt_c_txt: 'Keyboard', opt_d_txt: 'Speaker' },
+                }
+              }
+            }
+          }
+        };
+        initExam(stubData);
+      } catch (err) {
+        document.getElementById('loadingMain').innerHTML =
+          '<div class="alert alert-danger m-4">Failed to load exam. <a href="/apps/examDemo/">Go back</a></div>';
+      }
+    }
+
+    function initExam(data) {
+      paperData = data.paper;
+      timeRemaining = data.timeRemaining || 3600;
+
+      document.getElementById('navName').textContent = data.student['candidate-name'];
+      document.getElementById('navRoll').textContent = 'Roll: ' + data.student['roll-no'];
+
+      // Flatten questions
+      flatQuestions = [];
+      Object.values(paperData.section).forEach((sec, si) => {
+        Object.values(sec.qustion).forEach((q) => {
+          flatQuestions.push({ sectionName: sec.name, q });
+          answers[q.id] = q.ans === 'NULL' ? null : q.ans;
+          flags[q.id]   = false;
+        });
+      });
+
+      document.getElementById('loadingMain').classList.add('d-none');
+      document.getElementById('examMain').classList.remove('d-none');
+
+      buildNumGrid();
+      renderQuestion(0);
+      startTimer();
+    }
+
+    // ── Render Question ───────────────────────────────────────────────────────
+    function renderQuestion(idx) {
+      if (idx < 0 || idx >= flatQuestions.length) return;
+      currentIdx = idx;
+
+      const { sectionName, q } = flatQuestions[idx];
+      const totalQ = flatQuestions.length;
+
+      document.getElementById('secBadge').textContent   = 'Section: ' + sectionName;
+      document.getElementById('qCounter').textContent   = `Q ${idx + 1} of ${totalQ}`;
+      document.getElementById('btnPrev').disabled = idx === 0;
+      document.getElementById('btnNext').disabled = idx === totalQ - 1;
+
+      // Question body
+      let html = '';
+      if (q.q_txt)  html += `<div class="q-text">${q.q_txt}</div>`;
+      if (q.q_img && q.q_img !== 'NULL' && q.q_img !== '')
+        html += `<img src="${q.q_img}" class="q-img" alt="Question image"/>`;
+
+      const sel = answers[q.id];
+      ['a','b','c','d'].forEach(opt => {
+        const txt = q['opt_' + opt + '_txt'];
+        const img = q['opt_' + opt + '_img'];
+        if ((!txt || txt === 'NULL') && (!img || img === 'NULL' || img === '')) return;
+        const isSelected = sel === opt;
+        html += `
+          <label class="option-label ${isSelected ? 'selected' : ''}" id="lbl_${opt}">
+            <input type="radio" name="ans" value="${opt}" ${isSelected ? 'checked' : ''}/>
+            <span class="opt-key">${opt.toUpperCase()}</span>
+            <span class="opt-text">`;
+        if (txt && txt !== 'NULL') html += txt;
+        if (img && img !== 'NULL' && img !== '') html += `<img src="${img}" style="max-width:120px;border-radius:4px;margin-top:4px;" alt=""/>`;
+        html += `</span></label>`;
+      });
+
+      document.getElementById('qBody').innerHTML = html;
+
+      // Click handlers for option labels
+      document.querySelectorAll('.option-label').forEach(lbl => {
+        lbl.addEventListener('click', () => {
+          const val = lbl.querySelector('input').value;
+          selectAnswer(val);
+        });
+      });
+
+      // Refresh num grid highlight
+      document.querySelectorAll('.q-num-btn').forEach((btn, i) => {
+        btn.classList.remove('current');
+        if (i === currentIdx) btn.classList.add('current');
+      });
+    }
+
+    // ── Answer / Flag ─────────────────────────────────────────────────────────
+    function selectAnswer(val) {
+      const q = flatQuestions[currentIdx].q;
+      answers[q.id] = val;
+      flags[q.id]   = false;
+
+      // Update UI
+      document.querySelectorAll('.option-label').forEach(lbl => {
+        lbl.classList.toggle('selected', lbl.querySelector('input').value === val);
+      });
+      document.querySelectorAll('.q-num-btn')[currentIdx].className =
+        'q-num-btn answered' + (currentIdx === currentIdx ? ' ' : '');
+
+      updateNumBtn(currentIdx);
+      saveAnswer(q.id, val);
+    }
+
+    function markReview() {
+      const q = flatQuestions[currentIdx].q;
+      flags[q.id] = !flags[q.id];
+      updateNumBtn(currentIdx);
+    }
+
+    function clearResponse() {
+      const q = flatQuestions[currentIdx].q;
+      answers[q.id] = null;
+      flags[q.id]   = false;
+      document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+      document.querySelectorAll('input[name=ans]').forEach(i => i.checked = false);
+      updateNumBtn(currentIdx);
+    }
+
+    function navigate(dir) {
+      renderQuestion(currentIdx + dir);
+    }
+
+    // ── Number Grid ───────────────────────────────────────────────────────────
+    function buildNumGrid() {
+      const grid = document.getElementById('numGrid');
+      grid.innerHTML = '';
+      let lastSec = '';
+      flatQuestions.forEach(({ sectionName }, i) => {
+        if (sectionName !== lastSec) {
+          const div = document.createElement('div');
+          div.className = 'sec-divider';
+          div.textContent = sectionName;
+          grid.appendChild(div);
+          lastSec = sectionName;
+        }
+        const btn = document.createElement('button');
+        btn.className = 'q-num-btn';
+        btn.textContent = i + 1;
+        btn.dataset.idx = i;
+        btn.addEventListener('click', () => renderQuestion(i));
+        grid.appendChild(btn);
+      });
+    }
+
+    function updateNumBtn(idx) {
+      const q   = flatQuestions[idx].q;
+      const btn = document.querySelectorAll('.q-num-btn')[idx];
+      if (!btn) return;
+      const isCurrent = idx === currentIdx;
+      let cls = 'q-num-btn';
+      if (flags[q.id])        cls += ' flagged';
+      else if (answers[q.id]) cls += ' answered';
+      if (isCurrent)          cls += ' current';
+      btn.className = cls;
+    }
+
+    // ── Timer ─────────────────────────────────────────────────────────────────
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          submitExam(true);
+        }
+        const h = Math.floor(timeRemaining / 3600);
+        const m = Math.floor((timeRemaining % 3600) / 60);
+        const s = timeRemaining % 60;
+        const display = [h, m, s].map(v => String(v).padStart(2,'0')).join(':');
+        const el = document.getElementById('timerDisplay');
+        el.textContent = display;
+        if (timeRemaining <= 300) el.classList.add('warn');
+      }, 1000);
+    }
+
+    // ── Zoom ──────────────────────────────────────────────────────────────────
+    function changeZoom(delta) {
+      if (delta === 0) { zoomBase = 1.0; } else { zoomBase = Math.min(1.6, Math.max(0.7, zoomBase + delta)); }
+      document.body.style.fontSize = zoomBase + 'rem';
+    }
+
+    // ── Save Answer (API) ─────────────────────────────────────────────────────
+    async function saveAnswer(questionId, answer) {
+      // ============================================================
+      // API INTEGRATION POINT
+      // await fetch('/api/exam/save-answer', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ roll: rollNo, questionId, answer, timeRemaining })
+      // });
+      // ============================================================
+    }
+
+    // ── Submit Modal ──────────────────────────────────────────────────────────
+    function openSubmitModal() {
+      let answered = 0, flagged = 0, unanswered = 0;
+      flatQuestions.forEach(({ q }) => {
+        if (flags[q.id])        flagged++;
+        else if (answers[q.id]) answered++;
+        else                    unanswered++;
+      });
+      document.getElementById('statAnswered').textContent   = answered;
+      document.getElementById('statFlagged').textContent    = flagged;
+      document.getElementById('statUnanswered').textContent = unanswered;
+      new bootstrap.Modal(document.getElementById('submitModal')).show();
+    }
+
+    async function submitExam(autoSubmit = false) {
+      clearInterval(timerInterval);
+      const btn = document.getElementById('confirmSubmitBtn');
+      if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting…'; }
+
+      const payload = {
+        roll: rollNo,
+        answers: flatQuestions.map(({ q }) => ({
+          id: q.id,
+          answer: answers[q.id] || null,
+          flagged: !!flags[q.id]
+        })),
+        timeRemaining,
+        autoSubmit
+      };
+
+      try {
+        // ============================================================
+        // API INTEGRATION POINT
+        // const res  = await fetch('/api/exam/submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        // const data = await res.json();
+        // if (data.success) window.location.href = `/apps/examDemo/result?roll=${rollNo}`;
+        // ============================================================
+
+        alert('Submit API not connected yet. Payload logged to console.');
+        console.log('Submit payload:', payload);
+      } catch (err) {
+        alert('Submission failed. Please try again.');
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa fa-check me-1"></i>Submit Now'; }
+      }
+    }
+
+    // Disable context menu / key shortcuts during exam
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (['F12','F11','Tab'].includes(e.key) && !e.ctrlKey) e.preventDefault();
+    });
+
+    // Init
+    loadPaper();
+  </script>
+</body>
+</html>
