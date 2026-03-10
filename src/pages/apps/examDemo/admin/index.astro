@@ -17,16 +17,28 @@
     :root { --exam-primary: #0d2e5e; --exam-accent: #e8a000; }
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0d2e5e 100%);
+      background: linear-gradient(135deg, #b6b6b6 0%, #bdbdbd 50%, #c1c1c1 100%);
       display: flex; flex-direction: column;
       font-family: 'Segoe UI', sans-serif;
     }
     .brand-bar {
       padding: 14px 24px;
-      background: rgba(255,255,255,0.05);
+      background: #002b5c;
       border-bottom: 1px solid rgba(255,255,255,0.1);
       display: flex; align-items: center; gap: 12px;
     }
+    .logo {
+        width: 40px;
+        height: 40px;
+        display: block;
+        filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.300));
+        transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    /* .logo:hover {
+        transform: perspective(1000px) rotateY(360deg) scale(1.1);
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+    } */
     .brand-bar .title-block h6 { color: #fff; margin: 0; font-weight: 800; }
     .brand-bar .title-block small { color: rgba(255,255,255,0.5); font-size: 0.75rem; }
     .admin-badge {
@@ -84,9 +96,10 @@
 <body>
 
   <div class="brand-bar">
+    <img src="/assets/images/knhs.png" alt="KNHS Logo" width="40" height="40" class="me-2 logo" />
     <div class="title-block">
       <h6>Online Examination Portal</h6>
-      <small>Kamalpur Netaji HIght School</small>
+      <small>Kamalpur Netaji High School</small>
     </div>
     <span class="admin-badge ms-auto">Admin Panel</span>
   </div>
