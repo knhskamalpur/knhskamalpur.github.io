@@ -214,23 +214,6 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
       }
     }
 
-    function toggleNav() {
-      const nl = document.getElementById('navLinks');
-      nl.style.display = nl.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    // Scroll to top after alert on this page
-    const _baseShowAlert = showAlert;
-    function showAlert(type, msg) {
-      _baseShowAlert(type, msg);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Clear validation styles on input
-    document.querySelectorAll('.form-control').forEach(el => {
-      el.addEventListener('input', () => el.classList.remove('is-invalid'));
-    });
-
     loadProfileNumber();
   </script>
 </Fragment>
