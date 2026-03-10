@@ -110,27 +110,26 @@
       overflow-y: auto;
       max-height: 62vh;
     }
-    .q-text { font-size: 1.05em; font-weight: 600; color: #1a1a2e; margin-bottom: 20px; line-height: 1.6; }
-    .q-img { max-width: 100%; border-radius: 8px; margin-bottom: 16px; }
-    .option-label {
-      display: flex; align-items: flex-start; gap: 12px;
-      background: #f8f9fb; border: 2px solid #e8eaf0;
-      border-radius: 8px; padding: 12px 16px;
-      margin-bottom: 10px; cursor: pointer;
-      transition: all 0.15s;
+    .q-text { font-size: 1.05em; font-weight: 600; color: #1a1a2e; margin-bottom: 16px; line-height: 1.6; }
+    .q-img { max-width: 100%; margin-bottom: 14px; }
+
+    /* ── Option rows — visible radio + A) text like PHP ── */
+    .option-row {
+      margin-bottom: 6px;
+      padding: 5px 0;
+      border-bottom: 1px solid #f0f0f0;
     }
-    .option-label:hover { border-color: #aab4cc; background: #eef1f8; }
-    .option-label.selected { border-color: var(--exam-primary); background: #e8f0fe; }
-    .option-label input[type=radio] { display: none; }
-    .opt-key {
-      background: #e8eaf0; border-radius: 6px;
-      width: 28px; height: 28px;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 0.85rem; flex-shrink: 0;
-      color: #333;
+    .option-row:last-child { border-bottom: none; }
+    .option-row label {
+      display: flex; align-items: flex-start; gap: 10px;
+      cursor: pointer; width: 100%; margin: 0; font-size: 1em; line-height: 1.5;
     }
-    .option-label.selected .opt-key { background: var(--exam-primary); color: #fff; }
-    .opt-text { padding-top: 4px; line-height: 1.5; }
+    .option-row input[type=radio] {
+      margin-top: 3px; flex-shrink: 0;
+      width: 16px; height: 16px; cursor: pointer;
+      accent-color: var(--exam-primary);
+    }
+    .opt-text { line-height: 1.5; }
 
     /* ── Question Footer ── */
     .q-footer {
@@ -166,17 +165,19 @@
     .legend { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; border-bottom: 1px solid #eee; }
     .leg-item { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: #555; }
     .leg-dot { width: 12px; height: 12px; border-radius: 3px; }
-    .num-grid { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px; max-height: 70vh; overflow-y: auto; }
+    .num-grid { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px 14px; max-height: 70vh; overflow-y: auto; }
+    /* Match PHP palette: btn-light / btn-success / btn-warning */
     .q-num-btn {
       width: 34px; height: 34px;
-      border-radius: 6px; border: 1.5px solid #ccd;
-      background: var(--q-unanswered); cursor: pointer;
-      font-size: 0.78rem; font-weight: 700; color: #333;
-      transition: all 0.15s;
+      border-radius: 4px; border: 1px solid #343a40;
+      background: #f8f9fa; cursor: pointer;
+      font-size: 0.8rem; font-weight: 600; color: #212529;
+      transition: all 0.1s;
     }
-    .q-num-btn.answered  { background: var(--q-answered);  color: #fff; border-color: #1e7e34; }
-    .q-num-btn.flagged   { background: var(--q-flagged);   color: #fff; border-color: #e06000; }
-    .q-num-btn.current   { background: var(--q-current);   color: #fff; border-color: #0a1e42; box-shadow: 0 0 0 3px rgba(13,46,94,0.3); }
+    .q-num-btn:hover      { filter: brightness(0.92); }
+    .q-num-btn.answered  { background: #28a745; color: #fff; border-color: #28a745; }
+    .q-num-btn.flagged   { background: #ffc107; color: #212529; border-color: #d39e00; }
+    .q-num-btn.current   { outline: 3px solid var(--exam-primary); outline-offset: 1px; }
 
     /* ── Section divider in num panel ── */
     .sec-divider {
@@ -250,9 +251,8 @@
       <div class="num-panel-header"><i class="fa fa-th me-2"></i>Question No. Box</div>
       <div class="legend">
         <div class="leg-item"><div class="leg-dot" style="background:#28a745;"></div> Answered</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#fd7e14;"></div> Review</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#f0f3f9; border:1px solid #ccd;"></div> Not visited</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#0d2e5e;"></div> Current</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#ffc107; border:1px solid #d39e00;"></div> Review</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f8f9fa; border:1px solid #343a40;"></div> Not Answered</div>
       </div>
       <div class="num-grid" id="numGrid">
         <!-- injected by JS -->
@@ -417,27 +417,25 @@
         const hasImg = img && img !== 'NULL' && img.trim() !== '';
         if (!hasTxt && !hasImg) return;
         const isSelected = sel === opt;
-        html += `
-          <label class="option-label ${isSelected ? 'selected' : ''}" id="lbl_${opt}">
+        // PHP-style: visible radio + "A) text" label
+        html += `<div class="option-row">
+          <label>
             <input type="radio" name="ans" value="${opt}" ${isSelected ? 'checked' : ''}/>
-            <span class="opt-key">${opt.toUpperCase()}</span>
-            <span class="opt-text">`;
-        // show text OR image (matching PHP: text takes priority)
+            <span class="opt-text"><strong>${opt.toUpperCase()})</strong>&nbsp;`;
         if (hasTxt) {
           html += txt;
         } else {
           html += `<img src="${img}" style="width:20%;height:auto;" alt=""/>`;
         }
-        html += `</span></label>`;
+        html += `</span></label></div>`;
       });
 
       document.getElementById('qBody').innerHTML = html;
 
-      // Click handlers for option labels
-      document.querySelectorAll('.option-label').forEach(lbl => {
-        lbl.addEventListener('click', () => {
-          const val = lbl.querySelector('input').value;
-          selectAnswer(val);
+      // Click/change handlers for radio inputs
+      document.querySelectorAll('input[name=ans]').forEach(inp => {
+        inp.addEventListener('change', () => {
+          if (inp.checked) selectAnswer(inp.value);
         });
       });
 
@@ -454,10 +452,6 @@
       answers[q.id] = val;
       flags[q.id]   = false;
 
-      // Update UI
-      document.querySelectorAll('.option-label').forEach(lbl => {
-        lbl.classList.toggle('selected', lbl.querySelector('input').value === val);
-      });
       updateNumBtn(currentIdx);
       saveAnswer(q.id, val);
     }
@@ -472,7 +466,6 @@
       const q = flatQuestions[currentIdx].q;
       answers[q.id] = null;
       flags[q.id]   = false;
-      document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
       document.querySelectorAll('input[name=ans]').forEach(i => i.checked = false);
       updateNumBtn(currentIdx);
     }
