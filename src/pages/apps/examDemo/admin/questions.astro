@@ -80,7 +80,7 @@
     .q-editor {
       background: #fff; border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-      overflow: hidden;
+      display: flex; flex-direction: column;
     }
     .qe-header {
       background: var(--exam-primary); color: #fff;
@@ -98,7 +98,7 @@
     .btn-del-q { background: rgba(220,53,69,0.7) !important; border-color: rgba(220,53,69,0.8) !important; }
     .btn-del-q:hover { background: rgba(220,53,69,1) !important; }
 
-    .qe-body { padding: 24px; }
+    .qe-body { padding: 24px; overflow-y: auto; max-height: calc(100vh - 230px); flex: 1; }
     .form-label { font-weight: 600; font-size: 0.875rem; color: #333; }
     .form-control { border-radius: 8px; border: 1.5px solid #dde2ec; padding: 10px 14px; }
     .form-control:focus { border-color: var(--exam-primary); box-shadow: 0 0 0 3px rgba(13,46,94,0.12); }
@@ -127,6 +127,7 @@
     .qe-footer {
       padding: 14px 20px; background: #f8f9fb; border-top: 1px solid #eee;
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+      flex-shrink: 0; position: sticky; bottom: 0; z-index: 10;
     }
     .btn-save-q {
       background: var(--exam-primary); color: #fff; border: none;
