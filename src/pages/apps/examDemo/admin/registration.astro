@@ -24,7 +24,7 @@
     .admin-nav {
       background: var(--exam-primary);
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      display: flex; align-items: center; padding: 0 20px; height: 56px;
+      display: flex; align-items: center; padding: 0 20px; flex-wrap: wrap; min-height: 56px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
     .admin-nav .brand { color: #fff; font-weight: 800; font-size: 1.05rem; flex: 1; }
@@ -35,7 +35,8 @@
     .nav-links a .fa { margin-right: 5px; }
     .btn-logout { background: rgba(220,53,69,0.8); color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.82rem; font-weight: 700; cursor: pointer; margin-left: 8px; }
     .btn-logout:hover { background: #dc3545; }
-    @media(max-width:680px) { .nav-links, .badge-admin { display: none !important; } }
+    .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
+    @media(max-width:680px) { .nav-links, .badge-admin { display: none; } .nav-toggle { display: block; } .nav-links { width: 100%; flex-direction: column; gap: 2px; padding: 6px 0 4px; } }
 
     .spacer { height: 68px; }
 
@@ -91,7 +92,7 @@
   <nav class="admin-nav">
     <div class="brand"><i class="fa fa-graduation-cap me-2"></i>aPanel</div>
     <span class="badge-admin">ADMIN</span>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="/apps/examDemo/admin/dashboard"><i class="fa fa-tachometer-alt"></i>Dashboard</a>
       <a href="/apps/examDemo/admin/registration" class="active"><i class="fa fa-user-plus"></i>Registration</a>
       <a href="/apps/examDemo/admin/questions"><i class="fa fa-question-circle"></i>Questions</a>
@@ -100,6 +101,7 @@
     <button class="btn-logout" onclick="window.location.href='/apps/examDemo/admin/'">
       <i class="fa fa-sign-out-alt me-1"></i>Logout
     </button>
+    <button class="nav-toggle" onclick="toggleNav()"><i class="fa fa-bars"></i></button>
   </nav>
   <div class="spacer"></div>
 
@@ -274,6 +276,11 @@
     document.querySelectorAll('.form-control').forEach(el => {
       el.addEventListener('input', () => el.classList.remove('is-invalid'));
     });
+
+    function toggleNav() {
+      const nl = document.getElementById('navLinks');
+      nl.style.display = nl.style.display === 'flex' ? 'none' : 'flex';
+    }
 
     loadProfileNumber();
   </script>

@@ -24,14 +24,15 @@
     body { background: #edf0f7; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
 
     /* Navbar */
-    .admin-nav { background: var(--exam-primary); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; padding: 0 20px; height: 56px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .admin-nav { background: var(--exam-primary); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; padding: 0 20px; flex-wrap: wrap; min-height: 56px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
     .admin-nav .brand { color: #fff; font-weight: 800; font-size: 1.05rem; flex: 1; }
     .admin-nav .badge-admin { background: var(--exam-accent); color: #000; border-radius: 12px; padding: 2px 10px; font-size: 0.72rem; font-weight: 800; margin-right: 12px; }
     .nav-links { display: flex; gap: 4px; }
     .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; }
     .nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.15); color: #fff; }
     .btn-logout { background: rgba(220,53,69,0.8); color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.82rem; font-weight: 700; cursor: pointer; margin-left: 8px; }
-    @media(max-width:680px) { .nav-links, .badge-admin { display: none !important; } }
+    .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
+    @media(max-width:680px) { .nav-links, .badge-admin { display: none; } .nav-toggle { display: block; } .nav-links { width: 100%; flex-direction: column; gap: 2px; padding: 6px 0 4px; } }
     .spacer { height: 68px; }
 
     /* Toolbar */
@@ -113,7 +114,7 @@
   <nav class="admin-nav">
     <div class="brand"><i class="fa fa-graduation-cap me-2"></i>aPanel</div>
     <span class="badge-admin">ADMIN</span>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="/apps/examDemo/admin/dashboard"><i class="fa fa-tachometer-alt"></i>Dashboard</a>
       <a href="/apps/examDemo/admin/registration"><i class="fa fa-user-plus"></i>Registration</a>
       <a href="/apps/examDemo/admin/questions"><i class="fa fa-question-circle"></i>Questions</a>
@@ -122,6 +123,7 @@
     <button class="btn-logout" onclick="window.location.href='/apps/examDemo/admin/'">
       <i class="fa fa-sign-out-alt me-1"></i>Logout
     </button>
+    <button class="nav-toggle" onclick="toggleNav()"><i class="fa fa-bars"></i></button>
   </nav>
   <div class="spacer"></div>
 
@@ -316,6 +318,11 @@
           ${msg}
           <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
         </div>`;
+    }
+
+    function toggleNav() {
+      const nl = document.getElementById('navLinks');
+      nl.style.display = nl.style.display === 'flex' ? 'none' : 'flex';
     }
 
     loadCandidates();
