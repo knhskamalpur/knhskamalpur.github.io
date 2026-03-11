@@ -32,7 +32,7 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
 
     /* Sidebar — question sets list */
     .sets-panel {
-      background: #fff; border-radius: 12px;
+      background: var(--bg-card); border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.07);
       overflow: hidden;
     }
@@ -48,18 +48,18 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
     }
     .set-item {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px; border-bottom: 1px solid #f0f0f0;
+      padding: 12px 16px; border-bottom: 1px solid var(--border-color);
       cursor: pointer; transition: background 0.15s;
     }
-    .set-item:hover { background: #f4f6fa; }
+    .set-item:hover { background: var(--hover-row); }
     .set-item.active { background: #e8f0fe; border-left: 3px solid var(--exam-primary); }
-    .set-item .set-name { font-weight: 700; font-size: 0.9rem; color: #1a1a2e; }
-    .set-item .set-count { font-size: 0.75rem; color: #888; margin-top: 2px; }
-    .no-sets { padding: 20px; text-align: center; color: #aaa; font-size: 0.85rem; }
+    .set-item .set-name { font-weight: 700; font-size: 0.9rem; color: var(--text-dark); }
+    .set-item .set-count { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .no-sets { padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
 
     /* Main — question editor */
     .q-editor {
-      background: #fff; border-radius: 12px;
+      background: var(--bg-card); border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.07);
       display: flex; flex-direction: column;
     }
@@ -80,18 +80,18 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
     .btn-del-q:hover { background: rgba(220,53,69,1) !important; }
 
     .qe-body { padding: 24px; overflow-y: auto; max-height: calc(100vh - 230px); flex: 1; }
-    .form-label { font-weight: 600; font-size: 0.875rem; color: #333; }
-    .form-control { border-radius: 8px; border: 1.5px solid #dde2ec; padding: 10px 14px; }
+    .form-label { font-weight: 600; font-size: 0.875rem; color: var(--text-body); }
+    .form-control { border-radius: 8px; border: 1.5px solid var(--border-input); padding: 10px 14px; }
     .form-control:focus { border-color: var(--exam-primary); box-shadow: 0 0 0 3px rgba(13,46,94,0.12); }
     textarea.form-control { resize: vertical; min-height: 80px; }
 
     .option-block {
-      background: #f8f9fb; border: 1.5px solid #e8eaf0;
+      background: var(--bg-section); border: 1.5px solid var(--border-color);
       border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
     }
     .option-block .opt-label {
       display: flex; align-items: center; gap: 8px;
-      font-weight: 800; color: var(--exam-primary); font-size: 0.85rem;
+      font-weight: 800; color: var(--exam-primary-text); font-size: 0.85rem;
       margin-bottom: 10px;
     }
     .opt-key-badge {
@@ -102,11 +102,11 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
     }
     .or-divider { text-align: center; color: #aaa; font-size: 0.75rem; font-weight: 600; margin: 6px 0; }
     .correct-ans-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .correct-ans-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: #333; }
+    .correct-ans-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--text-body); }
     .correct-ans-row input[type=radio] { accent-color: #28a745; width: 16px; height: 16px; }
 
     .qe-footer {
-      padding: 14px 20px; background: #f8f9fb; border-top: 1px solid #eee;
+      padding: 14px 20px; background: var(--bg-section); border-top: 1px solid var(--border-color);
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
       flex-shrink: 0; position: sticky; bottom: 0; z-index: 10;
     }
@@ -127,8 +127,8 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
     .modal-header-blue .btn-close { filter: invert(1); }
 
     /* Placeholder state */
-    .placeholder-state { padding: 40px; text-align: center; color: #aaa; }
-    .placeholder-state .fa { font-size: 3rem; margin-bottom: 16px; color: #dde2ec; }
+    .placeholder-state { padding: 40px; text-align: center; color: var(--text-muted); }
+    .placeholder-state .fa { font-size: 3rem; margin-bottom: 16px; color: var(--border-input); }
   </style>
 </Fragment>
 

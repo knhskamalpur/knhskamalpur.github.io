@@ -23,8 +23,47 @@ const navItems = [
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    :root { --exam-primary: #0d2e5e; --exam-accent: #e8a000; }
-    body { background: #edf0f7; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+    :root {
+      --exam-primary: #0d2e5e;
+      --exam-accent: #e8a000;
+      --exam-primary-text: #0d2e5e;
+      /* Light mode (default) */
+      --bg-page: #edf0f7;
+      --bg-card: #ffffff;
+      --bg-section: #f8f9fb;
+      --text-primary: #212529;
+      --text-dark: #1a1a2e;
+      --text-body: #333;
+      --text-muted: #888;
+      --border-color: #eeeeee;
+      --border-input: #dde2ec;
+      --hover-row: #f8f9fb;
+      --progress-track: #e8eaf0;
+      --footer-color: #888;
+    }
+    html[data-theme='dark'] {
+      --exam-primary-text: #7eabdf;
+      --bg-page: #0f1520;
+      --bg-card: #1a2336;
+      --bg-section: #1e2b3e;
+      --text-primary: #e2e8f0;
+      --text-dark: #e2e8f0;
+      --text-body: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-color: #2d3748;
+      --border-input: #3d4f6a;
+      --hover-row: #1e2b3e;
+      --progress-track: #2d3d54;
+      --footer-color: #64748b;
+    }
+    /* (Bootstrap element overrides are in the is:global block below) */
+    body {
+      background: var(--bg-page);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
 
     /* ── Admin Navbar ── */
     .admin-nav {
@@ -43,7 +82,7 @@ const navItems = [
       text-transform: uppercase; white-space: nowrap;
     }
     
-    .nav-container { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .nav-container { display: flex; align-items: center; gap: 8px; }
     
     .nav-links { display: flex; gap: 4px; }
     .nav-links a {
@@ -137,10 +176,69 @@ const navItems = [
       .btn-logout { margin: 0 12px 20px; padding: 13px; border-radius: 10px; width: calc(100% - 24px); }
     }
 
+    /* ── Theme Toggle Button ── */
+    .btn-theme {
+      width: 40px; height: 40px; border-radius: 8px;
+      margin: 0 10px;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.85); font-size: 1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.3s ease;
+      flex-shrink: 0;
+    }
+    .btn-theme:hover { background: rgba(255,255,255,0.18); }
+
     .spacer { height: 80px; }
-    footer { text-align: center; padding: 20px; color: #888; font-size: 0.8rem; margin-top: 20px; }
+    footer { text-align: center; padding: 20px; color: var(--footer-color); font-size: 0.8rem; margin-top: 20px; }
     .spinner-border { width: 1.1rem; height: 1.1rem; border-width: 2px; }
+
+    /* ── Custom Scrollbar ── */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-section); border-radius: 8px; }
+    ::-webkit-scrollbar-thumb { background: #3a5a9a; border-radius: 8px; border: 2px solid var(--bg-section); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--exam-accent); }
+    * { scrollbar-width: thin; scrollbar-color: #3a5a9a var(--bg-section); }
   </style>
+
+  <!-- Global Bootstrap overrides: must be is:global so Astro doesn't scope them.
+       Bootstrap creates modal/form elements dynamically — they won't carry the Astro cid. -->
+  <style is:global>
+    /* ── Form controls ── */
+    html[data-theme='dark'] .form-control,
+    html[data-theme='dark'] .form-select,
+    html[data-theme='dark'] .input-group-text {
+      background-color: var(--bg-card) !important;
+      border-color: var(--border-input) !important;
+      color: var(--text-dark) !important;
+    }
+    html[data-theme='dark'] .form-control::placeholder { color: var(--text-muted) !important; }
+    html[data-theme='dark'] .form-control:focus { border-color: var(--exam-primary) !important; }
+
+    /* ── Modal ── */
+    html[data-theme='dark'] .modal {
+      --bs-modal-bg: var(--bg-card);
+      --bs-modal-color: var(--text-dark);
+      --bs-modal-header-border-color: var(--border-color);
+      --bs-modal-footer-border-color: var(--border-color);
+    }
+    html[data-theme='dark'] .modal-content {
+      background-color: var(--bg-card) !important;
+      color: var(--text-dark) !important;
+    }
+    html[data-theme='dark'] .modal-header,
+    html[data-theme='dark'] .modal-footer {
+      border-color: var(--border-color) !important;
+    }
+
+    /* ── Backdrop blur ── */
+    .modal-backdrop {
+      backdrop-filter: blur(6px) !important;
+      -webkit-backdrop-filter: blur(6px) !important;
+      background-color: rgba(0, 0, 0, 0.45) !important;
+      opacity: 1 !important;
+    }
+  </style>
+
   <slot name="head" />
 </head>
 <body>
@@ -157,7 +255,11 @@ const navItems = [
       <span class="admin-badge ms-auto">Admin Panel</span>
     </div>
     
-    <button class="nav-toggle ms-auto" id="navToggle" onclick="toggleNav()" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navContainer">
+    <button class="btn-theme ms-auto" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode">
+      <i class="fa fa-moon" id="themeIcon"></i>
+    </button>
+
+    <button class="nav-toggle" id="navToggle" onclick="toggleNav()" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navContainer">
       <span class="hamburger">
         <span class="bar"></span>
         <span class="bar"></span>
@@ -213,6 +315,31 @@ const navItems = [
       document.body.style.overflow = '';
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
+
+    /* ── Theme ── */
+    (function() {
+      const saved = localStorage.getItem('adminTheme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = saved || (prefersDark ? 'dark' : 'light');
+      applyTheme(theme, false);
+    })();
+    function applyTheme(theme, save) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.className = theme === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+      }
+      if (save) localStorage.setItem('adminTheme', theme);
+    }
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(current === 'dark' ? 'light' : 'dark', true);
+    }
+    /* Sync when OS preference changes (only if user hasn't saved a choice) */
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      if (!localStorage.getItem('adminTheme')) applyTheme(e.matches ? 'dark' : 'light', false);
+    });
+
     function showAlert(type, msg) {
       const el = document.getElementById('alertArea');
       if (!el) return;

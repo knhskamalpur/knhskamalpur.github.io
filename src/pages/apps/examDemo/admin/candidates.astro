@@ -17,14 +17,14 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
 
     /* Toolbar */
     .toolbar {
-      background: #fff; border-radius: 12px;
+      background: var(--bg-card); border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.07);
       padding: 14px 18px;
       display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
       margin-bottom: 16px;
     }
-    .toolbar h5 { margin: 0; color: var(--exam-primary); font-weight: 800; flex: 1; }
-    .search-box { border-radius: 8px; border: 1.5px solid #dde2ec; padding: 7px 12px; font-size: 0.9rem; min-width: 220px; }
+    .toolbar h5 { margin: 0; color: var(--exam-primary-text); font-weight: 800; flex: 1; }
+    .search-box { background: var(--bg-page); color: var(--text-dark); border-radius: 8px; border: 1.5px solid var(--border-input); padding: 7px 12px; font-size: 0.9rem; min-width: 220px; }
     .search-box:focus { outline: none; border-color: var(--exam-primary); }
     .btn-add { background: var(--exam-primary); color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
     .btn-add:hover { background: #1a5099; color: #fff; }
@@ -35,7 +35,7 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
 
     /* Table card */
     .table-card {
-      background: #fff; border-radius: 12px;
+      background: var(--bg-card); border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
       overflow: hidden;
     }
@@ -43,13 +43,13 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
     table { width: 100%; border-collapse: collapse; }
     thead tr { background: var(--exam-primary); color: #fff; }
     thead th { padding: 12px 14px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border: none; white-space: nowrap; }
-    tbody tr { border-bottom: 1px solid #f0f0f0; transition: background 0.1s; }
+    tbody tr { border-bottom: 1px solid var(--border-color); transition: background 0.1s; }
     tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: #f8f9fb; }
-    tbody td { padding: 12px 14px; font-size: 0.875rem; color: #333; vertical-align: middle; }
-    .name-cell { font-weight: 700; color: #1a1a2e; }
+    tbody tr:hover { background: var(--hover-row); }
+    tbody td { padding: 12px 14px; font-size: 0.875rem; color: var(--text-body); vertical-align: middle; }
+    .name-cell { font-weight: 700; color: var(--text-dark); }
     .roll-badge {
-      background: #e8f0fe; color: var(--exam-primary);
+      background: #e8f0fe; color: var(--exam-primary-text);
       border-radius: 6px; padding: 2px 8px;
       font-size: 0.78rem; font-weight: 800;
     }
@@ -64,20 +64,20 @@ import AdminLayout from '../../../../layouts/AdminLayout.astro';
     .btn-row-del:hover { background: #f8d7da; }
 
     /* Empty state */
-    .empty-state { padding: 48px; text-align: center; color: #aaa; }
-    .empty-state .fa { font-size: 2.5rem; margin-bottom: 12px; color: #dde2ec; }
+    .empty-state { padding: 48px; text-align: center; color: var(--text-muted); }
+    .empty-state .fa { font-size: 2.5rem; margin-bottom: 12px; color: var(--border-input); }
 
     /* Stats row */
     .mini-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
     .mini-stat {
-      background: #fff; border-radius: 10px;
+      background: var(--bg-card); border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       padding: 10px 18px 10px 14px;
       display: flex; align-items: center; gap: 10px;
     }
-    .mini-stat .ms-icon { font-size: 1.2rem; color: var(--exam-primary); }
-    .mini-stat .ms-val { font-size: 1.3rem; font-weight: 800; color: #1a1a2e; }
-    .mini-stat .ms-lbl { font-size: 0.72rem; color: #888; }
+    .mini-stat .ms-icon { font-size: 1.2rem; color: var(--exam-primary-text); }
+    .mini-stat .ms-val { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); }
+    .mini-stat .ms-lbl { font-size: 0.72rem; color: var(--text-muted); }
 
     @media print {
       .admin-nav, .toolbar .btn-add, .toolbar .btn-danger-sm, .toolbar .btn-refresh,
