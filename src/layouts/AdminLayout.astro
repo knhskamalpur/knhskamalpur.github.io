@@ -33,12 +33,14 @@ const navItems = [
       display: flex; align-items: center; padding: 0 24px; min-height: 64px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    .admin-nav .brand { color: #fff; font-weight: 800; font-size: 1.1rem; letter-spacing: 0.5px; }
-    .admin-nav .badge-admin {
+    .brand-bar { display: flex; align-items: center; gap: 10px; }
+    .brand-bar .title-block h6 { color: #fff; font-weight: 800; font-size: 0.95rem; margin: 0; letter-spacing: 0.3px; }
+    .brand-bar .title-block small { color: rgba(255,255,255,0.6); font-size: 0.7rem; }
+    .admin-badge {
       background: var(--exam-accent); color: #000;
       border-radius: 6px; padding: 2px 8px;
-      font-size: 0.7rem; font-weight: 800; margin-left: 12px;
-      text-transform: uppercase;
+      font-size: 0.7rem; font-weight: 800;
+      text-transform: uppercase; white-space: nowrap;
     }
     
     .nav-container { display: flex; align-items: center; gap: 8px; margin-left: auto; }
@@ -66,6 +68,19 @@ const navItems = [
       background: rgba(255,255,255,0.1); border: none; color: #fff; 
       font-size: 1.2rem; cursor: pointer; align-items: center; justify-content: center;
     }
+    
+    .logo {
+        width: 40px;
+        height: 40px;
+        display: block;
+        filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.300));
+        transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    /* .logo:hover {
+        transform: perspective(1000px) rotateY(360deg) scale(1.1);
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+    } */
 
     @media(max-width: 992px) {
       .nav-toggle { display: flex; }
@@ -92,8 +107,14 @@ const navItems = [
 <body>
 
   <nav class="admin-nav">
-    <div class="brand"><i class="fa fa-graduation-cap me-2"></i>aPanel</div>
-    <span class="badge-admin">ADMIN</span>
+    <div class="brand-bar">
+      <img src="/assets/images/knhs.png" alt="KNHS Logo" width="40" height="40" class="me-2 logo" />
+      <div class="title-block">
+        <h6>Online Examination Portal</h6>
+        <small>Kamalpur Netaji High School</small>
+      </div>
+      <span class="admin-badge ms-auto">Admin Panel</span>
+    </div>
     
     <button class="nav-toggle ms-auto" onclick="toggleNav()" aria-label="Toggle navigation">
       <i class="fa fa-bars" id="toggleIcon"></i>
