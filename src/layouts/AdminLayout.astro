@@ -106,7 +106,7 @@ const navItems = [
       display: none; width: 40px; height: 40px; border-radius: 8px; 
       background: rgba(255,255,255,0.1); border: none;
       cursor: pointer; align-items: center; justify-content: center;
-      transition: background 0.2s;
+      transition: background 0.2s; margin-right: 15px;
     }
     .nav-toggle:hover { background: rgba(255,255,255,0.18); }
     .hamburger { display: flex; flex-direction: column; gap: 5px; width: 22px; pointer-events: none; }
@@ -142,16 +142,16 @@ const navItems = [
     @media(max-width: 992px) {
       .nav-toggle { display: flex; }
       .nav-container {
-        position: fixed; top: 0; right: -300px; bottom: 0;
+        position: fixed; top: 0; left: -300px; bottom: 0;
         width: 280px; max-width: 82vw;
         background: linear-gradient(165deg, #0f3470 0%, #091e47 100%);
         flex-direction: column; padding: 0; gap: 0;
-        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 999; visibility: visible; margin-left: 0;
-        box-shadow: -6px 0 36px rgba(0,0,0,0.4);
+        box-shadow: 6px 0 36px rgba(0,0,0,0.4);
         overflow-y: auto;
       }
-      .nav-container.show { right: 0; }
+      .nav-container.show { left: 0; }
       .drawer-header {
         display: flex; align-items: center; justify-content: space-between;
         padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -179,7 +179,6 @@ const navItems = [
     /* ── Theme Toggle Button ── */
     .btn-theme {
       width: 40px; height: 40px; border-radius: 8px;
-      margin: 0 10px;
       background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
       color: rgba(255,255,255,0.85); font-size: 1rem;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -246,6 +245,15 @@ const navItems = [
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNav()"></div>
 
   <nav class="admin-nav">
+
+    <button class="nav-toggle" id="navToggle" onclick="toggleNav()" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navContainer">
+      <span class="hamburger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </span>
+    </button>
+
     <div class="brand-bar">
       <img src="/assets/images/knhs.png" alt="KNHS Logo" width="40" height="40" class="me-2 logo" />
       <div class="title-block">
@@ -258,15 +266,6 @@ const navItems = [
     <button class="btn-theme ms-auto" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode">
       <i class="fa fa-moon" id="themeIcon"></i>
     </button>
-
-    <button class="nav-toggle" id="navToggle" onclick="toggleNav()" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navContainer">
-      <span class="hamburger">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-      </span>
-    </button>
-
     <div class="nav-container" id="navContainer">
       <div class="drawer-header">
         <span class="drawer-title"><i class="fa fa-shield-alt me-2"></i>Admin Menu</span>
