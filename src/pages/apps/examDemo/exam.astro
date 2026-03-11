@@ -19,6 +19,7 @@
   <title>Examination — Online Exam</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="prefetch" href="/assets/images/tick.png" as="image" />
   <style>
     :root {
       --exam-primary: #0d2e5e;
@@ -40,99 +41,126 @@
     .exam-nav {
       background: var(--exam-primary);
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      display: flex; align-items: center; gap: 8px;
-      padding: 0 16px; height: 54px;
+      display: flex; align-items: center; gap: 4px;
+      padding: 0 12px; height: 54px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      flex-wrap: wrap;
     }
-    .exam-nav .brand { color: #fff; font-weight: 800; font-size: 1rem; }
-    .nav-pills-row { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; justify-content: flex-end; }
+    .exam-nav .brand { color: #fff; font-weight: 800; font-size: clamp(0.8rem, 2vw, 1rem); }
+    .nav-pills-row { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; justify-content: flex-end; align-items: center; }
     .np {
       background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.25);
       border-radius: 20px; color: #fff;
-      padding: 2px 10px; font-size: 0.75rem; white-space: nowrap;
+      padding: 2px 8px; font-size: clamp(0.65rem, 1.5vw, 0.75rem); white-space: nowrap;
     }
-    .np.timer { background: rgba(220,53,69,0.8); font-weight: 700; font-family: monospace; font-size: 0.85rem; letter-spacing: 1px; }
+    .np.timer { background: rgba(220,53,69,0.8); font-weight: 700; font-family: monospace; font-size: clamp(0.75rem, 1.8vw, 0.85rem); letter-spacing: 1px; }
     .np.timer.warn { animation: blink 1s infinite; }
     @keyframes blink { 50%{opacity:0.5} }
     .btn-submit-nav {
       background: #dc3545; color: #fff; border: none;
-      border-radius: 20px; padding: 4px 14px;
-      font-size: 0.8rem; font-weight: 700; cursor: pointer;
+      border-radius: 20px; padding: 4px 10px;
+      font-size: clamp(0.7rem, 1.5vw, 0.8rem); font-weight: 700; cursor: pointer;
+      min-height: 32px; display: flex; align-items: center;
     }
     .btn-submit-nav:hover { background: #c82333; }
+    @media(max-width:640px) {
+      .exam-nav { height: auto; gap: 6px; padding: 6px 8px; }
+      .np.d-none.d-md-inline { display: none !important; }
+      .np.d-none.d-sm-inline { font-size: 0.6rem; padding: 2px 6px; }
+    }
 
     /* ── Body layout ── */
     .spacer { height: 62px; }
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 260px;
-      gap: 10px;
-      padding: 10px 12px;
+      gap: 8px;
+      padding: clamp(8px, 2vw, 12px);
       min-height: calc(100vh - 62px);
     }
+    @media(max-width:1024px) {
+      .main-grid { grid-template-columns: 1fr 220px; }
+    }
     @media(max-width:768px) {
-      .main-grid { grid-template-columns: 1fr; }
-      .num-panel { order: -1; }
+      .main-grid { grid-template-columns: 1fr; gap: 6px; padding: 8px 6px; }
+      .num-panel { order: -1; max-height: 180px; }
+    }
+    @media(max-width:480px) {
+      .spacer { height: auto; }
+      .main-grid { padding: 4px; gap: 4px; }
     }
 
     /* ── Question Panel ── */
     .q-panel {
       background: #fff;
-      border-radius: 12px;
+      border-radius: clamp(8px, 2vw, 12px);
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
       display: flex; flex-direction: column;
-      min-height: 84vh;
+      min-height: 100%;
+      height: 100%;
     }
     .q-panel-header {
       background: #f8f9fb;
       border-bottom: 1px solid #e8eaf0;
-      padding: 12px 18px;
-      display: flex; align-items: center; gap: 10px;
-      border-radius: 12px 12px 0 0;
+      padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 18px);
+      display: flex; align-items: center; gap: clamp(6px, 2vw, 10px);
+      border-radius: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 0;
+      flex-wrap: wrap;
     }
     .q-panel-header .sec-badge {
       background: var(--exam-primary); color: #fff;
-      border-radius: 6px; padding: 2px 10px;
-      font-size: 0.78rem; font-weight: 700;
+      border-radius: 6px; padding: 2px 8px;
+      font-size: clamp(0.7rem, 1.5vw, 0.78rem); font-weight: 700;
     }
-    .q-counter { color: #555; font-size: 0.85rem; flex: 1; text-align: right; }
-    .zoom-btns { display: flex; gap: 4px; }
+    .q-counter { color: #555; font-size: clamp(0.75rem, 1.5vw, 0.85rem); flex: 1; text-align: right; min-width: fit-content; }
+    .zoom-btns { display: flex; gap: 2px; }
     .zoom-btns button {
       background: #e8eaf0; border: none; border-radius: 4px;
-      padding: 2px 8px; font-size: 0.75rem; cursor: pointer;
+      padding: clamp(2px, 1vw, 4px) clamp(6px, 1.5vw, 8px); font-size: clamp(0.65rem, 1.2vw, 0.75rem); cursor: pointer;
+      min-height: 28px; min-width: 28px;
     }
     .zoom-btns button:hover { background: #d0d4df; }
+    @media(max-width:640px) {
+      .q-panel-header { flex-direction: column; align-items: flex-start; }
+      .q-counter { width: 100%; text-align: left; margin-top: 4px; }
+    }
 
     .q-body {
       flex: 1;
-      padding: 24px 24px 16px;
+      padding: clamp(12px, 3vw, 24px);
       overflow-y: auto;
       max-height: 62vh;
+      font-size: clamp(0.85em, 1vw, 1.05em);
     }
-    .q-text { font-size: 1.05em; font-weight: 600; color: #1a1a2e; margin-bottom: 16px; line-height: 1.6; }
-    .q-img { max-width: 100%; margin-bottom: 14px; }
+    .q-text { font-size: clamp(1em, 1.2vw, 1.05em); font-weight: 600; color: #1a1a2e; margin-bottom: clamp(12px, 2vw, 16px); line-height: 1.6; }
+    .q-img { max-width: 100%; margin-bottom: 14px; height: auto; }
 
     /* option-row base layout only — radio hide + tick/holder moved to is:global below */
     .option-row {
-      margin-bottom: 6px;
-      padding: 5px 0;
+      margin-bottom: clamp(4px, 1vw, 6px);
+      padding: clamp(4px, 1vw, 5px) 0;
       border-bottom: 1px solid #f0f0f0;
     }
     .option-row:last-child { border-bottom: none; }
+    @media(max-width:640px) {
+      .option-row { margin-bottom: 8px; padding: 6px 0; }
+    }
 
     /* ── Question Footer ── */
     .q-footer {
-      padding: 12px 18px;
+      padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 18px);
       border-top: 1px solid #e8eaf0;
-      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      display: flex; flex-wrap: wrap; gap: clamp(6px, 1.5vw, 8px); align-items: center;
       background: #f8f9fb;
-      border-radius: 0 0 12px 12px;
+      border-radius: 0 0 clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px);
     }
     .q-footer button {
-      border-radius: 6px; border: none; padding: 8px 16px;
-      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      border-radius: 6px; border: none; padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 16px);
+      font-size: clamp(0.75rem, 1.2vw, 0.85rem); font-weight: 600; cursor: pointer;
       transition: opacity 0.15s;
+      min-height: 36px; display: flex; align-items: center; gap: 4px;
+      white-space: nowrap;
     }
     .q-footer button:hover { opacity: 0.85; }
     .q-footer button:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -140,63 +168,76 @@
     .btn-review   { background: var(--q-flagged); color: #fff; }
     .btn-clear    { background: #e9ecef; color: #333; }
     .btn-next     { background: #28a745; color: #fff; margin-left: auto; }
+    @media(max-width:640px) {
+      .q-footer { gap: 4px; }
+      .q-footer button { font-size: 0.75rem; padding: 6px 10px; min-height: 32px; flex: 1; min-width: calc(50% - 2px); }
+      .btn-next { margin-left: 0; }
+      .btn-prev, .btn-clear { flex: 0.5; }
+    }
 
     /* ── Number Panel ── */
     .num-panel {
       background: #fff;
-      border-radius: 12px;
+      border-radius: clamp(8px, 2vw, 12px);
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
     .num-panel-header {
       background: var(--exam-primary); color: #fff;
-      padding: 12px 16px; border-radius: 12px 12px 0 0;
-      font-weight: 700; font-size: 0.9rem;
+      padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 16px); border-radius: clamp(8px, 2vw, 12px) clamp(8px, 2vw, 12px) 0 0;
+      font-weight: 700; font-size: clamp(0.8rem, 1.2vw, 0.9rem);
     }
-    .legend { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; border-bottom: 1px solid #eee; }
-    .leg-item { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: #555; }
-    .leg-dot { width: 12px; height: 12px; border-radius: 3px; }
-    .num-grid { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px 14px; max-height: 70vh; overflow-y: auto; }
+    .legend { display: flex; flex-wrap: wrap; gap: clamp(4px, 1vw, 6px); padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 14px); border-bottom: 1px solid #eee; }
+    .leg-item { display: flex; align-items: center; gap: 4px; font-size: clamp(0.65rem, 1vw, 0.75rem); color: #555; }
+    .leg-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .num-grid { display: flex; flex-wrap: wrap; gap: clamp(3px, 1vw, 4px); padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 14px); max-height: 70vh; overflow-y: auto; }
     /* Match PHP palette: btn-light / btn-success / btn-warning */
     .q-num-btn {
-      width: 34px; height: 34px;
+      width: clamp(28px, 5vw, 34px); height: clamp(28px, 5vw, 34px); min-width: 28px; min-height: 28px;
       border-radius: 4px; border: 1px solid #343a40;
       background: #f8f9fa; cursor: pointer;
-      font-size: 0.8rem; font-weight: 600; color: #212529;
-      transition: all 0.1s;
+      font-size: clamp(0.65rem, 1vw, 0.8rem); font-weight: 600; color: #212529;
+      transition: all 0.1s; flex: 0 0 auto;
     }
     .q-num-btn:hover      { filter: brightness(0.92); }
     .q-num-btn.answered  { background: #28a745; color: #fff; border-color: #28a745; }
     .q-num-btn.flagged   { background: #ffc107; color: #212529; border-color: #d39e00; }
     .q-num-btn.current   { outline: 3px solid var(--exam-primary); outline-offset: 1px; }
+    @media(max-width:768px) {
+      .num-grid { max-height: 150px; }
+    }
 
     /* ── Section divider in num panel ── */
     .sec-divider {
-      width: 100%; font-size: 0.72rem; font-weight: 700;
+      width: 100%; font-size: clamp(0.65rem, 1vw, 0.72rem); font-weight: 700;
       color: #888; text-transform: uppercase; letter-spacing: 0.5px;
       border-bottom: 1px solid #eee; padding-bottom: 4px; margin-top: 6px;
     }
 
     /* ── Submit Modal ── */
     .modal-header-submit { background: #dc3545; color: #fff; }
-    .stat-box { background: #f8f9fb; border-radius: 8px; padding: 12px; text-align: center; }
-    .stat-box .num { font-size: 1.8rem; font-weight: 800; }
-    .stat-box .lbl { font-size: 0.75rem; color: #666; }
+    .stat-box { background: #f8f9fb; border-radius: 8px; padding: clamp(8px, 2vw, 12px); text-align: center; }
+    .stat-box .num { font-size: clamp(1.4rem, 3vw, 1.8rem); font-weight: 800; }
+    .stat-box .lbl { font-size: clamp(0.65rem, 1vw, 0.75rem); color: #666; }
     .stat-answered .num { color: #28a745; }
     .stat-unanswered .num { color: #6c757d; }
     .stat-flagged .num { color: var(--q-flagged); }
+    @media(max-width:640px) {
+      .row.g-2 { gap: 0.5rem !important; }
+      .stat-box { padding: 8px; }
+    }
   </style>
 
   <!-- option-row rules must be global: these elements are JS-generated and don't receive Astro's scoping attribute -->
   <style is:global>
     .option-row label {
       display: flex; align-items: flex-start;
-      cursor: pointer; width: 100%; margin: 0; font-size: 1em; line-height: 1.5;
+      cursor: pointer; width: 100%; margin: 0; font-size: clamp(0.85em, 1vw, 1em); line-height: 1.5;
     }
     .option-row label > input[type=radio] { display: none; }
     .option-row label > input[type=radio] + b {
       display: inline-flex;
       align-items: flex-start;
-      gap: 8px;
+      gap: clamp(6px, 1.5vw, 8px);
       font-weight: normal;
       line-height: 1.5;
       cursor: pointer;
@@ -205,9 +246,10 @@
     .option-row label > input[type=radio] + b::before {
       content: '';
       display: inline-block;
-      width: 22px;
-      height: 22px;
-      min-width: 22px;
+      width: clamp(18px, 4vw, 22px);
+      height: clamp(18px, 4vw, 22px);
+      min-width: 18px;
+      min-height: 18px;
       margin-top: 1px;
       background-image: url('/assets/images/holder.png');
       background-size: contain;
@@ -217,13 +259,31 @@
     .option-row label > input[type=radio]:checked + b::before {
       background-image: url('/assets/images/tick.png');
     }
+    
+    .logo {
+        width: clamp(32px, 6vw, 40px);
+        height: clamp(32px, 6vw, 40px);
+        display: block;
+        filter: drop-shadow(0 -1px 11px rgba(255, 255, 255, 0.300));
+        transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    
+    @media(max-width:640px) {
+      .modal-dialog-centered {
+        padding: 8px;
+      }
+      .modal-body { padding: clamp(12px, 2vw, 16px); }
+      .btn { padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 16px) !important; font-size: clamp(0.8rem, 1.2vw, 0.9rem); }
+    }
   </style>
 </head>
 <body>
 
   <!-- ── Top Navbar ── -->
   <nav class="exam-nav">
-    <div class="brand"><i class="fa fa-graduation-cap me-2"></i>Online Exam</div>
+    <img src="/assets/images/knhs.png" alt="KNHS Logo" width="40" height="40" class="logo" />
+    <div class="brand">Online Exam</div>
     <div class="nav-pills-row">
       <span class="np d-none d-md-inline" id="navName">—</span>
       <span class="np d-none d-sm-inline" id="navRoll">Roll: —</span>
