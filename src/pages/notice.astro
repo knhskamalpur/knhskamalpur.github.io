@@ -1,13 +1,225 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import '../styles/_notices.scss'
 
 const description = "Stay updated with the latest news, announcements, and official notices from Kamalpur Netaji High School (H.S.).";
 const keywords = "School Notices, KNHS Announcements, Exam Board Notices, Holiday Schedule, School News";
+
+// Sample notices data - Replace with data from Google Sheets API or your CMS
+const notices = [
+  {
+    id: 1,
+    date: "2026-03-12",
+    title: "Annual Examination Schedule",
+    category: "Exam",
+    iframeUrl: "https://docs.google.com/document/d/e/2PACX-1vQL12345/pub?embedded=true",
+    type: "googledocs"
+  },
+  {
+    id: 2,
+    date: "2026-03-10",
+    title: "Admission Forms Now Open",
+    category: "Admission",
+    iframeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQL56789/pubhtml?gid=0&single=true&widget=false&chrome=false",
+    type: "googlesheets"
+  },
+  {
+    id: 3,
+    date: "2026-03-05",
+    title: "Sports Day Announcement",
+    category: "Events",
+    iframeUrl: "https://docs.google.com/document/d/e/2PACX-1vQL99999/pub?embedded=true",
+    type: "googledocs"
+  },
+  {
+    id: 4,
+    date: "2026-02-28",
+    title: "Holiday Schedule 2026",
+    category: "Holiday",
+    iframeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQL88888/pubhtml?gid=0&single=true&widget=false&chrome=false",
+    type: "googlesheets"
+  },
+  {
+    id: 5,
+    date: "2026-02-20",
+    title: "Parent-Teacher Meeting",
+    category: "Meeting",
+    iframeUrl: "https://docs.google.com/document/d/e/2PACX-1vQL77777/pub?embedded=true",
+    type: "googledocs"
+  },
+  {
+    id: 6,
+    date: "2026-02-15",
+    title: "Merit List - Class XII",
+    category: "Achievement",
+    iframeUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQL66666/pubhtml?gid=0&single=true&widget=false&chrome=false",
+    type: "googlesheets"
+  }
+];
 ---
 
 <BaseLayout title="Notice" description={description} keywords={keywords}>
-  <section>
-    <h2>Notice Board</h2>
-    <p>School notices and announcements. (Migrated — please check original notices for exact content.)</p>
+  <section class="notices-section">
+
+    <!-- Board Header -->
+    <div class="board-header">
+      <div class="board-title-wrap">
+        <span class="board-icon">📌</span>
+        <div>
+          <h1>Notice Board</h1>
+          <!-- <p class="subtitle">Kamalpur Netaji High School (H.S.)</p> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="Exam">Exam</button>
+      <button class="filter-btn" data-filter="Admission">Admission</button>
+      <button class="filter-btn" data-filter="Events">Events</button>
+      <button class="filter-btn" data-filter="Holiday">Holiday</button>
+      <button class="filter-btn" data-filter="Meeting">Meeting</button>
+      <button class="filter-btn" data-filter="Achievement">Achievement</button>
+    </div>
+
+    <!-- Cork Board -->
+    <div class="corkboard">
+      <div class="corkboard-inner" id="noticesGrid">
+        {notices.map((notice, i) => (
+          <button
+            class="notice-slip"
+            data-category={notice.category}
+            data-id={notice.id}
+            data-url={notice.iframeUrl}
+            data-title={notice.title}
+            data-date={notice.date}
+            data-type={notice.type}
+            aria-label={`Read notice: ${notice.title}`}
+            style={`--rot: ${(i % 5 - 2) * 1.5}deg`}
+          >
+            <span class="pin"></span>
+            <span class="slip-category">{notice.category}</span>
+            <h3 class="slip-title">{notice.title}</h3>
+            <span class="slip-date">
+              {new Date(notice.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+            </span>
+            <span class="slip-cta">View Notice →</span>
+          </button>
+        ))}
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display:none">
+        <p>📭 No notices found for this category.</p>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination">
+      <button class="page-btn" id="prevBtn" aria-label="Previous page">← Prev</button>
+      <div class="page-numbers" id="pageNumbers"></div>
+      <button class="page-btn" id="nextBtn" aria-label="Next page">Next →</button>
+    </div>
+
   </section>
+
+  <!-- Modal -->
+  <div class="notice-modal" id="noticeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="modal-category" id="modalCategory"></span>
+          <span class="modal-date" id="modalDate"></span>
+        </div>
+        <button class="modal-close" id="modalClose" aria-label="Close notice">✕</button>
+      </div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-iframe-wrap">
+        <iframe id="modalIframe" src="" title="" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script slot="scripts" is:inline>
+    const NOTICES_PER_PAGE = 6;
+    let currentPage = 1;
+    const allSlips = Array.from(document.querySelectorAll('.notice-slip'));
+    let filteredSlips = [...allSlips];
+
+    // ── Filters ──────────────────────────────────────────────
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        filteredSlips = filter === 'all'
+          ? [...allSlips]
+          : allSlips.filter(s => s.dataset.category === filter);
+        currentPage = 1;
+        render();
+      });
+    });
+
+    // ── Render (pagination) ───────────────────────────────────
+    function render() {
+      const total = Math.ceil(filteredSlips.length / NOTICES_PER_PAGE);
+      const start = (currentPage - 1) * NOTICES_PER_PAGE;
+      const end   = start + NOTICES_PER_PAGE;
+
+      allSlips.forEach(s => (s.style.display = 'none'));
+      filteredSlips.slice(start, end).forEach(s => (s.style.display = 'flex'));
+
+      document.getElementById('emptyState').style.display =
+        filteredSlips.length === 0 ? 'flex' : 'none';
+
+      const pn = document.getElementById('pageNumbers');
+      pn.innerHTML = '';
+      for (let i = 1; i <= total; i++) {
+        const b = document.createElement('button');
+        b.className = 'page-number' + (i === currentPage ? ' active' : '');
+        b.textContent = i;
+        b.addEventListener('click', () => { currentPage = i; render(); });
+        pn.appendChild(b);
+      }
+
+      document.getElementById('prevBtn').disabled = currentPage <= 1;
+      document.getElementById('nextBtn').disabled = currentPage >= total;
+      document.getElementById('pagination').style.display = total > 1 ? 'flex' : 'none';
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => { currentPage--; render(); });
+    document.getElementById('nextBtn').addEventListener('click', () => { currentPage++; render(); });
+
+    // ── Modal ─────────────────────────────────────────────────
+    const modal  = document.getElementById('noticeModal');
+    const iframe = document.getElementById('modalIframe');
+
+    function openModal(slip) {
+      document.getElementById('modalTitle').textContent    = slip.dataset.title;
+      document.getElementById('modalCategory').textContent = slip.dataset.category;
+      document.getElementById('modalDate').textContent     = new Date(slip.dataset.date)
+        .toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+      iframe.src   = slip.dataset.url;
+      iframe.title = slip.dataset.title;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(() => { iframe.src = ''; }, 300);
+    }
+
+    allSlips.forEach(slip => slip.addEventListener('click', () => openModal(slip)));
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalBackdrop').addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── Init ──────────────────────────────────────────────────
+    render();
+  </script>
 </BaseLayout>
