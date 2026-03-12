@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "npm run dev",
+			"type": "shell",
+			"command": "npm",
+			"args": ["run", "dev"],
+			"runOptions": {
+				"runOn": "folderOpen"
+			},
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": {
+					"regexp": "^.*$",
+					"line": 0
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "^.*",
+					"endsPattern": ".*"
+				}
+			}
+		}
+	]
+}
