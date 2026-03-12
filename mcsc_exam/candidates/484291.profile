@@ -1,0 +1,1 @@
+{"candidate-name":"SANDIP KISKU","c-o":"HABULAL KISKU","dob":"1997-03-15","registration-no":"2281047619","mobile-no":"8967835995","roll-no":"484291","exam-date":"2018-05-08","batch":"11:30"}

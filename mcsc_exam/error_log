@@ -1,0 +1,23 @@
+[19-May-2018 14:59:29 Asia/Calcutta] PHP Notice:  Undefined variable: metadata in /home/prsolhph/public_html/mcsc/online-exam/yresult.php on line 9
+[19-May-2018 15:02:08 Asia/Calcutta] PHP Notice:  Undefined variable: metadata in /home/prsolhph/public_html/mcsc/online-exam/yresult.php on line 9
+[19-May-2018 15:03:19 Asia/Calcutta] PHP Notice:  Undefined variable: metadata in /home/prsolhph/public_html/mcsc/online-exam/yresult.php on line 9
+[30-May-2018 12:24:22 Asia/Calcutta] PHP Notice:  Undefined index: q in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 2
+[30-May-2018 12:24:22 Asia/Calcutta] PHP Warning:  Invalid argument supplied for foreach() in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 8
+[30-May-2018 12:24:22 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 224
+[30-May-2018 12:24:22 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 237
+[30-May-2018 12:24:22 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 242
+[30-May-2018 12:24:22 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 246
+[30-May-2018 12:24:22 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 250
+[30-May-2018 12:24:22 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 254
+[06-Jun-2018 09:31:05 Asia/Calcutta] PHP Notice:  Undefined index: roll in /home/prsolhph/public_html/mcsc/online-exam/home.php on line 2
+[06-Jun-2018 09:31:05 Asia/Calcutta] PHP Warning:  file_get_contents(./candidates/.qustion): failed to open stream: No such file or directory in /home/prsolhph/public_html/mcsc/online-exam/home.php on line 88
+[06-Jun-2018 09:31:05 Asia/Calcutta] PHP Warning:  file_get_contents(./candidates/.profile): failed to open stream: No such file or directory in /home/prsolhph/public_html/mcsc/online-exam/home.php on line 91
+[06-Jun-2018 09:31:05 Asia/Calcutta] PHP Warning:  Invalid argument supplied for foreach() in /home/prsolhph/public_html/mcsc/online-exam/home.php on line 108
+[12-Jun-2018 03:09:07 Asia/Calcutta] PHP Warning:  file_get_contents(./qustions/test1.q): failed to open stream: No such file or directory in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 3
+[12-Jun-2018 03:09:07 Asia/Calcutta] PHP Warning:  Invalid argument supplied for foreach() in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 8
+[12-Jun-2018 03:09:07 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 224
+[12-Jun-2018 03:09:07 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 237
+[12-Jun-2018 03:09:07 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 242
+[12-Jun-2018 03:09:07 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 246
+[12-Jun-2018 03:09:07 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 250
+[12-Jun-2018 03:09:07 Asia/Calcutta] PHP Notice:  Undefined offset: 1 in /home/prsolhph/public_html/mcsc/online-exam/prevq.php on line 254

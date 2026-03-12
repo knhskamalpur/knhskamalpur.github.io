@@ -1,0 +1,1 @@
+{"candidate-name":"RANA CHELL","c-o":"JITEN CHELL","dob":"1996-05-31","registration-no":"2780445473","mobile-no":"9933105202","roll-no":"476918","exam-date":"2018-05-10","batch":"11:30"}

@@ -1,0 +1,1 @@
+{"candidate-name":"PRASHANTA MURMU","c-o":"SAHADEB MURMU","dob":"1994-05-03","registration-no":"2280245541","mobile-no":"8145223150","roll-no":"993177","exam-date":"2018-05-12","batch":"11:29"}

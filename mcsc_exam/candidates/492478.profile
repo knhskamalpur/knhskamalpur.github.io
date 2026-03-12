@@ -1,0 +1,1 @@
+{"candidate-name":"SABYASACHI KAR","c-o":"SHYAMAPADA KAR","dob":"1997-10-10","registration-no":"2780504276","mobile-no":"7319070088","roll-no":"492478","exam-date":"2018-05-07","batch":"11:30"}

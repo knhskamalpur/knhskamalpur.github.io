@@ -1,0 +1,1 @@
+{"candidate-name":"SWATI RAKSHIT","c-o":"SWAPAN RAKSHIT","dob":"1999-11-18","registration-no":"2280814767","mobile-no":"9732563781","roll-no":"447932","exam-date":"2018-05-11","batch":"11:30"}

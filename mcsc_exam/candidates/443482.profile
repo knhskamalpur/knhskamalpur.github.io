@@ -1,0 +1,1 @@
+{"candidate-name":"ARUN BAURI","c-o":"MANGAL BAURI","dob":"1996-06-09","registration-no":"2281085583","mobile-no":"7076880915","roll-no":"443482","exam-date":"2018-05-05","batch":"11:30"}

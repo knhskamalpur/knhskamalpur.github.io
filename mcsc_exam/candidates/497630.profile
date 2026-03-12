@@ -1,0 +1,1 @@
+{"candidate-name":"SANGITA KHAN","c-o":"SWAPAN KHAN","dob":"1998-04-25","registration-no":"2780503927","mobile-no":"9735198410","roll-no":"497630","exam-date":"2018-05-07","batch":"11:30"}

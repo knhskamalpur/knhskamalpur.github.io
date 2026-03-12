@@ -1,0 +1,1 @@
+{"candidate-name":"SUMAN MUKHERJEE","c-o":"KANAILAL MUKHERJEE","dob":"1998-02-28","registration-no":"2280051984","mobile-no":"9002932048","roll-no":"441175","exam-date":"2018-05-11","batch":"11:30"}

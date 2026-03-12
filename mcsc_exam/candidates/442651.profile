@@ -1,0 +1,1 @@
+{"candidate-name":"JHANTU BAURI","c-o":"KARTIK BAURI","dob":"1995-02-03","registration-no":"2281088877","mobile-no":"7679429896","roll-no":"442651","exam-date":"2018-05-05","batch":"11:30"}

@@ -1,0 +1,1 @@
+{"candidate-name":"BISWAJIT HANSDA","c-o":"RUIDAS HANSDA","dob":"1997-04-30","registration-no":"2280157649","mobile-no":"7908302512","roll-no":"451147","exam-date":"2018-05-11","batch":"11:30"}

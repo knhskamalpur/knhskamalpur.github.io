@@ -1,0 +1,1 @@
+{"candidate-name":"ASIT SAREN","c-o":"BARKA SAREN","dob":"1995-03-07","registration-no":"2280916518","mobile-no":"7872811162","roll-no":"481792","exam-date":"2018-05-08","batch":"11:30"}

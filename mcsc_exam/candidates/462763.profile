@@ -1,0 +1,1 @@
+{"candidate-name":"SANTANU MANDAL","c-o":"SIBDAS MANDAL","dob":"1998-03-24","registration-no":"2780625481","mobile-no":"7797704824","roll-no":"462763","exam-date":"2018-05-07","batch":"11:30"}

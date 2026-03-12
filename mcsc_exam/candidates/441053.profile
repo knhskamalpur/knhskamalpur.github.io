@@ -1,0 +1,1 @@
+{"candidate-name":"UJJWAL KAR","c-o":"GOPAL CHANDRA KAR","dob":"2000-04-12","registration-no":"2780157547","mobile-no":"8642012051","roll-no":"441053","exam-date":"2018-05-10","batch":"11:30"}

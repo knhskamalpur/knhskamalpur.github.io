@@ -1,0 +1,1 @@
+{"candidate-name":"TARAPADA MURMU","c-o":"LAXMIKANTA MURMU","dob":"1986-01-04","registration-no":"2281046254","mobile-no":"9732907874","roll-no":"489705","exam-date":"2018-05-10","batch":"11:30"}

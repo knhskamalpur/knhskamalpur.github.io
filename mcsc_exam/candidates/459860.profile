@@ -1,0 +1,1 @@
+{"candidate-name":"DEBASHIS ROY","c-o":"DHIREN CHANDRA ROY","dob":"1999-03-12","registration-no":"2280866808","mobile-no":"7318764640","roll-no":"459860","exam-date":"2018-05-06","batch":"11:30"}

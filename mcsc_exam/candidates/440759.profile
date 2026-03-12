@@ -1,0 +1,1 @@
+{"candidate-name":"SURAJIT MANDAL ","c-o":"MAHAMAYA CSC","dob":"1990-08-02","registration-no":"2281032981","mobile-no":"9933619500","roll-no":"440759","exam-date":"2018-05-07","batch":"11:30"}

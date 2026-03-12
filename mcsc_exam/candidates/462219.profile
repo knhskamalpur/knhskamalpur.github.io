@@ -1,0 +1,1 @@
+{"candidate-name":"SUMAN RAKSHIT","c-o":"SAROJ RAKSHIT","dob":"2000-03-28","registration-no":"2780526563","mobile-no":"7063808156","roll-no":"462219","exam-date":"2018-05-06","batch":"11:30"}

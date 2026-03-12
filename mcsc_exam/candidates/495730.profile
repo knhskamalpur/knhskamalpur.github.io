@@ -1,0 +1,1 @@
+{"candidate-name":"BABULAL TUDU","c-o":"ASHUTOSH TUDU","dob":"1988-01-01","registration-no":"2280018878","mobile-no":"8001551529","roll-no":"495730","exam-date":"2018-05-09","batch":"11:30"}

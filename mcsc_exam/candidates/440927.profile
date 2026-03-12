@@ -1,0 +1,1 @@
+{"candidate-name":"SAGARIKA MANDAL","c-o":"CHANICHARAN MANDAL","dob":"1998-05-07","registration-no":"2280728254","mobile-no":"8372019105","roll-no":"440927","exam-date":"2018-05-10","batch":"11:30"}

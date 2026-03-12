@@ -1,0 +1,1 @@
+{"candidate-name":"BABAN ROY","c-o":"DHIREN ROY","dob":"2000-04-14","registration-no":"2780567389","mobile-no":"9083895761","roll-no":"458516","exam-date":"2018-05-12","batch":"11:30"}

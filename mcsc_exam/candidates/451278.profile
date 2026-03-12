@@ -1,0 +1,1 @@
+{"candidate-name":"CHANDAN BAURI","c-o":"GOURANGA BAURI","dob":"1999-04-07","registration-no":"2281089861","mobile-no":"8016008361","roll-no":"451278","exam-date":"2018-05-05","batch":"11:30"}

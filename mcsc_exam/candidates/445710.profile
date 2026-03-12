@@ -1,0 +1,1 @@
+{"candidate-name":"SOURAV MANDAL","c-o":"PRASANTA KUMAR MANDAL","dob":"1997-03-12","registration-no":"2780625642","mobile-no":"9800719775","roll-no":"445710","exam-date":"2018-05-05","batch":"11:30"}

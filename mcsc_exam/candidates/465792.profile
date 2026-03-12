@@ -1,0 +1,1 @@
+{"candidate-name":"RUBI MAHATO","c-o":"AJOY KUMAR MAHATO","dob":"1997-01-02","registration-no":"2281122670","mobile-no":"9635948854","roll-no":"465792","exam-date":"2018-05-10","batch":"11:30"}

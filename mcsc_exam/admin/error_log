@@ -1,0 +1,23 @@
+[26-Apr-2018 23:04:07 Asia/Kolkata] PHP Warning:  Invalid argument supplied for foreach() in /home/prsolhph/public_html/mcsc/online-exam/admin/qustion.php on line 208
+[26-Apr-2018 23:06:45 Asia/Kolkata] PHP Notice:  Undefined variable: qn in /home/prsolhph/public_html/mcsc/online-exam/admin/qustion.php on line 150
+[26-Apr-2018 23:07:11 Asia/Kolkata] PHP Notice:  Undefined variable: qn in /home/prsolhph/public_html/mcsc/online-exam/admin/qustion.php on line 150
+[26-Apr-2018 23:36:13 Asia/Kolkata] PHP Parse error:  syntax error, unexpected '/' in /home/prsolhph/public_html/mcsc/online-exam/admin/viewallpro.php on line 66
+[26-Apr-2018 23:36:32 Asia/Kolkata] PHP Parse error:  syntax error, unexpected '/' in /home/prsolhph/public_html/mcsc/online-exam/admin/viewallpro.php on line 66
+[27-Apr-2018 00:38:44 Asia/Kolkata] PHP Notice:  Undefined variable: con in /home/prsolhph/public_html/mcsc/online-exam/admin/xhome.php on line 5
+[27-Apr-2018 00:38:44 Asia/Kolkata] PHP Fatal error:  Call to a member function prepare() on null in /home/prsolhph/public_html/mcsc/online-exam/admin/xhome.php on line 5
+[27-Apr-2018 11:02:27 Asia/Kolkata] PHP Notice:  Undefined variable: qn in /home/prsolhph/public_html/mcsc/online-exam/admin/qustion.php on line 150
+[27-Apr-2018 20:53:11 Asia/Kolkata] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[29-Apr-2018 22:54:35 Asia/Kolkata] PHP Notice:  Undefined variable: qn in /home/prsolhph/public_html/mcsc/online-exam/admin/qustion.php on line 150
+[30-Apr-2018 22:53:28 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[01-May-2018 12:50:42 Asia/Kolkata] PHP Notice:  Undefined variable: qn in /home/prsolhph/public_html/mcsc/online-exam/admin/qustion.php on line 150
+[01-May-2018 16:10:53 Asia/Kolkata] PHP Notice:  Undefined variable: qn in /home/prsolhph/public_html/mcsc/online-exam/admin/qustion.php on line 150
+[01-May-2018 21:19:13 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[03-May-2018 23:31:49 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[04-May-2018 21:53:30 Asia/Calcutta] PHP Warning:  unlink(../exam.status): No such file or directory in /home/prsolhph/public_html/mcsc/online-exam/admin/home.php on line 54
+[04-May-2018 22:38:28 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[05-May-2018 09:34:24 Asia/Calcutta] PHP Warning:  unlink(../exam.status): No such file or directory in /home/prsolhph/public_html/mcsc/online-exam/admin/home.php on line 54
+[05-May-2018 22:03:04 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[06-May-2018 10:55:34 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[06-May-2018 10:55:36 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[08-May-2018 19:50:19 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7
+[09-May-2018 22:41:00 Asia/Calcutta] PHP Notice:  Undefined index: fresh in /home/prsolhph/public_html/mcsc/online-exam/admin/check_login.php on line 7

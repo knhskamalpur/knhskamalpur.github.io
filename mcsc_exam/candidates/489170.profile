@@ -1,0 +1,1 @@
+{"candidate-name":"DOYEL MANDAL","c-o":"BIPLAB MANDAL","dob":"1997-01-12","registration-no":"2280950157","mobile-no":"7364975564","roll-no":"489170","exam-date":"2018-05-07","batch":"11:30"}

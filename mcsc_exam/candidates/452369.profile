@@ -1,0 +1,1 @@
+{"candidate-name":"SULEKHA BAURI","c-o":"BASUDEB BAURI","dob":"1992-03-15","registration-no":"2280948678","mobile-no":"8918652334","roll-no":"452369","exam-date":"2018-11-05","batch":"11:30"}

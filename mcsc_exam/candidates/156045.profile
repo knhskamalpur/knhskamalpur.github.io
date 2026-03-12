@@ -1,0 +1,1 @@
+{"candidate-name":"SUKDEB BAURI","c-o":"KSHUDIRAM BAURI","dob":"1995-01-01","registration-no":"2281156045","mobile-no":"7872863354","roll-no":"156045","exam-date":"2018-05-12","batch":"11:30"}

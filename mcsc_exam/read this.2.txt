@@ -1,0 +1,13 @@
+Candidate Name:
+C/O.:
+DOB.:
+application/Registration No.:
+Roll No.:
+Exam Date:
+Time/Batch:
+
+
+
+login  hobek roll no diye (roll no amra banabo)
+password: DOB (false)
+arijit: ok.

@@ -1,0 +1,1 @@
+{"candidate-name":"RAHUL LAYEK","c-o":"DAYAMOY LAYEK","dob":"2000-02-08","registration-no":"2280866809","mobile-no":"9123318682","roll-no":"478401","exam-date":"2018-05-12","batch":"11:30"}

@@ -1,0 +1,1 @@
+{"candidate-name":"ARIJIT KUNDU","c-o":"B. KUNDU","dob":"1997-07-27","registration-no":"124586521","mobile-no":"9775606012","roll-no":"5463210","exam-date":"2018-05-06","batch":"11:30"}

@@ -1,0 +1,1 @@
+{"candidate-name":"ADWAITA KAR","c-o":"CHANDI CHARAN KAR","dob":"1999-02-20","registration-no":"2281140163","mobile-no":"8170079457","roll-no":"449617","exam-date":"2018-05-11","batch":"11:30"}

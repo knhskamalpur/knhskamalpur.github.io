@@ -1,0 +1,1 @@
+{"candidate-name":"BISWAJIT MUKHERJEE","c-o":"SISIR MUKHERJEE","dob":"1991-03-16","registration-no":"2280915033","mobile-no":"9732385754","roll-no":"441147","exam-date":"2018-05-12","batch":"11:30"}

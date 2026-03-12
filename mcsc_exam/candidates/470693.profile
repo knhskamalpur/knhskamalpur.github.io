@@ -1,0 +1,1 @@
+{"candidate-name":"BANASHREE CHELL","c-o":"SUNIL CHELL","dob":"1997-08-23","registration-no":"2280691119","mobile-no":"9933105202","roll-no":"470693","exam-date":"2018-05-07","batch":"11:30"}

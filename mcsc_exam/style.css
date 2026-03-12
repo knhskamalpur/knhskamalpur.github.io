@@ -1,0 +1,9 @@
+.card{
+	background: linear-gradient(to left top,#ccc,#f1f1f1);
+	background: #eee;
+    /* color: #aaa; */
+    border: 1px solid rgba(0,0,0,0.3);
+    /* padding: 20px; */
+    border-radius: 11px;
+    /*box-shadow: 0 12px 15px 0 rgba(0,0,0,.24), 0 17px 50px 0 rgba(0,0,0,.19);*/
+}

@@ -1,0 +1,1 @@
+{"candidate-name":"KHAGENDRANATH HEMHRAM","c-o":"NANDALAL HEMBRAM","dob":"1996-02-01","registration-no":"2281139210","mobile-no":"8145571421","roll-no":"450276","exam-date":"2018-05-06","batch":"11:30"}

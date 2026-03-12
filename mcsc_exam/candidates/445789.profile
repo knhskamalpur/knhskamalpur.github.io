@@ -1,0 +1,1 @@
+{"candidate-name":"SUBHAJIT RAKSHIT","c-o":"GOURANGA RAKSHIT","dob":"1999-09-18","registration-no":"2281184754","mobile-no":"9735502938","roll-no":"445789","exam-date":"2018-05-05","batch":"11:30"}

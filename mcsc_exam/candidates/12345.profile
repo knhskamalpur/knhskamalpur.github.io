@@ -1,0 +1,1 @@
+{"candidate-name":"sourav rakshit","c-o":"t. rakshit","dob":"1993-07-05","registration-no":"1234567890","mobile-no":"9851081805","roll-no":"12345","exam-date":"2018-05-05","batch":"11:30"}

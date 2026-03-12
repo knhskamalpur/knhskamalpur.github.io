@@ -1,0 +1,1 @@
+{"candidate-name":"SANTOSH MURMU","c-o":"LATE RASU MURMU","dob":"1995-04-21","registration-no":"2281187622","mobile-no":"9732308300","roll-no":"457921","exam-date":"2018-05-06","batch":"11:30"}

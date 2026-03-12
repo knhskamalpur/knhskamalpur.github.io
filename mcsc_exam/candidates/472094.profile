@@ -1,0 +1,1 @@
+{"candidate-name":"MANOJ ROY","c-o":"KAMAKSHYA ROY","dob":"1998-04-20","registration-no":"2280868704","mobile-no":"7584081075","roll-no":"472094","exam-date":"2018-05-10","batch":"11:30"}

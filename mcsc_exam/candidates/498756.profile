@@ -1,0 +1,1 @@
+{"candidate-name":"ANIMESH KHAN","c-o":"NANIGOPAL KHAN","dob":"1995-04-10","registration-no":"2280032705","mobile-no":"9474469583","roll-no":"498756","exam-date":"2018-05-09","batch":"11:30"}

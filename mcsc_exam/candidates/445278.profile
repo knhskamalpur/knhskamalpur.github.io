@@ -1,0 +1,1 @@
+{"candidate-name":"SARADA KALINDI","c-o":"LALU KALINDI","dob":"1998-01-22","registration-no":"2281142127","mobile-no":"9593813720","roll-no":"445278","exam-date":"2018-05-05","batch":"11:30"}

@@ -1,0 +1,1 @@
+{"candidate-name":"SOUMEN KUNDU","c-o":"MANIK LAL KUNDU","dob":"1984-12-29","registration-no":"2281045214","mobile-no":"9564143290","roll-no":"482930","exam-date":"2018-05-09","batch":"11:30"}

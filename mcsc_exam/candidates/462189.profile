@@ -1,0 +1,1 @@
+{"candidate-name":"AMARNATH MANDAL","c-o":"ASIT BARAN MANDAL","dob":"1997-03-28","registration-no":"---------------------","mobile-no":"8436636304","roll-no":"462189","exam-date":"2018-05-12","batch":"11:30"}

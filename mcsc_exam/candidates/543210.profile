@@ -1,0 +1,1 @@
+{"candidate-name":"SUSANTA RAKASHIT","c-o":"TARAPADA RAKSHIT","dob":"1997-07-05","registration-no":"2000000000","mobile-no":"9002365916","roll-no":"543210","exam-date":"2018-05-20","batch":"11:30"}

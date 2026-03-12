@@ -1,0 +1,1 @@
+{"candidate-name":"NAYAN TUDU","c-o":"BHASAN TUDU","dob":"1995-05-15","registration-no":"2281283248","mobile-no":"7550315576","roll-no":"4904682","exam-date":"2018-05-09","batch":"11:30"}

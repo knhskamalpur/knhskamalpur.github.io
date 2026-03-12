@@ -1,0 +1,1 @@
+{"candidate-name":"AMIT KUNDU","c-o":"NEPAL CHANDRA KUNDU","dob":"1999-06-05","registration-no":"2281378762","mobile-no":"7908019272","roll-no":"448943","exam-date":"2018-05-12","batch":"11:30"}
