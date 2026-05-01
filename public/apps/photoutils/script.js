@@ -369,6 +369,36 @@ maxSizeInput.addEventListener('input', () => {
 });
 window.addEventListener('resize', drawOverlay);
 
+// Keyboard shortcuts (ignored when typing in inputs)
+document.addEventListener('keydown', (e) => {
+    const tag = e.target.tagName.toLowerCase();
+    if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
+
+    switch (e.key.toLowerCase()) {
+        case ' ':
+        case 'enter':
+            e.preventDefault();
+            if (!captureBtn.disabled) capturePhoto();
+            break;
+        case 'r':
+            startCamera(false);
+            break;
+        case 'm':
+            mirrorModeInput.checked = !mirrorModeInput.checked;
+            applyBwFilter();
+            break;
+        case 'b':
+            bwModeInput.checked = !bwModeInput.checked;
+            presetSelect.value = '';
+            deletePresetBtn.style.display = 'none';
+            applyBwFilter();
+            break;
+        case 's':
+            swapDimensions();
+            break;
+    }
+});
+
 // Start on load
 getCameras();
 loadPresets();

@@ -34,7 +34,7 @@ const keywords = "Photo Utils, Image Resizer, Form Photo Toolkit, Capture Photo,
                   <input type="number" id="width" value="1920">
               </div>
               <div class="control-group dim-swap-group">
-                  <button id="swap-dims" class="btn-icon" title="Swap Width and Height"><i class="fa fa-refresh"></i></button>
+                  <button id="swap-dims" class="btn-icon" title="Swap Width and Height (S)"><i class="fa fa-refresh"></i></button>
               </div>
               <div class="control-group">
                   <label for="height">Height (px):</label>
@@ -56,22 +56,22 @@ const keywords = "Photo Utils, Image Resizer, Form Photo Toolkit, Capture Photo,
           </div>
 
           <div class="actions-bar">
-              <button id="start-camera" class="btn-action" title="Restart Camera"><i class="fa fa-refresh"></i></button>
+              <button id="start-camera" class="btn-action" title="Restart Camera (R)"><i class="fa fa-refresh"></i></button>
               <div class="switch-container">
-                  <label class="switch" title="Toggle Mirror Mode">
+                  <label class="switch" title="Toggle Mirror Mode (M)">
                       <input type="checkbox" id="mirror-mode" checked>
                       <span class="slider round"></span>
                   </label>
                   <span class="switch-label"><i class="fa fa-arrows-h"></i></span>
               </div>
               <div class="switch-container">
-                  <label class="switch" title="Toggle Black & White Mode">
+                  <label class="switch" title="Toggle Black & White Mode (B)">
                       <input type="checkbox" id="bw-mode">
                       <span class="slider round"></span>
                   </label>
                   <span class="switch-label">B&W</span>
               </div>
-              <button id="capture" class="btn-action btn-capture" title="Capture Photo" disabled><i class="fa fa-camera"></i></button>
+              <button id="capture" class="btn-action btn-capture" title="Capture Photo (Space)" disabled><i class="fa fa-camera"></i></button>
               <input type="text" id="file-prefix" class="file-prefix-input" placeholder="filename prefix">
           </div>
 
