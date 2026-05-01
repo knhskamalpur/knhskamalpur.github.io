@@ -247,7 +247,7 @@ async function capturePhoto() {
     const a = document.createElement('a');
     a.href = url;
     const prefix = (filePrefixInput.value.trim() || 'photo').replace(/[^a-zA-Z0-9_\-]/g, '_');
-    a.download = `${prefix}_${targetWidth}x${targetHeight}_${Math.round(blob.size/1024)}KB.knhs.jpg`;
+    a.download = `${prefix}_${targetWidth}x${targetHeight}_${Math.round(blob.size/1024)}KB.jpg`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
