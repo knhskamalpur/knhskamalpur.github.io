@@ -65,14 +65,12 @@ async function startCamera(autoAdjust = false) {
         }
 
         const deviceId = cameraSelect.value;
-        const wIdeal = parseInt(widthInput.value) || 1920;
-        const hIdeal = parseInt(heightInput.value) || 1080;
 
         const constraints = {
             video: {
                 deviceId: deviceId ? { exact: deviceId } : undefined,
-                width: { ideal: wIdeal },
-                height: { ideal: hIdeal }
+                width: { ideal: 3840 },
+                height: { ideal: 2160 }
             }
         };
 
@@ -89,18 +87,13 @@ async function startCamera(autoAdjust = false) {
             const tH = parseInt(heightInput.value);
 
             if (autoAdjust) {
-                // If camera orientation doesn't match target orientation, swap targets and restart
+                // If camera orientation doesn't match target orientation, swap targets
                 if ((vH > vW && tW > tH) || (vW > vH && tH > tW)) {
                     widthInput.value = tH;
                     heightInput.value = tW;
-                    // Restart camera with new ideal constraints matching the orientation
-                    startCamera(false);
-                    return;
                 }
             }
 
-            viewportContainer.style.aspectRatio = `${vW}/${vH}`;
-            
             // Ensure overlay matches the new video dimensions
             setTimeout(drawOverlay, 300);
         };
@@ -135,9 +128,20 @@ function drawOverlay() {
     const dX = (cW - dW) / 2;
     const dY = (cH - dH) / 2;
 
-    // Calculate marker rectangle relative to the displayed video
-    const rW = targetWidth * displayRatio;
-    const rH = targetHeight * displayRatio;
+    // Calculate crop rectangle that matches the target aspect ratio within the video
+    const targetAspect = targetWidth / targetHeight;
+    const videoAspect = vW / vH;
+    let rW, rH;
+
+    if (videoAspect > targetAspect) {
+        // Video is wider — full height used, width cropped
+        rH = dH;
+        rW = dH * targetAspect;
+    } else {
+        // Video is taller — full width used, height cropped
+        rW = dW;
+        rH = dW / targetAspect;
+    }
 
     const rX = dX + (dW - rW) / 2;
     const rY = dY + (dH - rH) / 2;
@@ -192,15 +196,25 @@ async function capturePhoto() {
     const videoWidth = video.videoWidth;
     const videoHeight = video.videoHeight;
 
-    let sourceX = (videoWidth - targetWidth) / 2;
-    let sourceY = (videoHeight - targetHeight) / 2;
-    let sourceWidth = targetWidth;
-    let sourceHeight = targetHeight;
+    // Crop the largest region from the video that matches the target aspect ratio
+    const targetAspect = targetWidth / targetHeight;
+    const videoAspect = videoWidth / videoHeight;
+    let sourceX, sourceY, sourceWidth, sourceHeight;
 
-    // Fill background black first
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, targetWidth, targetHeight);
-    
+    if (videoAspect > targetAspect) {
+        // Video is wider — crop sides, use full height
+        sourceHeight = videoHeight;
+        sourceWidth = videoHeight * targetAspect;
+        sourceX = (videoWidth - sourceWidth) / 2;
+        sourceY = 0;
+    } else {
+        // Video is taller — crop top/bottom, use full width
+        sourceWidth = videoWidth;
+        sourceHeight = videoWidth / targetAspect;
+        sourceX = 0;
+        sourceY = (videoHeight - sourceHeight) / 2;
+    }
+
     // Apply grayscale filter if enabled
     if (isBw) {
         ctx.filter = 'grayscale(100%)';
@@ -208,7 +222,7 @@ async function capturePhoto() {
         ctx.filter = 'none';
     }
 
-    // Draw cropped image
+    // Draw cropped and scaled image (no black edges)
     ctx.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
 
     // Iterative quality reduction to meet file size
@@ -317,7 +331,7 @@ function applyPreset() {
     }
 
     applyBwFilter();
-    startCamera();
+    drawOverlay();
 }
 
 startBtn.addEventListener('click', () => startCamera(false));
