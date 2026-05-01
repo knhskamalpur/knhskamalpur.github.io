@@ -402,6 +402,17 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Enter in filename input also captures, Esc blurs
+filePrefixInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        filePrefixInput.blur();
+        if (!captureBtn.disabled) capturePhoto();
+    } else if (e.key === 'Escape') {
+        filePrefixInput.blur();
+    }
+});
+
 // Start on load
 getCameras();
 loadPresets();
