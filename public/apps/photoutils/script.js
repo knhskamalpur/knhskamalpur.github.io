@@ -13,6 +13,7 @@ const savePresetBtn = document.getElementById('save-preset');
 const deletePresetBtn = document.getElementById('delete-preset');
 const swapDimsBtn = document.getElementById('swap-dims');
 const bwModeInput = document.getElementById('bw-mode');
+const mirrorModeInput = document.getElementById('mirror-mode');
 const filePrefixInput = document.getElementById('file-prefix');
 const viewportContainer = document.querySelector('.viewport-container');
 
@@ -175,11 +176,10 @@ function drawOverlay() {
 }
 
 function applyBwFilter() {
-    if (bwModeInput.checked) {
-        video.style.filter = 'grayscale(100%)';
-    } else {
-        video.style.filter = 'none';
-    }
+    const filters = [];
+    if (bwModeInput.checked) filters.push('grayscale(100%)');
+    video.style.filter = filters.length ? filters.join(' ') : 'none';
+    video.style.transform = mirrorModeInput.checked ? 'scaleX(-1)' : 'none';
 }
 
 async function capturePhoto() {
@@ -223,7 +223,15 @@ async function capturePhoto() {
     }
 
     // Draw cropped and scaled image (no black edges)
+    if (mirrorModeInput.checked) {
+        ctx.save();
+        ctx.translate(targetWidth, 0);
+        ctx.scale(-1, 1);
+    }
     ctx.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
+    if (mirrorModeInput.checked) {
+        ctx.restore();
+    }
 
     // Iterative quality reduction to meet file size
     let quality = 0.95;
@@ -346,6 +354,7 @@ bwModeInput.addEventListener('change', () => {
     deletePresetBtn.style.display = 'none';
     applyBwFilter();
 });
+mirrorModeInput.addEventListener('change', applyBwFilter);
 
 // Redraw overlay when inputs change or window resizes
 [widthInput, heightInput].forEach(el => el.addEventListener('input', () => {
