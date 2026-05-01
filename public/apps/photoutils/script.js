@@ -375,7 +375,6 @@ document.addEventListener('keydown', (e) => {
     if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
 
     switch (e.key.toLowerCase()) {
-        case ' ':
         case 'enter':
             e.preventDefault();
             if (!captureBtn.disabled) capturePhoto();
@@ -395,6 +394,10 @@ document.addEventListener('keydown', (e) => {
             break;
         case 's':
             swapDimensions();
+            break;
+        case '/':
+            e.preventDefault();
+            filePrefixInput.focus();
             break;
     }
 });
